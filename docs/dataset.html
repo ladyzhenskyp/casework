@@ -1,0 +1,356 @@
+<title>Casework Support Dataset</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: a review document. Cream page, wine accents, one column for reading, data tables in mono. */
+:root{
+  color-scheme: light;
+  --cream:#FBF4EF; --white:#FFFFFF; --blush:#F5DEDA; --nude:#D9B5A2; --rose:#E59AA6;
+  --wine:#7A1F31; --stage:#1F080E; --cocoa:#2F1D18; --mocha:#77584C; --line:rgba(47,29,24,.12); --ok:#336B48;
+  --sans:"Geist","Helvetica Neue",Arial,sans-serif; --mono:"Geist Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--cocoa);font-family:var(--sans);font-size:16.5px;line-height:1.6;padding-inline:clamp(16px,4vw,48px);padding-block:0 80px}
+::selection{background:var(--wine);color:#fff}
+a{color:var(--wine);text-underline-offset:.2em}
+.top{background:var(--stage);color:#FBEAE6;margin-inline:calc(-1 * clamp(16px,4vw,48px));padding:56px clamp(16px,4vw,48px) 44px;margin-bottom:48px}
+.top .in{max-width:1080px;margin-inline:auto}
+.brand{display:flex;align-items:center;gap:10px;font-family:"Geist",sans-serif;font-weight:600;font-size:14px;color:#D7AFA9;margin-bottom:22px}
+.brand svg{width:20px;height:20px}
+.top h1{font-size:clamp(34px,4.6vw,58px);line-height:1;letter-spacing:-.04em;font-weight:700;margin:0 0 16px}
+.top p{color:#D7AFA9;max-width:64ch;margin:0 0 22px}
+.toc{display:flex;flex-wrap:wrap;gap:8px}
+.toc a{color:#FBEAE6;text-decoration:none;font-size:13.5px;padding:7px 12px;border:1px solid rgba(251,234,230,.18);border-radius:7px}
+.toc a:hover{background:rgba(251,234,230,.08)}
+main{max-width:1080px;margin-inline:auto}
+section{margin-bottom:72px;scroll-margin-top:24px}
+h2{font-size:clamp(26px,3vw,36px);letter-spacing:-.03em;line-height:1.1;margin:0 0 10px;font-weight:700}
+.lead{color:var(--mocha);max-width:68ch;margin:0 0 28px}
+h3{font-size:18px;letter-spacing:-.015em;margin:0 0 4px;font-weight:650}
+code,.mono{font-family:var(--mono);font-size:.88em}
+p code,li code,td code{background:var(--blush);color:var(--wine);padding:1px 6px;border-radius:5px}
+
+/* system map */
+.systems{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.sys{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:18px}
+.sys h3{display:flex;align-items:center;gap:8px}
+.sys h3 i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.sys p{font-size:14px;color:var(--mocha);margin:4px 0 12px}
+.sys ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.sys li{font-family:var(--mono);font-size:13px;background:var(--cream);border:1px solid var(--line);border-radius:7px;padding:6px 10px}
+.joins{margin-top:14px;background:var(--white);border:1px solid var(--line);border-radius:14px;padding:16px 18px;font-size:14.5px}
+.joins b{font-weight:600}
+.joins ul{margin:8px 0 0;padding-left:18px}
+.joins li{margin:4px 0}
+
+/* table specs */
+.spec{background:var(--white);border:1px solid var(--line);border-radius:14px;margin-bottom:16px;overflow:hidden}
+.spec summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:16px 18px}
+.spec summary::-webkit-details-marker{display:none}
+.spec summary h3{font-family:var(--mono);font-size:16px;font-weight:600}
+.spec summary p{margin:2px 0 0;font-size:14px;color:var(--mocha)}
+.spec summary .meta{display:flex;gap:8px;align-items:center;font-family:var(--mono);font-size:12px;color:var(--mocha)}
+.chev{width:18px;height:18px;transition:transform .2s}
+.spec[open] .chev{transform:rotate(180deg)}
+.pill{font-family:var(--sans);font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:6px;background:var(--cream);border:1px solid var(--line);color:var(--mocha);white-space:nowrap}
+.pill.crm{background:#F3E4DC;color:#6B3E2E;border-color:transparent}
+.pill.hd{background:var(--blush);color:var(--wine);border-color:transparent}
+.pill.sv{background:#EFE6E1;color:#5F4A42;border-color:transparent}
+.pill.int{background:#3A1019;color:#F5DEDA;border-color:transparent}
+.tbl{overflow-x:auto;border-top:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:500;font-size:12px;color:var(--mocha);background:#FDF9F6;padding:9px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.col{font-family:var(--mono);font-size:13px;white-space:nowrap;color:var(--cocoa)}
+td.ty{font-family:var(--mono);font-size:12.5px;color:var(--mocha);white-space:nowrap}
+td .trap{display:inline-block;font-size:11.5px;font-weight:600;color:var(--wine);background:var(--blush);border-radius:5px;padding:1px 7px;margin-left:4px}
+
+/* problems */
+.probs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.prob{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:18px}
+.prob .n{font-family:var(--mono);font-size:12px;color:var(--mocha)}
+.prob h3{margin:2px 0 6px}
+.prob p{margin:0;font-size:14.5px;color:var(--mocha)}
+.prob .where{margin-top:10px;font-family:var(--mono);font-size:12.5px;color:var(--wine)}
+
+/* cases */
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.filters button{font:500 13.5px var(--sans);color:var(--mocha);background:var(--white);border:1px solid var(--line);border-radius:7px;padding:7px 12px;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--wine);color:#fff;border-color:var(--wine)}
+.case{display:grid;grid-template-columns:52px minmax(0,1fr) minmax(0,.9fr);gap:20px;background:var(--white);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:12px}
+.case .no{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--nude);line-height:1}
+.case h3{font-size:19px;margin-bottom:6px}
+.case .ask{margin:0 0 10px;font-size:15px}
+.case .ask::before{content:"The request: ";font-weight:600;color:var(--wine)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tags span{font-family:var(--mono);font-size:11.5px;padding:2px 8px;border-radius:5px;background:var(--cream);border:1px solid var(--line);color:var(--mocha)}
+.lvl{font-family:var(--sans)!important;font-weight:600;border:0!important}
+.lvl.f{background:var(--cream)!important;color:var(--mocha)!important;border:1px solid var(--line)!important}
+.lvl.c{background:var(--blush)!important;color:var(--wine)!important}
+.lvl.a{background:var(--wine)!important;color:#fff!important}
+.side dl{margin:0;display:grid;gap:10px;font-size:14px}
+.side dt{font-size:11.5px;font-weight:600;color:var(--mocha);text-transform:uppercase;letter-spacing:.05em}
+.side dd{margin:2px 0 0}
+.side dd code{font-size:12.5px}
+
+/* rules + decisions */
+.rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.rule{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:18px}
+.rule p{margin:4px 0 0;font-size:14.5px;color:var(--mocha)}
+.decide{background:var(--stage);color:#FBEAE6;border-radius:18px;padding:clamp(22px,3vw,36px)}
+.decide h2{color:#FBEAE6}
+.decide ol{margin:16px 0 0;padding-left:22px;display:grid;gap:12px}
+.decide li{color:#E4C2BC}
+.decide li b{color:#FBEAE6;font-weight:600}
+.note{font-size:13px;color:var(--mocha);margin-top:10px}
+
+@media (max-width:900px){
+  .systems{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .probs,.rules{grid-template-columns:minmax(0,1fr)}
+  .case{grid-template-columns:40px minmax(0,1fr)}
+  .case .side{grid-column:2}
+}
+@media (max-width:560px){
+  .systems{grid-template-columns:minmax(0,1fr)}
+  .case{grid-template-columns:minmax(0,1fr)}
+  .case .side{grid-column:auto}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.chev{transition:none}}
+</style>
+
+<header class="top">
+  <div class="in">
+    <div class="brand"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 1 22 7v10l-10 6L2 17V7z" fill="#7A1F31" stroke="#FBEAE6" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 1v22M2 7l20 10M22 7 2 17" stroke="#E59AA6" stroke-width="1" opacity=".85"/></svg>casework &middot; approved and generated</div>
+    <h1>Support operations dataset</h1>
+    <p>The data behind version 1: a fictional software company's support team, six months of tickets, and three systems that don't fully agree. Everything here is synthetic. The data has been generated and every case's answer has been checked against it.</p>
+    <nav class="toc" aria-label="Sections">
+      <a href="#company">The company</a><a href="#systems">Systems and tables</a><a href="#tables">Columns</a><a href="#problems">Planted problems</a><a href="#cases">The 15 cases</a><a href="#checking">Answer checking</a><a href="#decide">Decisions</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section id="company">
+    <h2>The company</h2>
+    <p class="lead"><b>Northwind Desk</b> (invented) sells scheduling software to small and mid-size businesses on three plans: basic, pro and enterprise. Its support team of 24 agents answers customers by email, chat, web form and phone. The data covers April through September 2026.</p>
+    <div class="rules">
+      <div class="rule"><h3>The setup that causes trouble</h3><p>Sales and billing live in the CRM. Support works in the helpdesk. An integration copies each customer's plan from the CRM to the helpdesk every night, and the helpdesk uses that copy to decide which response-time promise (SLA) applies. When the sync fails, the two systems drift apart.</p></div>
+      <div class="rule"><h3>Approximate size</h3><p>300 customers, 323 helpdesk organizations, 24 agents, 5,852 tickets, 23,789 ticket events, 2,060 survey responses and 3,136 sync attempts. All eight tables together are 428 KB, small enough to load in a browser in about a second and big enough that problems can't be spotted by eye.</p></div>
+    </div>
+  </section>
+
+  <section id="systems">
+    <h2>Systems and tables</h2>
+    <p class="lead">Eight tables from four systems. Learners see them grouped this way in the app, so they learn to ask which system a number came from.</p>
+    <div class="systems">
+      <div class="sys"><h3><i style="background:#C9937C"></i>CRM</h3><p>Who the customer is and what they pay for. The source of truth for plans.</p><ul><li>customers</li></ul></div>
+      <div class="sys"><h3><i style="background:var(--rose)"></i>Helpdesk</h3><p>Where support work happens.</p><ul><li>helpdesk_orgs</li><li>tickets</li><li>ticket_events</li><li>agents</li><li>sla_policies</li></ul></div>
+      <div class="sys"><h3><i style="background:#A88E83"></i>Survey tool</h3><p>Satisfaction ratings sent after a ticket is solved.</p><ul><li>csat_responses</li></ul></div>
+      <div class="sys"><h3><i style="background:var(--wine)"></i>Integration</h3><p>The nightly CRM to helpdesk plan sync, and every attempt it made.</p><ul><li>integration_sync_log</li></ul></div>
+    </div>
+    <div class="joins">
+      <b>How the tables connect</b>
+      <ul>
+        <li><code>helpdesk_orgs.crm_customer_id</code> to <code>customers.customer_id</code> (not always filled in, sometimes twice)</li>
+        <li><code>tickets.org_id</code> to <code>helpdesk_orgs.org_id</code>, and <code>tickets.assignee_id</code> to <code>agents.agent_id</code></li>
+        <li><code>ticket_events.ticket_id</code> to <code>tickets.ticket_id</code></li>
+        <li><code>csat_responses.ticket_id</code> to <code>tickets.ticket_id</code> (some point at tickets that don't exist)</li>
+        <li><code>integration_sync_log.customer_id</code> to <code>customers.customer_id</code></li>
+        <li><code>sla_policies</code> joins on plan tier and priority to give the response-time target</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="tables">
+    <h2>Columns</h2>
+    <p class="lead">Every table and column, with the traps marked. Click a table to open it.</p>
+
+    <details class="spec" open>
+      <summary><div><h3>customers</h3><p>One row per paying customer, from the CRM.</p></div><div class="meta"><span class="pill crm">CRM</span>300 rows<svg class="chev" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 8 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div></summary>
+      <div class="tbl"><table><thead><tr><th>Column</th><th>Type</th><th>What it holds</th></tr></thead><tbody>
+        <tr><td class="col">customer_id</td><td class="ty">text</td><td>CRM ID like <code>C-1042</code></td></tr>
+        <tr><td class="col">company_name</td><td class="ty">text</td><td>Invented company name</td></tr>
+        <tr><td class="col">plan_tier</td><td class="ty">text</td><td>basic, pro or enterprise. The correct plan.</td></tr>
+        <tr><td class="col">plan_changed_at</td><td class="ty">timestamp</td><td>When the plan last changed. Upgrades here should appear in the helpdesk the next night.<span class="trap">drift source</span></td></tr>
+        <tr><td class="col">account_owner</td><td class="ty">text</td><td>Customer success manager responsible for the account</td></tr>
+        <tr><td class="col">status</td><td class="ty">text</td><td>active or churned</td></tr>
+      </tbody></table></div>
+    </details>
+
+    <details class="spec">
+      <summary><div><h3>helpdesk_orgs</h3><p>The helpdesk's own copy of each customer.</p></div><div class="meta"><span class="pill hd">Helpdesk</span>323 rows<svg class="chev" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 8 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div></summary>
+      <div class="tbl"><table><thead><tr><th>Column</th><th>Type</th><th>What it holds</th></tr></thead><tbody>
+        <tr><td class="col">org_id</td><td class="ty">integer</td><td>Helpdesk ID</td></tr>
+        <tr><td class="col">crm_customer_id</td><td class="ty">text</td><td>Link to the CRM. Blank for trial accounts, mistyped for three orgs, and six customers have two orgs.<span class="trap">missing / duplicate</span></td></tr>
+        <tr><td class="col">org_name</td><td class="ty">text</td><td>Name as typed by support, sometimes different from the CRM. Trial accounts end in (trial).</td></tr>
+        <tr><td class="col">sla_tier</td><td class="ty">text</td><td>The plan the helpdesk thinks the customer has. Wrong when the sync failed.<span class="trap">wrong plan</span></td></tr>
+        <tr><td class="col">synced_at</td><td class="ty">timestamp</td><td>Last successful sync from the CRM</td></tr>
+      </tbody></table></div>
+    </details>
+
+    <details class="spec">
+      <summary><div><h3>tickets</h3><p>One row per support request.</p></div><div class="meta"><span class="pill hd">Helpdesk</span>5,852 rows<svg class="chev" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 8 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div></summary>
+      <div class="tbl"><table><thead><tr><th>Column</th><th>Type</th><th>What it holds</th></tr></thead><tbody>
+        <tr><td class="col">ticket_id</td><td class="ty">integer</td><td>Ticket number like <code>4821</code></td></tr>
+        <tr><td class="col">org_id</td><td class="ty">integer</td><td>Which customer</td></tr>
+        <tr><td class="col">requester_email</td><td class="ty">text</td><td>Who wrote in. Used to spot repeat contacts and duplicates.</td></tr>
+        <tr><td class="col">channel</td><td class="ty">text</td><td>email, chat, web or phone</td></tr>
+        <tr><td class="col">priority</td><td class="ty">text</td><td>urgent, high, normal or low</td></tr>
+        <tr><td class="col">category</td><td class="ty">text</td><td>Topic, typed by agents: <code>Billing</code>, <code>billing </code>, <code>BILLING</code>, <code>billing-issue</code>, blank, and so on.<span class="trap">messy labels</span></td></tr>
+        <tr><td class="col">status</td><td class="ty">text</td><td>open, pending, solved or closed</td></tr>
+        <tr><td class="col">assignee_id</td><td class="ty">integer</td><td>Agent working it. Some point at agents who have left.<span class="trap">stale owner</span></td></tr>
+        <tr><td class="col">created_at</td><td class="ty">timestamp</td><td>When it came in. UTC for every channel except phone, which was logged in New York time.<span class="trap">time zone</span></td></tr>
+        <tr><td class="col">solved_at</td><td class="ty">timestamp</td><td>Last time it was marked solved. Blank if still open.</td></tr>
+      </tbody></table></div>
+    </details>
+
+    <details class="spec">
+      <summary><div><h3>ticket_events</h3><p>Everything that happened on each ticket, in order.</p></div><div class="meta"><span class="pill hd">Helpdesk</span>23,789 rows<svg class="chev" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 8 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div></summary>
+      <div class="tbl"><table><thead><tr><th>Column</th><th>Type</th><th>What it holds</th></tr></thead><tbody>
+        <tr><td class="col">event_id</td><td class="ty">integer</td><td>Event ID</td></tr>
+        <tr><td class="col">ticket_id</td><td class="ty">integer</td><td>Which ticket</td></tr>
+        <tr><td class="col">event_type</td><td class="ty">text</td><td>created, auto_reply, public_reply, internal_note, status_change, reopened, merged<span class="trap">auto_reply</span></td></tr>
+        <tr><td class="col">actor</td><td class="ty">text</td><td>agent, customer or system</td></tr>
+        <tr><td class="col">agent_id</td><td class="ty">integer</td><td>Which agent, when the actor is an agent</td></tr>
+        <tr><td class="col">new_status</td><td class="ty">text</td><td>For status changes: the status it moved to</td></tr>
+        <tr><td class="col">event_at</td><td class="ty">timestamp</td><td>When it happened, always UTC</td></tr>
+      </tbody></table></div>
+    </details>
+
+    <details class="spec">
+      <summary><div><h3>agents</h3><p>The support team, past and present.</p></div><div class="meta"><span class="pill hd">Helpdesk</span>24 rows<svg class="chev" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 8 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div></summary>
+      <div class="tbl"><table><thead><tr><th>Column</th><th>Type</th><th>What it holds</th></tr></thead><tbody>
+        <tr><td class="col">agent_id</td><td class="ty">integer</td><td>Agent ID</td></tr>
+        <tr><td class="col">agent_name</td><td class="ty">text</td><td>Invented name</td></tr>
+        <tr><td class="col">team</td><td class="ty">text</td><td>Tier 1, Tier 2 or Enterprise</td></tr>
+        <tr><td class="col">deactivated_at</td><td class="ty">timestamp</td><td>When they left. Blank if still on the team.</td></tr>
+      </tbody></table></div>
+    </details>
+
+    <details class="spec">
+      <summary><div><h3>sla_policies</h3><p>The response-time promise for each plan and priority.</p></div><div class="meta"><span class="pill hd">Helpdesk</span>12 rows<svg class="chev" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 8 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div></summary>
+      <div class="tbl"><table><thead><tr><th>Column</th><th>Type</th><th>What it holds</th></tr></thead><tbody>
+        <tr><td class="col">plan_tier</td><td class="ty">text</td><td>basic, pro or enterprise</td></tr>
+        <tr><td class="col">priority</td><td class="ty">text</td><td>urgent, high, normal or low</td></tr>
+        <tr><td class="col">first_response_minutes</td><td class="ty">integer</td><td>Promised time to the first human reply. Enterprise urgent is 60, basic low is 1,440 (one day).</td></tr>
+        <tr><td class="col">resolution_hours</td><td class="ty">integer</td><td>Promised time to solve</td></tr>
+      </tbody></table></div>
+    </details>
+
+    <details class="spec">
+      <summary><div><h3>csat_responses</h3><p>Ratings customers gave after a ticket was solved.</p></div><div class="meta"><span class="pill sv">Survey tool</span>2,060 rows<svg class="chev" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 8 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div></summary>
+      <div class="tbl"><table><thead><tr><th>Column</th><th>Type</th><th>What it holds</th></tr></thead><tbody>
+        <tr><td class="col">response_id</td><td class="ty">integer</td><td>Response ID</td></tr>
+        <tr><td class="col">ticket_id</td><td class="ty">integer</td><td>The ticket rated. A few don't match any ticket, and some tickets were rated twice.<span class="trap">orphans / dupes</span></td></tr>
+        <tr><td class="col">rating</td><td class="ty">integer</td><td>1 to 5</td></tr>
+        <tr><td class="col">comment</td><td class="ty">text</td><td>Optional short comment</td></tr>
+        <tr><td class="col">submitted_at</td><td class="ty">timestamp</td><td>When it was submitted</td></tr>
+      </tbody></table></div>
+    </details>
+
+    <details class="spec">
+      <summary><div><h3>integration_sync_log</h3><p>Every attempt to copy a plan from the CRM to the helpdesk.</p></div><div class="meta"><span class="pill int">Integration</span>3,136 rows<svg class="chev" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 8 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div></summary>
+      <div class="tbl"><table><thead><tr><th>Column</th><th>Type</th><th>What it holds</th></tr></thead><tbody>
+        <tr><td class="col">sync_id</td><td class="ty">integer</td><td>Attempt ID</td></tr>
+        <tr><td class="col">customer_id</td><td class="ty">text</td><td>Which CRM customer was being synced</td></tr>
+        <tr><td class="col">run_at</td><td class="ty">timestamp</td><td>When the attempt ran</td></tr>
+        <tr><td class="col">attempt</td><td class="ty">integer</td><td>1 for the first try, 2 and 3 for retries</td></tr>
+        <tr><td class="col">status</td><td class="ty">text</td><td>success or failed</td></tr>
+        <tr><td class="col">http_status</td><td class="ty">integer</td><td>200 OK, 401 expired credentials, 404 org not found, 409 conflict, 429 rate limited, 500 server error, 504 timeout<span class="trap">error codes</span></td></tr>
+        <tr><td class="col">error_message</td><td class="ty">text</td><td>The error text the API sent back</td></tr>
+      </tbody></table></div>
+    </details>
+  </section>
+
+  <section id="problems">
+    <h2>Planted problems</h2>
+    <p class="lead">The mess learners have to find. Each one is a real thing that goes wrong on support teams, and each shows up in at least one case.</p>
+    <div class="probs">
+      <div class="prob"><span class="n">Problem 1</span><h3>Auto-replies counted as responses</h3><p>The "we got your message" email fires in seconds. A naive first-response time counts it, so the team looks fast and SLAs look met.</p><div class="where">ticket_events.event_type = 'auto_reply'</div></div>
+      <div class="prob"><span class="n">Problem 2</span><h3>Reopened tickets counted as solved</h3><p>About 7% of solved tickets get reopened, and integration tickets about 17%. Reports that only check the final status miss that the first fix didn't work.</p><div class="where">ticket_events.event_type = 'reopened'</div></div>
+      <div class="prob"><span class="n">Problem 3</span><h3>Wrong plan in the helpdesk</h3><p>About 20 customers upgraded in the CRM, but the helpdesk still has their old plan, so their tickets run on a slower SLA clock.</p><div class="where">customers.plan_tier vs helpdesk_orgs.sla_tier</div></div>
+      <div class="prob"><span class="n">Problem 4</span><h3>Failed syncs behind the drift</h3><p>The integration's credentials expired for 6 days in July (401 errors), and rate limiting (429) dropped some retries. That's why the plans drifted.</p><div class="where">integration_sync_log.http_status</div></div>
+      <div class="prob"><span class="n">Problem 5</span><h3>Phone tickets in the wrong time zone</h3><p>Phone tickets were logged in New York time while everything else is UTC, so every phone ticket looks 4 hours slower than it really was and the dashboard flags false SLA breaches.</p><div class="where">tickets.channel = 'phone'</div></div>
+      <div class="prob"><span class="n">Problem 6</span><h3>Messy category labels</h3><p>Agents type categories by hand, so one topic appears five ways, plus blanks. Volume reports undercount the real top issues.</p><div class="where">tickets.category</div></div>
+      <div class="prob"><span class="n">Problem 7</span><h3>Duplicate tickets</h3><p>Customers email, then open a chat about the same problem minutes later. Some got merged, many didn't, which inflates volume.</p><div class="where">same requester and topic within 30 minutes</div></div>
+      <div class="prob"><span class="n">Problem 8</span><h3>Tickets owned by people who left</h3><p>Three agents left mid-period. 30 of their tickets were never reassigned and are quietly aging.</p><div class="where">agents.deactivated_at is not null</div></div>
+      <div class="prob"><span class="n">Problem 9</span><h3>Untrustworthy survey data</h3><p>Some survey responses point at tickets that don't exist, and some tickets were rated twice. Averages that ignore this are off.</p><div class="where">csat_responses.ticket_id</div></div>
+      <div class="prob"><span class="n">Problem 10</span><h3>Customers missing from one system</h3><p>14 trial accounts have no CRM link, 3 links are mistyped, and 6 customers have two helpdesk orgs, which splits their history.</p><div class="where">helpdesk_orgs.crm_customer_id</div></div>
+    </div>
+  </section>
+
+  <section id="cases">
+    <h2>The 15 cases</h2>
+    <p class="lead">Ordered so each case teaches one new idea. Foundations use one or two tables. Core adds time math and events. Advanced combines systems to answer the questions a support director actually asks.</p>
+    <div class="filters" role="group" aria-label="Filter by level">
+      <button type="button" aria-pressed="true" data-f="all">All 15</button>
+      <button type="button" aria-pressed="false" data-f="f">Foundations</button>
+      <button type="button" aria-pressed="false" data-f="c">Core</button>
+      <button type="button" aria-pressed="false" data-f="a">Advanced</button>
+    </div>
+    <div id="caselist"></div>
+  </section>
+
+  <section id="checking">
+    <h2>Answer checking</h2>
+    <p class="lead">How the app decides a learner's result matches the expected one. These are the rules I recommended earlier, now applied to this data.</p>
+    <div class="rules">
+      <div class="rule"><h3>Row order doesn't count</h3><p>Unless the case asks for a sorted list (like case 01's oldest-first queue), any order passes.</p></div>
+      <div class="rule"><h3>Column names don't count</h3><p>Only the values, column by column, in order. Naming a column <code>n</code> instead of <code>tickets</code> still passes.</p></div>
+      <div class="rule"><h3>Numbers match to the answer key's precision</h3><p>If the key says 153.3, a result of 153.27 passes too. Cases say how to round when it matters.</p></div>
+      <div class="rule"><h3>Duplicate rows do count</h3><p>Returning a ticket twice is a real bug, so it fails, and the tutor says which rows were repeated.</p></div>
+      <div class="rule"><h3>Time units are stated in the case</h3><p>Durations are always asked for in minutes, so nobody fails on hours versus minutes.</p></div>
+      <div class="rule"><h3>Mismatch explanations come from the comparison</h3><p>The app works out which rows are missing, extra or different. The AI tutor only puts that into plain words.</p></div>
+    </div>
+  </section>
+
+  <section id="decide">
+    <div class="decide">
+      <h2>Decisions</h2>
+      <ol>
+        <li><b>The company and setup.</b> Approved.</li>
+        <li><b>The 8 tables.</b> Approved.</li>
+        <li><b>The 10 planted problems.</b> Approved.</li>
+        <li><b>The 15 cases.</b> Approved. More feedback after you test them in the app.</li>
+        <li><b>The answer-checking rules.</b> Approved for now.</li>
+      </ol>
+      <p class="note" style="color:#D7AFA9">Generated and verified: every case has a reference answer, and each case's trap was tested to make sure falling into it gives a different result.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  var CASES = [
+    {n:'01',l:'f',t:'Today\'s urgent queue',a:'List every open urgent ticket, oldest first, so the morning lead knows where to start.',sk:['SELECT','WHERE','ORDER BY'],tb:'tickets',out:'ticket_id, org_id, created_at (sorted oldest first)',trap:'Pending tickets count as open work too.'},
+    {n:'02',l:'f',t:'Tickets owned by people who left',a:'Find open tickets still assigned to agents who no longer work here, with how many days each has waited.',sk:['JOIN','IS NOT NULL','date math'],tb:'tickets, agents',out:'ticket_id, agent_name, days_waiting',trap:'Deactivated agents still look normal in the tickets table.'},
+    {n:'03',l:'f',t:'What are customers writing in about?',a:'Count tickets by category for the last quarter. Leadership wants the top five.',sk:['LOWER','TRIM','CASE','GROUP BY'],tb:'tickets',out:'category, tickets',trap:'One topic is spelled five ways, plus blanks.'},
+    {n:'04',l:'f',t:'Customers the CRM doesn\'t know',a:'Which helpdesk organizations have no matching customer in the CRM?',sk:['LEFT JOIN','IS NULL'],tb:'helpdesk_orgs, customers',out:'org_id, org_name',trap:'Blank links are easy to spot. Three mistyped IDs, like C-1O07 with a letter O, only show up with a join.'},
+    {n:'05',l:'c',t:'Weekly volume by channel',a:'Show tickets per week for each channel, so staffing can see when chat demand rises.',sk:['DATE_TRUNC','GROUP BY','pivot with CASE'],tb:'tickets',out:'week, email, chat, web, phone',trap:'Turning channels into columns takes COUNT with FILTER, or SUM with CASE.'},
+    {n:'06',l:'c',t:'How fast do we really reply?',a:'For each priority, find the median minutes to the first reply from a person.',sk:['CTE','MIN','MEDIAN','filtering events'],tb:'tickets, ticket_events',out:'priority, median_first_reply_minutes',trap:'Auto-replies arrive in seconds and make the team look instant.'},
+    {n:'07',l:'c',t:'Two clocks for one ticket',a:'Every ticket also has a created event. Find tickets that disagree with their own created event, and by how much.',sk:['JOIN','date_diff','data quality'],tb:'tickets, ticket_events',out:'channel, mismatched_tickets, minutes_off',trap:'All 624 are phone tickets, exactly 240 minutes off: a time zone bug that also inflated case 06.'},
+    {n:'08',l:'c',t:'Solved, then reopened',a:'Which categories have the highest reopen rate? Only include categories with at least 50 solved tickets.',sk:['event logic','GROUP BY','HAVING'],tb:'tickets, ticket_events',out:'category, solved, reopened, reopen_rate',trap:'The final status says solved even when a ticket was reopened along the way.'},
+    {n:'09',l:'c',t:'The same problem, twice',a:'Find likely duplicate tickets: same requester, same topic, opened within 30 minutes of each other.',sk:['self-join or LAG','time windows'],tb:'tickets',out:'first_ticket, duplicate_ticket, minutes_apart',trap:'Merged tickets are already handled and should be left out.'},
+    {n:'10',l:'a',t:'Customers on the wrong clock',a:'Find customers whose helpdesk plan doesn\'t match the CRM, and how many of their tickets were judged against the wrong SLA.',sk:['JOIN','CASE','comparing systems'],tb:'customers, helpdesk_orgs, tickets',out:'customer_id, crm_plan, helpdesk_plan, affected_tickets',trap:'Customers with two helpdesk orgs get counted twice.'},
+    {n:'11',l:'a',t:'Why the syncs failed',a:'Count failed syncs by week and error code. What happened in July?',sk:['GROUP BY','date buckets','CASE'],tb:'integration_sync_log',out:'week, http_status, failures',trap:'Retries mean one bad night shows up as three failed attempts. Count syncs, not attempts.'},
+    {n:'12',l:'a',t:'Still stuck after retries',a:'For each customer, look only at the most recent sync attempt. Which ones are still failing today?',sk:['ROW_NUMBER','PARTITION BY','latest record'],tb:'integration_sync_log, customers',out:'customer_id, last_attempt_at, http_status, error_message',trap:'An old failure followed by a success is fixed, not stuck.'},
+    {n:'13',l:'a',t:'Came back within a week',a:'Find customers who opened a new ticket in the same category within 7 days of one being solved.',sk:['LAG','window functions','date math'],tb:'tickets',out:'requester_email, category, solved_at, next_ticket_at',trap:'Unless labels are cleaned first, repeats in "billing " and "Billing" are missed.'},
+    {n:'14',l:'a',t:'Satisfaction you can trust',a:'Average CSAT by agent, counting each ticket once and ignoring responses that don\'t match a real ticket.',sk:['ROW_NUMBER','dedupe','INNER JOIN'],tb:'csat_responses, tickets, agents',out:'agent_name, rated_tickets, avg_rating',trap:'Double ratings and orphan responses skew the averages.'},
+    {n:'15',l:'a',t:'The real SLA report',a:'The dashboard says 92.3% of tickets met their first-response SLA. The real number is 84.0%. Count the tickets the dashboard judged wrong, by cause.',sk:['multiple CTEs','CASE','combining every fix'],tb:'all helpdesk tables, customers, integration_sync_log',out:'likely_cause, breached_tickets',trap:'Three traps at once. Result: 645 auto_reply_counted, 277 timezone_shift, 26 wrong_plan_tier.'}
+  ];
+  var LV = {f:['Foundations','f'],c:['Core','c'],a:['Advanced','a']};
+  var list = document.getElementById('caselist');
+  list.innerHTML = CASES.map(function(c){
+    return '<article class="case" data-l="'+c.l+'"><span class="no">'+c.n+'</span><div><h3>'+c.t+'</h3><p class="ask">'+c.a+'</p><div class="tags"><span class="lvl '+LV[c.l][1]+'">'+LV[c.l][0]+'</span>'+c.sk.map(function(s){return '<span>'+s+'</span>';}).join('')+'</div></div>'+
+      '<div class="side"><dl><div><dt>Tables</dt><dd><code>'+c.tb+'</code></dd></div><div><dt>Returns</dt><dd><code>'+c.out+'</code></dd></div><div><dt>The trap</dt><dd>'+c.trap+'</dd></div></dl></div></article>';
+  }).join('');
+  var btns = document.querySelectorAll('.filters button');
+  btns.forEach(function(b){ b.addEventListener('click', function(){
+    btns.forEach(function(x){ x.setAttribute('aria-pressed', x===b ? 'true':'false'); });
+    document.querySelectorAll('.case').forEach(function(el){ el.hidden = !(b.dataset.f === 'all' || el.dataset.l === b.dataset.f); });
+  }); });
+})();
+</script>

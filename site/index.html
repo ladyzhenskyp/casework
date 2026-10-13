@@ -1,0 +1,696 @@
+<title>Casework Square</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..800&family=Unbounded:wght@600&family=Geist+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: a SaaS launch page. Wine stage hero with a live 3D reconciliation lens, cream product sections, wine close. */
+:root{
+  color-scheme: light;
+  --stage:#1F080E;      /* deep wine stage */
+  --stage-2:#2E0D16;
+  --wine:#7A1F31;       /* action burgundy */
+  --wine-hi:#922A3E;
+  --cream:#FBF4EF;      /* page ground */
+  --blush:#F5DEDA;      /* panels */
+  --blush-2:#EFCFC9;
+  --nude:#D9B5A2;
+  --rose:#E59AA6;
+  --cocoa:#2F1D18;      /* text */
+  --mocha:#77584C;      /* secondary text */
+  --line:rgba(47,29,24,.12);
+  --on-stage:#FBEAE6;
+  --on-stage-2:#D7AFA9;
+  --ok:#336B48;
+  --c1:#F2B8C0;--c2:#E07A8B;--c3:#D9B5A2;--c4:#B8506A;--c5:#F6E3D8; /* cause colors */
+  --sans:"Geist","Helvetica Neue",Arial,sans-serif;
+  --mono:"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --gut:clamp(16px,4vw,56px);
+  --max:1280px;
+  --r:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scrollbar-color:var(--wine) var(--blush)}
+body{margin:0;background:var(--cream);color:var(--cocoa);font-family:var(--sans);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--wine);color:#fff}
+:focus-visible{outline:2px solid var(--wine);outline-offset:3px;border-radius:6px}
+.stage :focus-visible,.closer :focus-visible{outline-color:var(--rose)}
+a{color:inherit;text-underline-offset:.2em}
+.wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--gut)}
+h1,h2,h3{margin:0;text-wrap:balance}
+p{margin:0}
+.mono{font-family:var(--mono)}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;top:calc(env(safe-area-inset-top,0px) + 14px);left:0;right:0;z-index:50;pointer-events:none}
+.nav .wrap{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px}
+.nav::before{content:"";position:absolute;inset:-14px 0 -12px;background:rgba(251,244,239,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);opacity:0;transition:opacity .35s;pointer-events:none}
+.nav.light::before{opacity:1}
+.nav .cta-pill{justify-self:end;pointer-events:auto}
+.nav .nav-links{justify-self:center;padding:8px 9px}
+.links{display:flex;gap:4px}
+.pill{pointer-events:auto;display:flex;align-items:center;gap:4px;padding:6px;border-radius:12px;background:rgba(46,13,22,.72);border:1px solid rgba(251,234,230,.14);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:background .35s,border-color .35s,box-shadow .35s}
+.nav.light .pill{background:rgba(251,244,239,.86);border-color:var(--line);box-shadow:0 8px 24px -16px rgba(47,29,24,.4)}
+.logo{pointer-events:auto;justify-self:start;display:flex;align-items:center;gap:11px;padding:6px 0;font-family:"Unbounded",var(--sans);font-weight:600;font-size:19px;letter-spacing:-.02em;line-height:1;color:var(--on-stage);text-decoration:none;transition:color .35s;position:relative}
+.nav.light .logo{color:var(--cocoa)}
+.logo svg{width:26px;height:26px}
+.nav .wrap > *{position:relative}
+.links a{color:var(--on-stage-2);text-decoration:none;font-size:14px;font-weight:500;padding:6px 12px;border-radius:5px;transition:background .2s,color .2s}
+.links a:hover{background:rgba(251,234,230,.1);color:var(--on-stage)}
+.nav.light .links a{color:var(--mocha)}
+.nav.light .links a:hover{background:var(--blush);color:var(--cocoa)}
+.cta-pill{display:inline-flex;align-items:center;gap:8px;background:var(--on-stage);color:var(--stage);font-weight:600;font-size:14px;padding:9px 16px;border-radius:6px;text-decoration:none;transition:transform .2s,background .2s}
+.nav.light .cta-pill{background:var(--wine);color:#fff}
+.cta-pill:hover{transform:translateY(-1px)}
+.cta-pill svg{width:14px;height:14px}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:10px;height:46px;padding:0 20px;border-radius:8px;font:600 15px/1 var(--sans);letter-spacing:-.005em;text-decoration:none;cursor:pointer;border:0;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s,background .2s}
+.btn svg{width:14px;height:14px}
+.btn.primary{background:var(--on-stage);color:var(--stage);box-shadow:0 10px 30px -12px rgba(229,154,166,.0),0 1px 2px rgba(0,0,0,.3)}
+.btn.primary:hover{transform:translateY(-2px);box-shadow:0 14px 28px -14px rgba(0,0,0,.55)}
+.btn.ghost{background:rgba(251,234,230,.04);color:var(--on-stage);box-shadow:inset 0 0 0 1px rgba(251,234,230,.2)}
+.btn.ghost:hover{background:rgba(251,234,230,.08)}
+.btn.wine{background:var(--wine);color:#fff;box-shadow:0 1px 2px rgba(47,29,24,.3)}
+.btn.wine:hover{background:var(--wine-hi);transform:translateY(-2px)}
+
+/* ---------- hero stage ---------- */
+.stage{position:relative;background:radial-gradient(120% 90% at 70% 45%,#3A1019 0%,var(--stage) 55%,#14050A 100%);color:var(--on-stage);overflow:hidden;isolation:isolate}
+#lens{position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block}
+.stage .wrap{position:relative;z-index:1;min-height:min(900px,100svh);display:grid;grid-template-rows:1fr auto;padding-block:calc(env(safe-area-inset-top,0px) + 96px) 36px}
+.meta-line{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--mono);font-size:12.5px;color:var(--on-stage-2)}
+.meta-line span{display:inline-flex;align-items:center;gap:8px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--rose);box-shadow:0 0 0 3px rgba(229,154,166,.18)}
+.hero-copy{align-self:center;max-width:860px;padding-block:40px}
+.hero-copy h1{font-size:clamp(42px,5.6vw,86px);line-height:.95;letter-spacing:-.045em;font-weight:700;color:var(--on-stage)}
+.hero-copy h1 em{font-style:normal;color:var(--rose)}
+.hero-copy p{margin-top:24px;font-size:clamp(16px,1.25vw,18px);line-height:1.5;max-width:38ch;color:#E4C2BC;letter-spacing:-.005em}
+.hero-actions{margin-top:30px;display:flex;flex-wrap:wrap;gap:12px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;font-family:var(--mono);font-size:12px;color:var(--on-stage-2)}
+.legend .lbl{margin-right:6px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:6px 11px;border-radius:6px;background:rgba(251,234,230,.06);border:1px solid rgba(251,234,230,.12)}
+.chip i{width:8px;height:8px;border-radius:2px;display:inline-block}
+.chip b{font-weight:600;color:var(--on-stage)}
+.scene-note{font-family:var(--mono);font-size:11px;color:rgba(215,175,169,.7);margin-left:auto}
+
+/* ---------- section scaffolding ---------- */
+.sec{padding-block:clamp(80px,10vw,150px)}
+.sec-head{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(24px,4vw,72px);align-items:end;margin-bottom:clamp(40px,5vw,64px)}
+.sec-head h2{font-size:clamp(38px,5vw,72px);line-height:1;letter-spacing:-.04em;font-weight:700}
+.sec-head p{font-size:18px;color:var(--mocha);max-width:46ch}
+
+/* ---------- product window ---------- */
+.window{border-radius:18px;background:#fff;border:1px solid var(--line);box-shadow:0 1px 2px rgba(47,29,24,.06),0 40px 80px -40px rgba(74,20,32,.45);overflow:hidden}
+.win-bar{display:flex;align-items:center;gap:14px;height:46px;padding:0 16px;border-bottom:1px solid var(--line);background:var(--cream)}
+.lights{display:flex;gap:7px}.lights i{width:11px;height:11px;border-radius:50%;background:var(--blush-2)}
+.url{flex:1;max-width:420px;margin-inline:auto;height:28px;border-radius:8px;background:#fff;border:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--mocha);display:flex;align-items:center;justify-content:center}
+.app{display:grid;grid-template-columns:230px minmax(0,1fr) 300px;min-height:560px}
+.side{border-right:1px solid var(--line);padding:18px 12px;background:#FDF9F6}
+.side h4{margin:0 8px 10px;font-size:11px;font-weight:600;color:var(--mocha);letter-spacing:.04em;text-transform:uppercase}
+.case-link{display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;font-size:13.5px;color:var(--cocoa)}
+.case-link .n{font-family:var(--mono);font-size:11.5px;color:var(--mocha);width:20px}
+.case-link .st{margin-left:auto;width:16px;height:16px;border-radius:50%;border:1.5px solid var(--nude);flex:none;display:grid;place-items:center}
+.case-link .st.done{background:var(--ok);border-color:var(--ok)}
+.case-link .st.done svg{width:9px;height:9px}
+.case-link .st.part{border-color:var(--rose);background:conic-gradient(var(--rose) 0 50%,transparent 0)}
+.case-link.on{background:var(--blush);font-weight:600}
+.main{display:grid;grid-template-rows:auto auto 1fr;min-width:0}
+.brief{padding:20px 24px 16px;border-bottom:1px solid var(--line)}
+.brief .tags{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.tag{font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:6px;background:var(--blush);color:var(--wine)}
+.tag.n{background:var(--cream);color:var(--mocha);border:1px solid var(--line)}
+.brief h3{font-size:20px;letter-spacing:-.02em;font-weight:650}
+.brief p{font-size:14px;color:var(--mocha);margin-top:6px;max-width:68ch}
+.editor{background:var(--stage);color:#F3D9D4;font-family:var(--mono);font-size:13px;line-height:1.7;padding:16px 0 16px;position:relative;min-width:0}
+.ed-top{display:flex;justify-content:space-between;align-items:center;padding:0 18px 10px;font-size:11.5px;color:#B88D86}
+.run{display:inline-flex;align-items:center;gap:7px;background:var(--rose);color:var(--stage);font:600 12.5px/1 var(--sans);padding:7px 12px;border-radius:7px;border:0}
+.run svg{width:10px;height:10px}
+.code{display:grid;grid-template-columns:38px minmax(0,1fr);overflow-x:auto}
+.gutter{color:#A27B76;text-align:right;padding-right:12px;user-select:none}
+.code pre{margin:0;white-space:pre}
+.k{color:#F49AAA}.s{color:#E8C4A4}.f{color:#F7D5CC}.c{color:#BC958E;font-style:italic}.nn{color:#F0B79F}
+.caret{display:inline-block;width:7px;height:15px;background:var(--rose);vertical-align:-3px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.results{padding:14px 24px 18px;min-width:0}
+.res-top{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-bottom:10px;font-size:13px}
+.status{display:inline-flex;align-items:center;gap:7px;font-weight:600;padding:5px 10px;border-radius:6px;background:#E5F0E8;color:var(--ok);font-size:12.5px}
+.status svg{width:12px;height:12px}
+.res-top .ms{margin-left:auto;font-family:var(--mono);font-size:11.5px;color:var(--mocha)}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table.grid{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12.5px;font-variant-numeric:tabular-nums;color:var(--cocoa)}
+table.grid th{text-align:left;font-weight:500;color:var(--mocha);background:#FDF9F6;padding:8px 12px;border-bottom:1px solid var(--line)}
+table.grid td{padding:8px 12px;border-bottom:1px solid var(--line)}
+table.grid tr:last-child td{border-bottom:0}
+.cause{display:inline-flex;align-items:center;gap:7px}
+.cause i{width:8px;height:8px;border-radius:2px}
+.tutor{border-left:1px solid var(--line);padding:18px;display:flex;flex-direction:column;gap:12px;background:#FDF9F6}
+.tutor h4{margin:0;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px}
+.tutor h4 .badge{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--mocha);background:var(--cream);border:1px solid var(--line);padding:2px 7px;border-radius:5px;margin-left:auto}
+.step{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fff;font-size:13px;line-height:1.5}
+.step .lv{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:600;color:var(--wine);margin-bottom:6px}
+.step .lv span{font-family:var(--mono);font-weight:500;color:var(--mocha)}
+.step.locked{background:transparent;color:var(--mocha);border-style:dashed}
+.step.locked .lv{color:var(--mocha)}
+.step.locked svg{width:12px;height:12px}
+.hint-btn{margin-top:auto;height:38px;border-radius:9px;border:1px solid var(--line);background:#fff;font:600 13px var(--sans);color:var(--cocoa)}
+
+/* ---------- statement ---------- */
+.statement{padding-block:clamp(80px,12vw,180px)}
+.statement p{font-size:clamp(34px,4.6vw,68px);line-height:1.06;letter-spacing:-.04em;font-weight:650;max-width:22ch}
+.statement .w{color:var(--cocoa)}
+.statement .hl{color:var(--wine)}
+
+/* ---------- live cards ---------- */
+.live{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.card{border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:18px;min-height:460px;min-width:0}
+.card.card-a{background:var(--stage);color:var(--on-stage)}
+.card.card-b{background:var(--blush)}
+.card.card-c{background:#fff;border:1px solid var(--line)}
+.card h3{font-size:24px;letter-spacing:-.03em;font-weight:650;line-height:1.1}
+.card .sub{font-size:15px;color:var(--mocha)}
+.card.card-a .sub{color:var(--on-stage-2)}
+.card .live-tag{font-family:var(--mono);font-size:11px;display:inline-flex;align-items:center;gap:7px;color:var(--mocha)}
+.card.card-a .live-tag{color:var(--on-stage-2)}
+.live-tag i{width:7px;height:7px;border-radius:50%;background:#58B07A;box-shadow:0 0 0 3px rgba(88,176,122,.2)}
+.demo{margin-top:auto}
+.card.card-b .demo{margin-top:8px}
+/* hint ladder demo */
+.ladder{display:grid;gap:8px}
+.rung{border-radius:12px;padding:12px 14px;background:rgba(251,234,230,.07);border:1px solid rgba(251,234,230,.12);font-size:13.5px;line-height:1.45;transition:background .3s,opacity .3s}
+.rung .lv{font-family:var(--mono);font-size:11px;color:var(--rose);margin-bottom:4px}
+.rung.hidden-step{opacity:.38}
+.rung.hidden-step .txt{filter:blur(4px)}
+.rung.never{border-style:dashed;background:transparent;color:var(--on-stage-2);border-color:rgba(251,234,230,.3)}
+.rung.never .lv{color:var(--on-stage-2)}
+.ladder-btn{height:42px;border-radius:8px;border:0;background:var(--on-stage);color:var(--stage);font:600 14px var(--sans);cursor:pointer;margin-top:4px}
+.ladder-btn:disabled{opacity:.4;cursor:default}
+/* checker demo */
+.seg{display:inline-flex;background:#fff;border-radius:10px;padding:4px;border:1px solid var(--line)}
+.seg button{border:0;background:transparent;font:600 13px var(--mono);padding:8px 14px;border-radius:6px;color:var(--mocha);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--wine);color:#fff}
+.meter{margin-top:16px;background:#fff;border-radius:14px;padding:16px;border:1px solid var(--line)}
+.meter .row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:10px}
+.meter .row b{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.bar{height:10px;border-radius:999px;background:var(--blush);overflow:hidden}
+.bar span{display:block;height:100%;width:100%;background:var(--ok);border-radius:999px;transition:width .6s cubic-bezier(.2,.8,.2,1),background .3s}
+.verdict{margin-top:12px;font-size:13.5px;line-height:1.5;min-height:62px}
+.verdict b{color:var(--wine)}
+.verdict.ok b{color:var(--ok)}
+/* progress demo */
+.cells{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.cell{aspect-ratio:1;border-radius:9px;background:var(--cream);border:1px solid var(--line);display:grid;place-items:center;font-family:var(--mono);font-size:11px;color:var(--mocha);max-width:100%}
+.cell.s{background:var(--wine);color:#fff;border-color:transparent}
+.cell.h{background:var(--rose);color:var(--stage);border-color:transparent}
+.cell.p{background:var(--blush);color:var(--wine)}
+.key{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:12px;color:var(--mocha)}
+.key span{display:inline-flex;align-items:center;gap:6px}
+.key i{width:10px;height:10px;border-radius:3px;display:inline-block}
+
+/* ---------- curriculum ---------- */
+.cases{border-top:1px solid var(--line)}
+.case-row{display:grid;grid-template-columns:70px minmax(0,1.3fr) minmax(0,1fr) 120px;gap:20px;align-items:center;padding:20px 4px;border-bottom:1px solid var(--line);transition:background .2s,padding .25s}
+.case-row:hover{background:#fff}
+.case-row .no{font-family:var(--mono);font-size:14px;color:var(--mocha)}
+.case-row .t{font-weight:600;font-size:18px;letter-spacing:-.015em}
+.case-row .t span{display:block;font-weight:400;font-size:14.5px;color:var(--mocha);letter-spacing:0}
+.case-row .sk{font-family:var(--mono);font-size:12.5px;color:var(--mocha)}
+.lvl{justify-self:end;font-size:12px;font-weight:600;padding:5px 11px;border-radius:6px}
+.lvl.l1{background:var(--cream);border:1px solid var(--line);color:var(--mocha)}
+.lvl.l2{background:var(--blush);color:var(--wine)}
+.lvl.l3{background:var(--wine);color:#fff}
+.case-row:target{background:var(--blush)}
+
+/* ---------- closer ---------- */
+.closer{background:var(--stage);color:var(--on-stage);border-radius:28px 28px 0 0;margin-top:clamp(40px,6vw,80px)}
+.closer .wrap{padding-block:clamp(80px,10vw,140px) 40px}
+.closer h2{font-size:clamp(48px,8vw,124px);line-height:.95;letter-spacing:-.05em;font-weight:700;max-width:12ch}
+.closer-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:40px;align-items:end}
+.closer p{color:var(--on-stage-2);max-width:44ch;margin-bottom:24px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 20px;font-size:15px;margin-bottom:30px}
+.facts dt{font-family:var(--mono);font-size:12px;color:var(--on-stage-2);padding-top:3px}
+.facts dd{margin:0}
+.foot{margin-top:clamp(60px,8vw,110px);padding-top:22px;border-top:1px solid rgba(251,234,230,.12);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--on-stage-2)}
+
+/* ---------- responsive ---------- */
+@media (max-width:1080px){
+  .app{grid-template-columns:200px minmax(0,1fr)}
+  .tutor{display:none}
+}
+@media (max-width:900px){
+  .sec-head,.closer-grid{grid-template-columns:minmax(0,1fr)}
+  .live{grid-template-columns:minmax(0,1fr)}
+  .card{min-height:0}
+  .links,.nav-links{display:none}
+  .nav .wrap{grid-template-columns:1fr auto}
+  .case-row{grid-template-columns:44px minmax(0,1fr) auto}
+  .case-row .sk{display:none}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{display:none}
+  .scene-note{display:none}
+  .legend{margin-top:300px}
+  .btn{height:48px;padding:0 20px;font-size:15px}
+  .win-bar .url{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .caret{animation:none}
+  .btn,.case-row,.bar span{transition:none}
+}
+</style>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Casework home">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 1 22 7v10l-10 6L2 17V7z" fill="#7A1F31" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 1v22M2 7l20 10M22 7 2 17" stroke="#E59AA6" stroke-width="1" opacity=".85"/></svg>
+      <span>casework</span>
+    </a>
+    <div class="pill nav-links">
+      <nav class="links" aria-label="Main">
+        <a href="#workspace">Workspace</a>
+        <a href="#features">How it works</a>
+        <a href="#cases">Cases</a>
+      </nav>
+    </div>
+    <a class="cta-pill" href="#case-01">Start case 01
+      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9m-3.5-4L12 8l-3.5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="stage" aria-labelledby="h1">
+    <canvas id="lens" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div class="hero-copy">
+        <h1 id="h1">SQL practice <br><em>on real ops data.</em></h1>
+        <p>Real support operations cases on messy data. Write SQL in your browser and get hints from an AI tutor, never the answer.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#case-01">Start case 01
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9m-3.5-4L12 8l-3.5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="btn ghost" href="#workspace">See the workspace</a>
+        </div>
+      </div>
+      <div class="legend" aria-label="Case 15: tickets the SLA dashboard judged wrong, by cause">
+        <span class="lbl">Case 15: tickets the dashboard got wrong</span>
+        <span class="chip"><i style="background:var(--c1)"></i>auto_reply_counted <b>645</b></span>
+        <span class="chip"><i style="background:var(--c2)"></i>timezone_shift <b>277</b></span>
+        <span class="chip"><i style="background:var(--c4)"></i>wrong_plan_tier <b>26</b></span>
+        <span class="scene-note">Synthetic data</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="workspace" aria-labelledby="ws-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="ws-h">Write the query. See if the rows match.</h2>
+        <p>Every case runs on a small benefits database right in the browser. Your result is compared to the expected rows, so any correct query passes.</p>
+      </div>
+
+      <div class="window" id="win">
+        <div class="win-bar"><div class="lights"><i></i><i></i><i></i></div><div class="url">casework.app/cases/14</div></div>
+        <div class="app">
+          <aside class="side" aria-label="Case list">
+            <h4>Benefits enrollment</h4>
+            <div class="case-link"><span class="n">11</span>Wrong pay period<span class="st done"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5.2 4.2 7.4 8 3" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="case-link"><span class="n">12</span>Missing dependents<span class="st done"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5.2 4.2 7.4 8 3" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="case-link"><span class="n">13</span>Duplicate members<span class="st part"></span></div>
+            <div class="case-link on"><span class="n">14</span>Carrier file mismatch<span class="st"></span></div>
+            <div class="case-link"><span class="n">15</span>Late enrollments<span class="st"></span></div>
+            <div class="case-link"><span class="n">16</span>Latest election<span class="st"></span></div>
+            <div class="case-link"><span class="n">17</span>Coverage gaps<span class="st"></span></div>
+            <div class="case-link"><span class="n">18</span>Month over month<span class="st"></span></div>
+          </aside>
+
+          <div class="main">
+            <div class="brief">
+              <div class="tags"><span class="tag">Case 14</span><span class="tag n">CTE</span><span class="tag n">LEFT JOIN</span><span class="tag n">CASE</span></div>
+              <h3>The carrier's file disagrees with our enrollment records</h3>
+              <p>Find every employee whose coverage doesn't match the carrier, and group the mismatches by likely cause before the October invoice is paid.</p>
+            </div>
+            <div class="editor">
+              <div class="ed-top"><span>query.sql</span><button class="run" type="button" tabindex="-1"><svg viewBox="0 0 10 10"><path d="M2 1l7 4-7 4z" fill="currentColor"/></svg>Run</button></div>
+              <div class="code"><div class="gutter" id="gut"></div><pre id="sql"></pre></div>
+            </div>
+            <div class="results">
+              <div class="res-top"><span class="status" id="status"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.3 5 8.8 9.5 3.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="status-t">5 of 5 rows match</span></span><span class="ms">DuckDB &middot; 41 ms</span></div>
+              <div class="tbl-wrap">
+                <table class="grid">
+                  <thead><tr><th>likely_cause</th><th>employees</th></tr></thead>
+                  <tbody id="rows">
+                    <tr><td><span class="cause"><i style="background:var(--c1)"></i>not_on_carrier_file</span></td><td>9</td></tr>
+                    <tr><td><span class="cause"><i style="background:var(--c2)"></i>termed_still_covered</span></td><td>6</td></tr>
+                    <tr><td><span class="cause"><i style="background:var(--c3)"></i>dependent_missing</span></td><td>4</td></tr>
+                    <tr><td><span class="cause"><i style="background:var(--c4)"></i>plan_mismatch</span></td><td>3</td></tr>
+                    <tr><td><span class="cause"><i style="background:var(--c5);outline:1px solid var(--nude)"></i>duplicate_on_carrier</span></td><td>2</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <aside class="tutor" aria-label="AI tutor">
+            <h4>Tutor <span class="badge">2 of 3 hints used</span></h4>
+            <div class="step"><div class="lv">Nudge <span>level 1</span></div>Compare everyone who elected coverage against the carrier file, including people the carrier never heard of.</div>
+            <div class="step"><div class="lv">Structure <span>level 2</span></div>A CTE for this year's elections, then a LEFT JOIN to the carrier. NULLs on the carrier side are your first group.</div>
+            <div class="step locked"><div class="lv"><svg viewBox="0 0 12 12" fill="none"><rect x="2.5" y="5.5" width="7" height="5" rx="1.2" stroke="currentColor" stroke-width="1.2"/><path d="M4 5.5V4a2 2 0 0 1 4 0v1.5" stroke="currentColor" stroke-width="1.2"/></svg>Skeleton <span>level 3</span></div>A partial query with blanks to fill in.</div>
+            <button class="hint-btn" type="button" tabindex="-1">Show level 3 hint</button>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="statement" aria-label="What makes Casework different">
+    <div class="wrap">
+      <p id="statement">Every case is a request an ops team actually gets: <span class="hl">terminated employees still covered,</span> <span class="hl">dependents the carrier never received,</span> and <span class="hl">a deduction keyed in dollars instead of cents.</span></p>
+    </div>
+  </section>
+
+  <section class="sec" id="features" aria-labelledby="ft-h" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="ft-h">Built to teach, not to hand out answers</h2>
+        <p>Try the two parts that make Casework different. These run right here on the page.</p>
+      </div>
+      <div class="live">
+        <article class="card card-a">
+          <h3>Hints unlock one level at a time</h3>
+          <p class="sub">The AI tutor sees your schema, query and error. It is instructed never to write the finished solution.</p>
+          <div class="demo">
+            <div class="ladder" id="ladder">
+              <div class="rung"><div class="lv">Level 1 &middot; Nudge</div><div class="txt">You're comparing two sources. Start from everyone who elected coverage.</div></div>
+              <div class="rung hidden-step"><div class="lv">Level 2 &middot; Structure</div><div class="txt">A CTE, then a LEFT JOIN to the carrier file.</div></div>
+              <div class="rung hidden-step"><div class="lv">Level 3 &middot; Skeleton</div><div class="txt">SELECT &hellip; CASE WHEN c.member_id IS NULL THEN ____</div></div>
+              <div class="rung never"><div class="lv">Full solution</div><div class="txt">Never unlocks. You write the final query.</div></div>
+              <button class="ladder-btn" id="ladder-btn" type="button">Get the next hint</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card-b">
+          <h3>Checked by result, with the reason when it's wrong</h3>
+          <p class="sub">Switch the join and watch the check respond.</p>
+          <div class="demo">
+            <div class="seg" role="group" aria-label="Join type">
+              <button type="button" aria-pressed="false" data-j="inner">INNER JOIN</button>
+              <button type="button" aria-pressed="true" data-j="left">LEFT JOIN</button>
+            </div>
+            <div class="meter">
+              <div class="row"><span>Rows that match expected</span><b id="mcount">24 / 24</b></div>
+              <div class="bar"><span id="mbar"></span></div>
+              <p class="verdict ok" id="mverdict" aria-live="polite"><b>Match.</b> Same 24 employees as the answer key, so the case is solved.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card-c">
+          <h3>Progress you can see at a glance</h3>
+          <p class="sub">Solved cases, and which ones took hints, so you know what to revisit before an interview.</p>
+          <div class="demo">
+            <div class="cells" aria-label="Example progress across 18 cases">
+              <span class="cell s">01</span><span class="cell s">02</span><span class="cell s">03</span><span class="cell h">04</span><span class="cell s">05</span><span class="cell s">06</span>
+              <span class="cell h">07</span><span class="cell s">08</span><span class="cell s">09</span><span class="cell h">10</span><span class="cell s">11</span><span class="cell s">12</span>
+              <span class="cell p">13</span><span class="cell">14</span><span class="cell">15</span><span class="cell">16</span><span class="cell">17</span><span class="cell">18</span>
+            </div>
+            <div class="key"><span><i style="background:var(--wine)"></i>Solved</span><span><i style="background:var(--rose)"></i>Solved with hints</span><span><i style="background:var(--blush)"></i>Started</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="cases" aria-labelledby="cs-h" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="cs-h">Eighteen cases, from lookup to reconciliation</h2>
+        <p>One benefits database, ordered the way the skills build: single-table lookups first, full reconciliations and window functions last.</p>
+      </div>
+      <div class="cases">
+        <div class="case-row" id="case-01"><span class="no">01</span><span class="t">Who's on the census?<span>Active employees hired this year.</span></span><span class="sk">SELECT, WHERE</span><span class="lvl l1">Foundations</span></div>
+        <div class="case-row"><span class="no">03</span><span class="t">Enrolled with no election<span>Active employees who never picked a plan.</span></span><span class="sk">LEFT JOIN, IS NULL</span><span class="lvl l1">Foundations</span></div>
+        <div class="case-row"><span class="no">06</span><span class="t">Headcount by plan and tier<span>The numbers Finance asks for every month.</span></span><span class="sk">GROUP BY</span><span class="lvl l2">Core</span></div>
+        <div class="case-row"><span class="no">08</span><span class="t">A deduction in the wrong units<span>Someone keyed dollars where cents belong.</span></span><span class="sk">JOIN, HAVING</span><span class="lvl l2">Core</span></div>
+        <div class="case-row"><span class="no">11</span><span class="t">Wrong pay period<span>Deductions posted before the election started.</span></span><span class="sk">CTE, date logic</span><span class="lvl l2">Core</span></div>
+        <div class="case-row"><span class="no">14</span><span class="t">The carrier's file disagrees<span>Every mismatch, grouped by likely cause.</span></span><span class="sk">CTE, LEFT JOIN, CASE</span><span class="lvl l3">Advanced</span></div>
+        <div class="case-row"><span class="no">16</span><span class="t">Each employee's latest election<span>One row per person, most recent change wins.</span></span><span class="sk">ROW_NUMBER()</span><span class="lvl l3">Advanced</span></div>
+        <div class="case-row"><span class="no">18</span><span class="t">Month over month, by plan<span>Where enrollment moved, and by how much.</span></span><span class="sk">LAG(), window frames</span><span class="lvl l3">Advanced</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="closer" aria-labelledby="cl-h">
+  <div class="wrap">
+    <div class="closer-grid">
+      <h2 id="cl-h">Open the first case.</h2>
+      <div>
+        <p>Built by Patricia, an operations and customer success professional, as a portfolio project and her own interview practice.</p>
+        <dl class="facts">
+          <dt>Stack</dt><dd>DuckDB-WASM, JavaScript, FastAPI, Claude</dd>
+          <dt>Data</dt><dd>Fully synthetic benefits database</dd>
+          <dt>AI use</dt><dd>Hints only, capped per day, never full solutions</dd>
+        </dl>
+        <a class="btn primary" href="#case-01">Start case 01
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9m-3.5-4L12 8l-3.5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </div>
+    <div class="foot"><span>Casework &middot; design preview. Links stay on this page until the app is live.</span><span>All names and records are invented.</span></div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------------- SQL editor content ---------------- */
+  var SQL = [
+    '<span class="k">WITH</span> elected <span class="k">AS</span> (',
+    '  <span class="k">SELECT</span> employee_id, plan_code, tier',
+    '  <span class="k">FROM</span> plan_elections',
+    '  <span class="k">WHERE</span> plan_year = <span class="nn">2026</span>',
+    ')',
+    '<span class="k">SELECT</span> <span class="k">CASE</span>',
+    '    <span class="k">WHEN</span> c.member_id <span class="k">IS NULL</span> <span class="k">THEN</span> <span class="s">\'not_on_carrier_file\'</span>',
+    '    <span class="k">WHEN</span> h.term_date <span class="k">IS NOT NULL</span> <span class="k">THEN</span> <span class="s">\'termed_still_covered\'</span>',
+    '    <span class="c">-- dependents, plan, duplicates ...</span>',
+    '  <span class="k">END AS</span> likely_cause, <span class="f">COUNT</span>(*) <span class="k">AS</span> employees',
+    '<span class="k">FROM</span> elected e',
+    '<span class="k">LEFT JOIN</span> carrier_file c <span class="k">ON</span> c.member_id = e.employee_id',
+    '<span class="k">GROUP BY</span> <span class="nn">1</span> <span class="k">ORDER BY</span> <span class="nn">2</span> <span class="k">DESC</span>;'
+  ];
+  var pre = document.getElementById('sql'), gut = document.getElementById('gut');
+  pre.innerHTML = SQL.map(function(l){ return '<span class="ln">'+l+'</span>'; }).join('\n') + '<span class="caret"></span>';
+  gut.innerHTML = SQL.map(function(_,i){ return i+1; }).join('<br>');
+
+  /* ---------------- hint ladder demo ---------------- */
+  var lbtn = document.getElementById('ladder-btn');
+  lbtn.addEventListener('click', function(){
+    var next = document.querySelector('#ladder .hidden-step');
+    if(!next) return;
+    next.classList.remove('hidden-step');
+    if(window.gsap && !reduce) gsap.fromTo(next, {y:8}, {y:0, duration:.5, ease:'expo.out'});
+    if(!document.querySelector('#ladder .hidden-step')){ lbtn.disabled = true; lbtn.textContent = 'All hints used'; }
+  });
+
+  /* ---------------- join checker demo ---------------- */
+  var segs = document.querySelectorAll('.seg button');
+  var mcount = document.getElementById('mcount'), mbar = document.getElementById('mbar'), mv = document.getElementById('mverdict');
+  segs.forEach(function(b){
+    b.addEventListener('click', function(){
+      segs.forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      if(b.dataset.j === 'inner'){
+        mcount.textContent = '15 / 24'; mbar.style.width = '62.5%'; mbar.style.background = 'var(--wine)';
+        mv.className = 'verdict'; mv.innerHTML = '<b>9 rows short.</b> The missing employees have no carrier record at all. That usually means an INNER JOIN where you need a LEFT JOIN.';
+      } else {
+        mcount.textContent = '24 / 24'; mbar.style.width = '100%'; mbar.style.background = 'var(--ok)';
+        mv.className = 'verdict ok'; mv.innerHTML = '<b>Match.</b> Same 24 employees as the answer key, so the case is solved.';
+      }
+    });
+  });
+
+  /* ---------------- nav tone ---------------- */
+  var nav = document.getElementById('nav'), stage = document.querySelector('.stage'), closer = document.querySelector('.closer');
+  function navTone(){
+    var y = 60, sb = stage.getBoundingClientRect(), cb = closer.getBoundingClientRect();
+    var dark = (sb.top <= y && sb.bottom > y) || (cb.top <= y && cb.bottom > y);
+    nav.classList.toggle('light', !dark);
+  }
+  addEventListener('scroll', navTone, {passive:true}); navTone();
+
+  /* ---------------- hero 3D: the reconciliation lens ---------------- */
+  function lens(){
+    var canvas = document.getElementById('lens');
+    if(!window.THREE) return;
+    var renderer;
+    try { renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true, alpha:true}); } catch(e){ return; }
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(36, 1, .1, 100);
+    camera.position.set(0, 0, 13);
+    var group = new THREE.Group(); scene.add(group);
+
+    function rr(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
+    var gc = document.createElement('canvas'); gc.width = gc.height = 128;
+    (function(){ var g = gc.getContext('2d'), gr = g.createRadialGradient(64,64,0,64,64,64); gr.addColorStop(0,'rgba(255,214,206,.9)'); gr.addColorStop(1,'rgba(229,154,166,0)'); g.fillStyle = gr; g.fillRect(0,0,128,128); })();
+
+    // the query: three real cases, each a WHERE clause and the field it checks
+    var CLAUSES = [
+      {sql:'WHERE first_reply > sla', test:function(d){ return d.reply > d.sla; }, line:2},
+      {sql:'WHERE plan <> crm_plan', test:function(d){ return d.plan !== d.crm; }, line:1},
+      {sql:'WHERE reopened = true', test:function(d){ return d.reopened; }, line:3}
+    ];
+    var PLANS = ['basic','pro','enterprise'], SLA = {basic:480, pro:240, enterprise:60};
+    function fmt(m){ var h = Math.floor(m/60), mm = m%60; return h ? h+'h '+(mm<10?'0':'')+mm+'m' : mm+'m'; }
+    function draw(c, d, hit, line){
+      var x = c.getContext('2d'); x.clearRect(0,0,c.width,c.height);
+      x.fillStyle = hit ? 'rgba(251,234,230,.97)' : 'rgba(251,234,230,.9)'; rr(x,4,4,392,236,18); x.fill();
+      if(hit){ x.strokeStyle = '#E07A8B'; x.lineWidth = 6; rr(x,4,4,392,236,18); x.stroke(); }
+      x.fillStyle = '#3b2219'; x.font = '600 26px "Geist Mono", monospace'; x.fillText(d.id, 26, 48);
+      [['plan', d.plan], ['crm_plan', d.crm], ['first_reply', fmt(d.reply)+'  sla '+fmt(d.sla)], ['reopened', String(d.reopened)]].forEach(function(rw, i){
+        var y = 92 + i*36;
+        if(hit && i === line){ x.fillStyle = 'rgba(224,122,139,.28)'; rr(x,16,y-26,368,34,8); x.fill(); }
+        x.font = '500 19px "Geist Mono", monospace';
+        x.fillStyle = 'rgba(59,34,25,.6)'; x.fillText(rw[0], 26, y);
+        x.fillStyle = (hit && i === line) ? '#9C2A41' : '#3b2219'; x.fillText(rw[1], 170, y);
+      });
+    }
+    var N = 16, cards = [];
+    for(var i=0;i<N;i++){
+      var plan = PLANS[i % 3];
+      var d = {id:'T-'+(4801+i*11), plan:plan, crm: (i % 5 === 1) ? PLANS[(i+1)%3] : plan, sla:SLA[plan], reopened: i % 4 === 2};
+      d.reply = (i % 3 === 0 || i % 7 === 3) ? Math.round(d.sla*(1.3+(i%4)*.25)) : Math.round(d.sla*(.25+(i%5)*.12));
+      var c = document.createElement('canvas'); c.width = 400; c.height = 244;
+      var tex = new THREE.CanvasTexture(c);
+      var m = new THREE.Mesh(new THREE.PlaneGeometry(2.3,1.4), new THREE.MeshBasicMaterial({map:tex, transparent:true, depthWrite:false}));
+      m.userData = {d:d, c:c, tex:tex, o:i/N, state:''};
+      group.add(m); cards.push(m);
+    }
+    var FW = 3.0, FH = 2.0, fz = 1.5, PILE = 2.75;
+    var frameLine = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.PlaneGeometry(FW,FH)), new THREE.LineBasicMaterial({color:0xe59aa6, transparent:true, opacity:.95}));
+    var pane = new THREE.Mesh(new THREE.PlaneGeometry(FW,FH), new THREE.MeshBasicMaterial({color:0xe59aa6, transparent:true, opacity:.06, blending:THREE.AdditiveBlending, depthWrite:false, side:THREE.DoubleSide}));
+    var frameG = new THREE.Group(); frameG.add(pane); frameG.add(frameLine); frameG.position.z = fz; group.add(frameG);
+    var lc = document.createElement('canvas'); lc.width = 640; lc.height = 72; var ltex = new THREE.CanvasTexture(lc);
+    var label = new THREE.Mesh(new THREE.PlaneGeometry(3.4,.38), new THREE.MeshBasicMaterial({map:ltex, transparent:true, depthWrite:false}));
+    label.position.set(0, FH/2 + .32, fz); group.add(label);
+    var cc = document.createElement('canvas'); cc.width = 320; cc.height = 72; var ctex = new THREE.CanvasTexture(cc);
+    var counter = new THREE.Mesh(new THREE.PlaneGeometry(1.8,.4), new THREE.MeshBasicMaterial({map:ctex, transparent:true, depthWrite:false}));
+    counter.position.set(PILE, 1.25, fz); group.add(counter);
+    var glowS = new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(gc), blending:THREE.AdditiveBlending, depthWrite:false, transparent:true, opacity:.28}));
+    glowS.scale.set(5,5,1); glowS.position.z = fz - .1; group.add(glowS);
+
+    var ci = -1, count = 0, pileN = 0;
+    function drawCount(){
+      var x = cc.getContext('2d'); x.clearRect(0,0,320,72);
+      x.font = '500 28px "Geist Mono", monospace'; x.textBaseline = 'middle'; x.fillStyle = '#D7AFA9'; x.fillText('result', 6, 38);
+      x.font = '600 32px "Geist Mono", monospace'; x.fillStyle = '#FBEAE6'; x.fillText(count + (count===1?' row':' rows'), 120, 38);
+      ctex.needsUpdate = true;
+    }
+    function setClause(i){
+      ci = i; count = 0; pileN = 0;
+      var x = lc.getContext('2d'); x.clearRect(0,0,640,72);
+      x.fillStyle = 'rgba(46,13,22,.9)'; rr(x,2,6,636,60,12); x.fill();
+      x.strokeStyle = 'rgba(229,154,166,.6)'; x.lineWidth = 2; rr(x,2,6,636,60,12); x.stroke();
+      x.font = '500 30px "Geist Mono", monospace'; x.textBaseline = 'middle';
+      var xx = 24; CLAUSES[i].sql.split(' ').forEach(function(w, k){ x.fillStyle = k===0 ? '#F49AAA' : '#FBEAE6'; x.fillText(w, xx, 38); xx += x.measureText(w+' ').width; });
+      ltex.needsUpdate = true; drawCount();
+      cards.forEach(function(m){ m.userData.state = ''; });
+    }
+    var PER = 9;
+    function place(t){
+      var want = Math.floor(t/PER) % CLAUSES.length; if(want !== ci) setClause(want);
+      frameLine.material.opacity = .7 + Math.sin(t*3)*.2;
+      var cl = CLAUSES[ci];
+      cards.forEach(function(m){
+        var u = m.userData, d = u.d, p = (u.o + t*.032) % 1, z = -24 + p*30, x = (u.o*7%1 - .5)*.5, y = (u.o*13%1 - .5)*.35, op = Math.min(1, (z+24)/5);
+        var hit = cl.test(d), state = (z > fz ? (hit ? 'hit' : 'pass') : 'in') + ci;
+        if(u.state !== state){
+          draw(u.c, d, state.indexOf('hit') === 0, cl.line); u.tex.needsUpdate = true;
+          if(state.indexOf('hit') === 0){ count++; drawCount(); u.slot = pileN++; }
+          u.state = state;
+        }
+        if(z > fz && hit){
+          var k = Math.min(1, (z-fz)/2.2), e = 1-Math.pow(1-k,3), slot = Math.min(u.slot||0, 5);
+          x = x + (PILE - x)*e; y = y + ((.55 - slot*.32) - y)*e; z = fz + (z-fz)*(1-e) - slot*.02;
+          m.scale.setScalar(1 - .3*e);
+          if(p > .97) op = Math.max(0, (1-p)/.03);
+        } else {
+          m.scale.setScalar(1);
+          if(z > fz) op *= Math.max(0, 1 - (z-fz)/2.5);
+        }
+        m.position.set(x,y,z); m.material.opacity = op;
+      });
+    }
+
+    var baseY = -.42, baseX = .06;
+    group.rotation.set(baseX, baseY, 0);
+    var mx = 0, my = 0;
+    addEventListener('pointermove', function(e){ mx = e.clientX/innerWidth - .5; my = e.clientY/innerHeight - .5; }, {passive:true});
+
+    function size(){
+      var w = canvas.clientWidth, h = canvas.clientHeight;
+      renderer.setSize(w, h, false); camera.aspect = w/h; camera.updateProjectionMatrix();
+      // keep the queue to the right of the headline on wide screens, below the buttons on narrow ones
+      if(w > 900){ group.position.set(2.45, -.35, 0); group.scale.setScalar(.88); }
+      else { group.position.set(-.8, -1.15, 0); group.scale.setScalar(.36); }
+    }
+    size(); addEventListener('resize', size);
+
+    var clock = new THREE.Clock(), visible = true;
+    new IntersectionObserver(function(es){ visible = es[0].isIntersecting; }).observe(canvas);
+    function frame(){
+      var t = clock.getElapsedTime();
+      group.rotation.y += ((baseY + mx*.35) - group.rotation.y)*.05;
+      group.rotation.x += ((baseX + my*.2) - group.rotation.x)*.05;
+      place(t);
+      renderer.render(scene, camera);
+    }
+    if(reduce){ place(7.5); renderer.render(scene, camera); addEventListener('resize', function(){ place(7.5); renderer.render(scene,camera); }); return; }
+    (function loop(){ if(visible) frame(); requestAnimationFrame(loop); })();
+  }
+  lens();
+
+  /* ---------------- GSAP motion ---------------- */
+  if(!window.gsap || reduce) return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  // hero entrance from a visible state
+  gsap.timeline({defaults:{ease:'expo.out'}})
+    .from('.hero-copy h1', {y:30, opacity:0, duration:1.2})
+    .from('.hero-copy p, .hero-actions', {y:16, opacity:0, stagger:.1, duration:1}, '<.25')
+    .from('.legend .chip', {y:8, opacity:0, stagger:.05, duration:.7}, '<.3')
+    .from('#lens', {opacity:0, duration:1.6, ease:'power2.out'}, 0);
+
+  // workspace: window rises, query types, rows stream, check passes
+  gsap.from('#win', {y:60, opacity:.2, duration:1.2, ease:'expo.out', scrollTrigger:{trigger:'#win', start:'top 90%'}});
+  var lines = pre.querySelectorAll('.ln'), rowsEl = document.querySelectorAll('#rows tr'), st = document.getElementById('status');
+  var run = gsap.timeline({paused:true});
+  run.set(lines, {opacity:0}).set(rowsEl, {opacity:0}).set(st, {opacity:0})
+     .to(lines, {opacity:1, duration:.05, stagger:.13})
+     .to('.run', {scale:.92, duration:.1, yoyo:true, repeat:1}, '+=.2')
+     .fromTo(rowsEl, {opacity:0, y:6}, {opacity:1, y:0, stagger:.08, duration:.4, ease:'expo.out'}, '+=.15')
+     .fromTo(st, {opacity:0, scale:.9}, {opacity:1, scale:1, duration:.4, ease:'expo.out'}, '+=.05');
+  run.progress(1); // visible by default
+  ScrollTrigger.create({trigger:'#win', start:'top 65%', once:true, onEnter:function(){ run.progress(0).play(); }});
+
+  // statement: words light up as you scroll
+  var stEl = document.getElementById('statement');
+  var html = '';
+  stEl.childNodes.forEach(function(n){
+    var cls = n.nodeType === 1 ? 'w hl' : 'w';
+    (n.textContent).split(/(\s+)/).forEach(function(tok){ html += /\S/.test(tok) ? '<span class="'+cls+'">'+tok+'</span>' : tok; });
+  });
+  stEl.innerHTML = html;
+  gsap.fromTo('#statement .w', {opacity:.18}, {opacity:1, stagger:.08, ease:'none',
+    scrollTrigger:{trigger:'#statement', start:'top 80%', end:'bottom 45%', scrub:.4}});
+
+  // live cards and case rows
+  gsap.from('.live .card', {y:50, opacity:0, stagger:.1, duration:1, ease:'expo.out', scrollTrigger:{trigger:'.live', start:'top 85%'}});
+  gsap.from('.case-row', {y:18, opacity:0, stagger:.05, duration:.7, ease:'expo.out', scrollTrigger:{trigger:'.cases', start:'top 85%'}});
+})();
+</script>

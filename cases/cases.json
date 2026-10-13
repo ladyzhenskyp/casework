@@ -1,0 +1,4262 @@
+[
+ {
+  "id": "01",
+  "level": "foundations",
+  "title": "Today's urgent queue",
+  "rules": [
+   "A ticket still needs work if its status is open or pending.",
+   "Sort oldest first by created_at, then by ticket_id."
+  ],
+  "returns": [
+   "ticket_id",
+   "org_id",
+   "created_at"
+  ],
+  "ordered": true,
+  "tables": [
+   "tickets"
+  ],
+  "skills": [
+   "SELECT",
+   "WHERE",
+   "IN",
+   "ORDER BY"
+  ],
+  "prompt": "The morning lead wants every urgent ticket that still needs work, oldest first, so she knows where to start.",
+  "expected": {
+   "columns": [
+    "ticket_id",
+    "org_id",
+    "created_at"
+   ],
+   "rows": [
+    [
+     15648,
+     5396,
+     "2026-07-22 11:38:09"
+    ],
+    [
+     14908,
+     5400,
+     "2026-09-20 11:10:24"
+    ],
+    [
+     8341,
+     5469,
+     "2026-09-22 12:09:13"
+    ],
+    [
+     7495,
+     5064,
+     "2026-09-24 17:38:47"
+    ],
+    [
+     9699,
+     5076,
+     "2026-09-24 18:43:37"
+    ],
+    [
+     14280,
+     5154,
+     "2026-09-25 12:52:23"
+    ],
+    [
+     15683,
+     5501,
+     "2026-09-25 19:35:36"
+    ],
+    [
+     15689,
+     5713,
+     "2026-09-26 15:11:01"
+    ],
+    [
+     13405,
+     5695,
+     "2026-09-26 22:52:52"
+    ],
+    [
+     15686,
+     5596,
+     "2026-09-27 01:26:34"
+    ],
+    [
+     9942,
+     5428,
+     "2026-09-27 14:12:55"
+    ],
+    [
+     15684,
+     5323,
+     "2026-09-27 17:28:17"
+    ],
+    [
+     11310,
+     5103,
+     "2026-09-28 16:25:37"
+    ],
+    [
+     11000,
+     5558,
+     "2026-09-28 17:44:05"
+    ],
+    [
+     15697,
+     5454,
+     "2026-09-29 07:12:44"
+    ],
+    [
+     15696,
+     5523,
+     "2026-09-29 08:03:16"
+    ],
+    [
+     15699,
+     5643,
+     "2026-09-29 14:18:22"
+    ],
+    [
+     15694,
+     5427,
+     "2026-09-30 09:50:12"
+    ],
+    [
+     15692,
+     5207,
+     "2026-09-30 12:50:00"
+    ],
+    [
+     13520,
+     5454,
+     "2026-09-30 16:37:38"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "02",
+  "level": "foundations",
+  "title": "Tickets owned by people who left",
+  "rules": [
+   "An agent has left if deactivated_at is filled in.",
+   "A ticket still needs work if its status is open or pending.",
+   "Measure days_waiting as whole days from created_at to the snapshot date, 2026-10-01."
+  ],
+  "returns": [
+   "ticket_id",
+   "agent_name",
+   "days_waiting"
+  ],
+  "ordered": false,
+  "tables": [
+   "tickets",
+   "agents"
+  ],
+  "skills": [
+   "JOIN",
+   "IS NOT NULL",
+   "date_diff"
+  ],
+  "prompt": "Some agents have left the team. Find tickets that still need work and are still assigned to someone who no longer works here, with how long each has been waiting.",
+  "expected": {
+   "columns": [
+    "ticket_id",
+    "agent_name",
+    "days_waiting"
+   ],
+   "rows": [
+    [
+     15615,
+     "Elena Ellis",
+     113
+    ],
+    [
+     15616,
+     "Elena Ellis",
+     116
+    ],
+    [
+     15618,
+     "Elena Ellis",
+     113
+    ],
+    [
+     15621,
+     "Elena Ellis",
+     114
+    ],
+    [
+     15624,
+     "Elena Ellis",
+     119
+    ],
+    [
+     15627,
+     "Elena Ellis",
+     111
+    ],
+    [
+     15629,
+     "Elena Ellis",
+     115
+    ],
+    [
+     15632,
+     "Elena Ellis",
+     117
+    ],
+    [
+     15635,
+     "Elena Ellis",
+     119
+    ],
+    [
+     15638,
+     "Kai Kim",
+     70
+    ],
+    [
+     15639,
+     "Kai Kim",
+     71
+    ],
+    [
+     15641,
+     "Kai Kim",
+     64
+    ],
+    [
+     15642,
+     "Kai Kim",
+     71
+    ],
+    [
+     15645,
+     "Kai Kim",
+     66
+    ],
+    [
+     15648,
+     "Kai Kim",
+     71
+    ],
+    [
+     15649,
+     "Kai Kim",
+     65
+    ],
+    [
+     15652,
+     "Kai Kim",
+     73
+    ],
+    [
+     15654,
+     "Kai Kim",
+     70
+    ],
+    [
+     15656,
+     "Kai Kim",
+     63
+    ],
+    [
+     15659,
+     "Kai Kim",
+     73
+    ],
+    [
+     15662,
+     "Priya Patel",
+     46
+    ],
+    [
+     15665,
+     "Priya Patel",
+     47
+    ],
+    [
+     15668,
+     "Priya Patel",
+     53
+    ],
+    [
+     15669,
+     "Priya Patel",
+     42
+    ],
+    [
+     15670,
+     "Priya Patel",
+     49
+    ],
+    [
+     15672,
+     "Priya Patel",
+     47
+    ],
+    [
+     15673,
+     "Priya Patel",
+     46
+    ],
+    [
+     15676,
+     "Priya Patel",
+     49
+    ],
+    [
+     15679,
+     "Priya Patel",
+     51
+    ],
+    [
+     15681,
+     "Priya Patel",
+     46
+    ]
+   ]
+  }
+ },
+ {
+  "id": "03",
+  "level": "foundations",
+  "title": "What are customers writing in about?",
+  "rules": [
+   "Clean a category by making it lowercase, removing a trailing '-issue', and trimming spaces.",
+   "Leave out tickets with no category after cleaning.",
+   "Only tickets created from 2026-07-01 up to (not including) 2026-10-01.",
+   "Most tickets first."
+  ],
+  "returns": [
+   "category",
+   "tickets"
+  ],
+  "ordered": true,
+  "tables": [
+   "tickets"
+  ],
+  "skills": [
+   "lower",
+   "trim",
+   "replace",
+   "GROUP BY",
+   "LIMIT"
+  ],
+  "prompt": "Leadership wants the five most common ticket topics for July through September. Agents type categories by hand, so clean them up first.",
+  "expected": {
+   "columns": [
+    "category",
+    "tickets"
+   ],
+   "rows": [
+    [
+     "scheduling",
+     615
+    ],
+    [
+     "billing",
+     466
+    ],
+    [
+     "login",
+     409
+    ],
+    [
+     "bug",
+     361
+    ],
+    [
+     "integrations",
+     281
+    ]
+   ]
+  }
+ },
+ {
+  "id": "04",
+  "level": "foundations",
+  "title": "Customers the CRM doesn't know",
+  "rules": [
+   "An organization is unmatched if its crm_customer_id is blank or doesn't match any customer_id."
+  ],
+  "returns": [
+   "org_id",
+   "org_name"
+  ],
+  "ordered": false,
+  "tables": [
+   "helpdesk_orgs",
+   "customers"
+  ],
+  "skills": [
+   "LEFT JOIN",
+   "IS NULL"
+  ],
+  "prompt": "Which helpdesk organizations can't be matched to a customer in the CRM?",
+  "expected": {
+   "columns": [
+    "org_id",
+    "org_name"
+   ],
+   "rows": [
+    [
+     5797,
+     "Wren Consulting (trial)"
+    ],
+    [
+     5798,
+     "Bluebird Physio (trial)"
+    ],
+    [
+     5801,
+     "Bluebird Spa (trial)"
+    ],
+    [
+     5805,
+     "Evergreen Consulting (trial)"
+    ],
+    [
+     5806,
+     "Northgate Consulting (trial)"
+    ],
+    [
+     5807,
+     "Oakline Veterinary (trial)"
+    ],
+    [
+     5809,
+     "Riverbend Barbers (trial)"
+    ],
+    [
+     5810,
+     "Juniper Counseling (trial)"
+    ],
+    [
+     5813,
+     "Riverbend Consulting (trial)"
+    ],
+    [
+     5814,
+     "Saffron Wellness (trial)"
+    ],
+    [
+     5816,
+     "Maple Dental (trial)"
+    ],
+    [
+     5817,
+     "Orchid Law Group (trial)"
+    ],
+    [
+     5819,
+     "Granite Optometry (trial)"
+    ],
+    [
+     5822,
+     "Bluebird Pet Care (trial)"
+    ],
+    [
+     5824,
+     "Driftwood Fitness"
+    ],
+    [
+     5826,
+     "Larkspur Yoga"
+    ],
+    [
+     5827,
+     "Juniper Chiropractic"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "05",
+  "level": "core",
+  "title": "Weekly volume by channel",
+  "rules": [
+   "Weeks start on Monday (date_trunc('week', ...)).",
+   "One column per channel, in this order: email, chat, web, phone."
+  ],
+  "returns": [
+   "week",
+   "email",
+   "chat",
+   "web",
+   "phone"
+  ],
+  "ordered": false,
+  "tables": [
+   "tickets"
+  ],
+  "skills": [
+   "date_trunc",
+   "COUNT with FILTER or CASE",
+   "GROUP BY"
+  ],
+  "prompt": "Staffing wants to see how many tickets arrive each week on each channel, one row per week.",
+  "expected": {
+   "columns": [
+    "week",
+    "email",
+    "chat",
+    "web",
+    "phone"
+   ],
+   "rows": [
+    [
+     "2026-03-30",
+     62,
+     45,
+     38,
+     18
+    ],
+    [
+     "2026-04-06",
+     81,
+     61,
+     34,
+     24
+    ],
+    [
+     "2026-04-13",
+     92,
+     67,
+     40,
+     24
+    ],
+    [
+     "2026-04-20",
+     110,
+     54,
+     37,
+     22
+    ],
+    [
+     "2026-04-27",
+     93,
+     63,
+     40,
+     16
+    ],
+    [
+     "2026-05-04",
+     90,
+     58,
+     34,
+     20
+    ],
+    [
+     "2026-05-11",
+     93,
+     48,
+     33,
+     26
+    ],
+    [
+     "2026-05-18",
+     121,
+     48,
+     52,
+     21
+    ],
+    [
+     "2026-05-25",
+     101,
+     69,
+     38,
+     22
+    ],
+    [
+     "2026-06-01",
+     100,
+     76,
+     52,
+     20
+    ],
+    [
+     "2026-06-08",
+     106,
+     55,
+     42,
+     24
+    ],
+    [
+     "2026-06-15",
+     89,
+     45,
+     37,
+     22
+    ],
+    [
+     "2026-06-22",
+     109,
+     59,
+     40,
+     16
+    ],
+    [
+     "2026-06-29",
+     77,
+     42,
+     48,
+     14
+    ],
+    [
+     "2026-07-06",
+     93,
+     50,
+     40,
+     36
+    ],
+    [
+     "2026-07-13",
+     104,
+     63,
+     44,
+     19
+    ],
+    [
+     "2026-07-20",
+     105,
+     60,
+     51,
+     38
+    ],
+    [
+     "2026-07-27",
+     99,
+     45,
+     35,
+     24
+    ],
+    [
+     "2026-08-03",
+     99,
+     58,
+     50,
+     24
+    ],
+    [
+     "2026-08-10",
+     101,
+     67,
+     49,
+     24
+    ],
+    [
+     "2026-08-17",
+     118,
+     53,
+     40,
+     27
+    ],
+    [
+     "2026-08-24",
+     86,
+     51,
+     44,
+     26
+    ],
+    [
+     "2026-08-31",
+     95,
+     68,
+     47,
+     30
+    ],
+    [
+     "2026-09-07",
+     94,
+     60,
+     35,
+     21
+    ],
+    [
+     "2026-09-14",
+     128,
+     52,
+     55,
+     34
+    ],
+    [
+     "2026-09-21",
+     98,
+     68,
+     50,
+     25
+    ],
+    [
+     "2026-09-28",
+     44,
+     24,
+     18,
+     15
+    ]
+   ]
+  }
+ },
+ {
+  "id": "06",
+  "level": "core",
+  "title": "How fast do we really reply?",
+  "rules": [
+   "A reply from a person is a ticket_events row with event_type 'public_reply' and actor 'agent'.",
+   "Measure from tickets.created_at, in minutes, rounded to 1 decimal place.",
+   "Leave out tickets that haven't had a reply from a person yet."
+  ],
+  "returns": [
+   "priority",
+   "median_first_reply_minutes"
+  ],
+  "ordered": false,
+  "tables": [
+   "tickets",
+   "ticket_events"
+  ],
+  "skills": [
+   "CTE",
+   "MIN",
+   "median",
+   "date_diff"
+  ],
+  "prompt": "For each priority, what is the median time from a ticket being created to the first reply from a person?",
+  "expected": {
+   "columns": [
+    "priority",
+    "median_first_reply_minutes"
+   ],
+   "rows": [
+    [
+     "high",
+     160.7
+    ],
+    [
+     "low",
+     474.4
+    ],
+    [
+     "normal",
+     289.9
+    ],
+    [
+     "urgent",
+     87.9
+    ]
+   ]
+  }
+ },
+ {
+  "id": "07",
+  "level": "core",
+  "title": "Two clocks for one ticket",
+  "rules": [
+   "Compare tickets.created_at with the event_at of that ticket's 'created' event.",
+   "Summarize by channel: how many tickets disagree, and the average difference in minutes (event_at minus created_at), rounded to a whole number."
+  ],
+  "returns": [
+   "channel",
+   "mismatched_tickets",
+   "minutes_off"
+  ],
+  "ordered": false,
+  "tables": [
+   "tickets",
+   "ticket_events"
+  ],
+  "skills": [
+   "JOIN",
+   "date_diff",
+   "GROUP BY",
+   "data quality"
+  ],
+  "prompt": "Every ticket also has a 'created' event in ticket_events. Some tickets disagree with their own created event. Find out which ones, and by how much.",
+  "expected": {
+   "columns": [
+    "channel",
+    "mismatched_tickets",
+    "minutes_off"
+   ],
+   "rows": [
+    [
+     "phone",
+     632,
+     240
+    ]
+   ]
+  }
+ },
+ {
+  "id": "08",
+  "level": "core",
+  "title": "Solved, then reopened",
+  "rules": [
+   "Clean categories the same way as case 03 and leave out tickets with no category.",
+   "A solved ticket has a solved_at. It was reopened if it has at least one 'reopened' event.",
+   "reopen_rate is reopened / solved * 100, rounded to 1 decimal place.",
+   "Only categories with at least 50 solved tickets."
+  ],
+  "returns": [
+   "category",
+   "solved",
+   "reopened",
+   "reopen_rate"
+  ],
+  "ordered": false,
+  "tables": [
+   "tickets",
+   "ticket_events"
+  ],
+  "skills": [
+   "LEFT JOIN",
+   "COUNT",
+   "HAVING"
+  ],
+  "prompt": "Which topics have the highest reopen rate? A reopened ticket means the first fix didn't work.",
+  "expected": {
+   "columns": [
+    "category",
+    "solved",
+    "reopened",
+    "reopen_rate"
+   ],
+   "rows": [
+    [
+     "account settings",
+     380,
+     20,
+     5.3
+    ],
+    [
+     "billing",
+     857,
+     45,
+     5.3
+    ],
+    [
+     "bug",
+     629,
+     73,
+     11.6
+    ],
+    [
+     "integrations",
+     552,
+     92,
+     16.7
+    ],
+    [
+     "login",
+     719,
+     41,
+     5.7
+    ],
+    [
+     "notifications",
+     460,
+     27,
+     5.9
+    ],
+    [
+     "reporting",
+     403,
+     23,
+     5.7
+    ],
+    [
+     "scheduling",
+     1144,
+     64,
+     5.6
+    ]
+   ]
+  }
+ },
+ {
+  "id": "09",
+  "level": "core",
+  "title": "The same problem, twice",
+  "rules": [
+   "A duplicate is a later ticket from the same requester_email, with the same cleaned category, created within 30 minutes after the first (more than 0, up to and including 30).",
+   "Leave out tickets that were already merged (they have a 'merged' event).",
+   "minutes_apart is rounded to 1 decimal place."
+  ],
+  "returns": [
+   "first_ticket",
+   "duplicate_ticket",
+   "minutes_apart"
+  ],
+  "ordered": false,
+  "tables": [
+   "tickets",
+   "ticket_events"
+  ],
+  "skills": [
+   "self-join",
+   "time windows",
+   "NOT IN"
+  ],
+  "prompt": "Customers often email, then open a chat about the same problem minutes later. Find likely duplicate tickets that nobody merged.",
+  "expected": {
+   "columns": [
+    "first_ticket",
+    "duplicate_ticket",
+    "minutes_apart"
+   ],
+   "rows": [
+    [
+     10150,
+     15279,
+     27
+    ],
+    [
+     10337,
+     15299,
+     24
+    ],
+    [
+     10382,
+     15266,
+     4
+    ],
+    [
+     10450,
+     15292,
+     16
+    ],
+    [
+     10486,
+     15200,
+     17
+    ],
+    [
+     10504,
+     15175,
+     23
+    ],
+    [
+     10713,
+     15213,
+     16
+    ],
+    [
+     10833,
+     15123,
+     17
+    ],
+    [
+     10906,
+     15240,
+     25
+    ],
+    [
+     10914,
+     15236,
+     18
+    ],
+    [
+     10992,
+     15232,
+     5
+    ],
+    [
+     11025,
+     15239,
+     15
+    ],
+    [
+     11087,
+     15323,
+     14
+    ],
+    [
+     11194,
+     15066,
+     27
+    ],
+    [
+     11250,
+     15191,
+     6
+    ],
+    [
+     11300,
+     15118,
+     7
+    ],
+    [
+     11494,
+     15076,
+     14
+    ],
+    [
+     11619,
+     15053,
+     4
+    ],
+    [
+     11718,
+     15063,
+     21
+    ],
+    [
+     11767,
+     15182,
+     22
+    ],
+    [
+     11971,
+     15210,
+     28
+    ],
+    [
+     11984,
+     15199,
+     12
+    ],
+    [
+     12024,
+     15314,
+     27
+    ],
+    [
+     12177,
+     15188,
+     8
+    ],
+    [
+     12382,
+     15230,
+     28
+    ],
+    [
+     12609,
+     15272,
+     25
+    ],
+    [
+     12764,
+     15071,
+     9
+    ],
+    [
+     12800,
+     15128,
+     7
+    ],
+    [
+     12979,
+     15185,
+     5
+    ],
+    [
+     13017,
+     15068,
+     17
+    ],
+    [
+     13051,
+     15103,
+     20
+    ],
+    [
+     13478,
+     15333,
+     8
+    ],
+    [
+     14140,
+     15162,
+     4
+    ],
+    [
+     14195,
+     15262,
+     28
+    ],
+    [
+     14209,
+     15059,
+     14
+    ],
+    [
+     14410,
+     15321,
+     16
+    ],
+    [
+     14890,
+     15248,
+     12
+    ],
+    [
+     15027,
+     15158,
+     21
+    ],
+    [
+     15278,
+     15195,
+     12
+    ],
+    [
+     4229,
+     15329,
+     25
+    ],
+    [
+     4274,
+     15195,
+     20
+    ],
+    [
+     4274,
+     15278,
+     8
+    ],
+    [
+     4306,
+     15227,
+     16
+    ],
+    [
+     4309,
+     15097,
+     10
+    ],
+    [
+     4336,
+     15310,
+     26
+    ],
+    [
+     4390,
+     15313,
+     27
+    ],
+    [
+     4692,
+     15347,
+     21
+    ],
+    [
+     4921,
+     15187,
+     4
+    ],
+    [
+     5051,
+     15207,
+     15
+    ],
+    [
+     5197,
+     15078,
+     15
+    ],
+    [
+     5267,
+     15045,
+     7
+    ],
+    [
+     5306,
+     15151,
+     18
+    ],
+    [
+     5312,
+     15302,
+     7
+    ],
+    [
+     5364,
+     15133,
+     22
+    ],
+    [
+     5426,
+     15081,
+     15
+    ],
+    [
+     5436,
+     15344,
+     6
+    ],
+    [
+     5603,
+     15179,
+     16
+    ],
+    [
+     5710,
+     15138,
+     3
+    ],
+    [
+     5877,
+     15174,
+     4
+    ],
+    [
+     6059,
+     15061,
+     28
+    ],
+    [
+     6069,
+     15172,
+     21
+    ],
+    [
+     6079,
+     15131,
+     3
+    ],
+    [
+     6116,
+     15308,
+     3
+    ],
+    [
+     6214,
+     15250,
+     25
+    ],
+    [
+     6284,
+     15181,
+     24
+    ],
+    [
+     6433,
+     15135,
+     25
+    ],
+    [
+     6478,
+     15242,
+     28
+    ],
+    [
+     6799,
+     15216,
+     20
+    ],
+    [
+     7159,
+     15148,
+     4
+    ],
+    [
+     7214,
+     15107,
+     26
+    ],
+    [
+     7514,
+     15245,
+     19
+    ],
+    [
+     7643,
+     15254,
+     4
+    ],
+    [
+     7796,
+     15306,
+     15
+    ],
+    [
+     7818,
+     15121,
+     22
+    ],
+    [
+     7873,
+     15161,
+     7
+    ],
+    [
+     7937,
+     15178,
+     4
+    ],
+    [
+     8125,
+     15225,
+     19
+    ],
+    [
+     8132,
+     15088,
+     14
+    ],
+    [
+     8339,
+     15208,
+     21
+    ],
+    [
+     8779,
+     15220,
+     5
+    ],
+    [
+     8881,
+     15247,
+     4
+    ],
+    [
+     8902,
+     15326,
+     9
+    ],
+    [
+     8990,
+     15141,
+     11
+    ],
+    [
+     9261,
+     13809,
+     9.3
+    ],
+    [
+     9360,
+     15152,
+     19
+    ],
+    [
+     9644,
+     15197,
+     10
+    ],
+    [
+     9858,
+     15265,
+     27
+    ],
+    [
+     9895,
+     15231,
+     13
+    ],
+    [
+     9925,
+     15155,
+     20
+    ],
+    [
+     9988,
+     15060,
+     11
+    ]
+   ]
+  }
+ },
+ {
+  "id": "10",
+  "level": "advanced",
+  "title": "Customers on the wrong clock",
+  "rules": [
+   "The CRM (customers.plan_tier) is correct. The helpdesk copy is helpdesk_orgs.sla_tier.",
+   "Count tickets from all of the customer's helpdesk organizations created at or after customers.plan_changed_at.",
+   "One row per customer."
+  ],
+  "returns": [
+   "customer_id",
+   "crm_plan",
+   "helpdesk_plan",
+   "affected_tickets"
+  ],
+  "ordered": false,
+  "tables": [
+   "customers",
+   "helpdesk_orgs",
+   "tickets"
+  ],
+  "skills": [
+   "JOIN",
+   "DISTINCT",
+   "comparing systems"
+  ],
+  "prompt": "Find customers whose plan in the helpdesk doesn't match the CRM, and how many of their tickets since the CRM plan changed were judged against the wrong SLA.",
+  "expected": {
+   "columns": [
+    "customer_id",
+    "crm_plan",
+    "helpdesk_plan",
+    "affected_tickets"
+   ],
+   "rows": [
+    [
+     "C-1011",
+     "pro",
+     "basic",
+     11
+    ],
+    [
+     "C-1057",
+     "pro",
+     "basic",
+     7
+    ],
+    [
+     "C-1098",
+     "pro",
+     "basic",
+     11
+    ],
+    [
+     "C-1102",
+     "enterprise",
+     "pro",
+     23
+    ],
+    [
+     "C-1108",
+     "enterprise",
+     "pro",
+     55
+    ],
+    [
+     "C-1116",
+     "pro",
+     "basic",
+     17
+    ],
+    [
+     "C-1145",
+     "pro",
+     "basic",
+     11
+    ],
+    [
+     "C-1153",
+     "pro",
+     "basic",
+     22
+    ],
+    [
+     "C-1155",
+     "enterprise",
+     "pro",
+     23
+    ],
+    [
+     "C-1156",
+     "pro",
+     "basic",
+     13
+    ],
+    [
+     "C-1159",
+     "enterprise",
+     "pro",
+     20
+    ],
+    [
+     "C-1172",
+     "pro",
+     "basic",
+     20
+    ],
+    [
+     "C-1218",
+     "pro",
+     "basic",
+     18
+    ],
+    [
+     "C-1219",
+     "pro",
+     "basic",
+     26
+    ],
+    [
+     "C-1238",
+     "pro",
+     "basic",
+     29
+    ],
+    [
+     "C-1242",
+     "pro",
+     "basic",
+     17
+    ],
+    [
+     "C-1244",
+     "pro",
+     "basic",
+     14
+    ],
+    [
+     "C-1262",
+     "enterprise",
+     "pro",
+     23
+    ],
+    [
+     "C-1269",
+     "enterprise",
+     "pro",
+     25
+    ],
+    [
+     "C-1288",
+     "pro",
+     "basic",
+     13
+    ]
+   ]
+  }
+ },
+ {
+  "id": "11",
+  "level": "advanced",
+  "title": "Why the syncs failed",
+  "rules": [
+   "Treat all attempts for the same customer on the same day as one sync.",
+   "A sync failed if none of its attempts succeeded. Its error code is the http_status of its last attempt.",
+   "Weeks start on Monday."
+  ],
+  "returns": [
+   "week",
+   "http_status",
+   "failed_syncs"
+  ],
+  "ordered": false,
+  "tables": [
+   "integration_sync_log"
+  ],
+  "skills": [
+   "GROUP BY",
+   "bool_or / MAX",
+   "latest value in a group"
+  ],
+  "prompt": "The nightly CRM to helpdesk sync retries when it fails. Count failed syncs by week and error code. What happened in July?",
+  "expected": {
+   "columns": [
+    "week",
+    "http_status",
+    "failed_syncs"
+   ],
+   "rows": [
+    [
+     "2026-04-13",
+     409,
+     2
+    ],
+    [
+     "2026-04-20",
+     409,
+     1
+    ],
+    [
+     "2026-04-20",
+     429,
+     1
+    ],
+    [
+     "2026-05-11",
+     409,
+     1
+    ],
+    [
+     "2026-05-11",
+     429,
+     1
+    ],
+    [
+     "2026-05-18",
+     429,
+     1
+    ],
+    [
+     "2026-05-25",
+     409,
+     1
+    ],
+    [
+     "2026-07-06",
+     401,
+     47
+    ],
+    [
+     "2026-07-06",
+     429,
+     2
+    ],
+    [
+     "2026-07-13",
+     401,
+     45
+    ],
+    [
+     "2026-07-13",
+     409,
+     1
+    ],
+    [
+     "2026-07-20",
+     409,
+     1
+    ],
+    [
+     "2026-07-27",
+     409,
+     2
+    ],
+    [
+     "2026-08-17",
+     409,
+     1
+    ],
+    [
+     "2026-08-17",
+     429,
+     1
+    ],
+    [
+     "2026-08-24",
+     409,
+     1
+    ],
+    [
+     "2026-08-31",
+     404,
+     5
+    ],
+    [
+     "2026-08-31",
+     409,
+     1
+    ],
+    [
+     "2026-08-31",
+     429,
+     1
+    ],
+    [
+     "2026-09-07",
+     404,
+     7
+    ],
+    [
+     "2026-09-07",
+     429,
+     1
+    ],
+    [
+     "2026-09-14",
+     404,
+     5
+    ],
+    [
+     "2026-09-14",
+     409,
+     1
+    ],
+    [
+     "2026-09-21",
+     401,
+     4
+    ],
+    [
+     "2026-09-21",
+     404,
+     5
+    ],
+    [
+     "2026-09-21",
+     429,
+     5
+    ],
+    [
+     "2026-09-28",
+     401,
+     9
+    ],
+    [
+     "2026-09-28",
+     404,
+     2
+    ],
+    [
+     "2026-09-28",
+     429,
+     3
+    ]
+   ]
+  }
+ },
+ {
+  "id": "12",
+  "level": "advanced",
+  "title": "Still stuck after retries",
+  "rules": [
+   "The most recent attempt is the latest run_at (break ties with the higher attempt number).",
+   "Only customers whose most recent attempt failed."
+  ],
+  "returns": [
+   "customer_id",
+   "last_attempt_at",
+   "http_status",
+   "error_message"
+  ],
+  "ordered": false,
+  "tables": [
+   "integration_sync_log"
+  ],
+  "skills": [
+   "ROW_NUMBER",
+   "PARTITION BY",
+   "latest record"
+  ],
+  "prompt": "For each customer, look only at their most recent sync attempt. Which customers are still failing today?",
+  "expected": {
+   "columns": [
+    "customer_id",
+    "last_attempt_at",
+    "http_status",
+    "error_message"
+   ],
+   "rows": [
+    [
+     "C-1006",
+     "2026-09-19 01:49:10",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1011",
+     "2026-09-26 05:01:02",
+     401,
+     "Unauthorized: API token expired"
+    ],
+    [
+     "C-1019",
+     "2026-09-04 19:34:04",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1030",
+     "2026-09-28 18:37:03",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1032",
+     "2026-09-26 18:01:08",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1048",
+     "2026-09-18 17:42:14",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1057",
+     "2026-09-26 21:25:38",
+     429,
+     "Too Many Requests: rate limit exceeded, retry later"
+    ],
+    [
+     "C-1065",
+     "2026-09-17 18:49:11",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1072",
+     "2026-09-09 22:06:58",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1083",
+     "2026-09-12 08:43:11",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1089",
+     "2026-09-26 08:06:04",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1098",
+     "2026-09-26 21:43:33",
+     429,
+     "Too Many Requests: rate limit exceeded, retry later"
+    ],
+    [
+     "C-1102",
+     "2026-09-26 15:02:14",
+     401,
+     "Unauthorized: API token expired"
+    ],
+    [
+     "C-1108",
+     "2026-09-28 15:06:49",
+     429,
+     "Too Many Requests: rate limit exceeded, retry later"
+    ],
+    [
+     "C-1116",
+     "2026-09-30 00:14:15",
+     401,
+     "Unauthorized: API token expired"
+    ],
+    [
+     "C-1118",
+     "2026-09-01 05:03:36",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1145",
+     "2026-09-29 04:17:17",
+     401,
+     "Unauthorized: API token expired"
+    ],
+    [
+     "C-1153",
+     "2026-09-28 11:57:02",
+     429,
+     "Too Many Requests: rate limit exceeded, retry later"
+    ],
+    [
+     "C-1155",
+     "2026-09-25 15:20:17",
+     429,
+     "Too Many Requests: rate limit exceeded, retry later"
+    ],
+    [
+     "C-1156",
+     "2026-09-27 07:17:57",
+     401,
+     "Unauthorized: API token expired"
+    ],
+    [
+     "C-1159",
+     "2026-09-29 02:54:28",
+     401,
+     "Unauthorized: API token expired"
+    ],
+    [
+     "C-1160",
+     "2026-09-10 19:15:36",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1162",
+     "2026-09-10 12:15:26",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1170",
+     "2026-09-21 14:28:39",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1172",
+     "2026-09-29 22:34:57",
+     401,
+     "Unauthorized: API token expired"
+    ],
+    [
+     "C-1174",
+     "2026-09-11 04:23:22",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1178",
+     "2026-09-19 03:03:57",
+     409,
+     "Conflict: more than one organization matches this customer"
+    ],
+    [
+     "C-1205",
+     "2026-09-05 16:07:43",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1206",
+     "2026-09-18 01:09:19",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1218",
+     "2026-09-29 13:06:21",
+     401,
+     "Unauthorized: API token expired"
+    ],
+    [
+     "C-1219",
+     "2026-09-28 15:45:29",
+     429,
+     "Too Many Requests: rate limit exceeded, retry later"
+    ],
+    [
+     "C-1223",
+     "2026-09-28 07:02:55",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1230",
+     "2026-09-05 22:21:34",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1231",
+     "2026-09-13 23:27:26",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1238",
+     "2026-09-26 17:56:53",
+     401,
+     "Unauthorized: API token expired"
+    ],
+    [
+     "C-1242",
+     "2026-09-26 10:06:21",
+     429,
+     "Too Many Requests: rate limit exceeded, retry later"
+    ],
+    [
+     "C-1244",
+     "2026-09-29 02:41:42",
+     401,
+     "Unauthorized: API token expired"
+    ],
+    [
+     "C-1248",
+     "2026-09-25 07:16:41",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1259",
+     "2026-09-19 01:07:01",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1262",
+     "2026-09-29 02:48:00",
+     401,
+     "Unauthorized: API token expired"
+    ],
+    [
+     "C-1269",
+     "2026-09-28 11:52:26",
+     401,
+     "Unauthorized: API token expired"
+    ],
+    [
+     "C-1275",
+     "2026-07-12 02:34:06",
+     401,
+     "Unauthorized: API token expired"
+    ],
+    [
+     "C-1286",
+     "2026-09-02 18:38:19",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1287",
+     "2026-07-13 02:38:30",
+     401,
+     "Unauthorized: API token expired"
+    ],
+    [
+     "C-1288",
+     "2026-09-26 15:32:50",
+     429,
+     "Too Many Requests: rate limit exceeded, retry later"
+    ],
+    [
+     "C-1290",
+     "2026-09-25 04:21:27",
+     404,
+     "Organization not found in helpdesk"
+    ],
+    [
+     "C-1291",
+     "2026-09-11 19:45:56",
+     404,
+     "Organization not found in helpdesk"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "13",
+  "level": "advanced",
+  "title": "Came back within a week",
+  "rules": [
+   "Clean categories as in case 03 and leave out tickets with no category. Leave out merged tickets.",
+   "For each ticket, the next ticket is the same requester's next ticket in the same category, by created_at.",
+   "Count it when the ticket has a solved_at and the next ticket was created after solved_at and within 7 days of it."
+  ],
+  "returns": [
+   "requester_email",
+   "category",
+   "solved_at",
+   "next_ticket_at"
+  ],
+  "ordered": false,
+  "tables": [
+   "tickets",
+   "ticket_events"
+  ],
+  "skills": [
+   "LEAD",
+   "window functions",
+   "intervals"
+  ],
+  "prompt": "Find people who wrote in again about the same topic within 7 days of their last ticket being solved. That's a sign the fix didn't stick.",
+  "expected": {
+   "columns": [
+    "requester_email",
+    "category",
+    "solved_at",
+    "next_ticket_at"
+   ],
+   "rows": [
+    [
+     "aiden.dubois@quarrychiropractic.com",
+     "scheduling",
+     "2026-08-24 12:47:56",
+     "2026-08-25 17:03:33"
+    ],
+    [
+     "aiden.ellis@beaconsalon.com",
+     "billing",
+     "2026-06-19 15:00:51",
+     "2026-06-22 21:10:31"
+    ],
+    [
+     "aiden.ellis@beaconsalon.com",
+     "notifications",
+     "2026-04-25 15:49:01",
+     "2026-05-01 15:23:14"
+    ],
+    [
+     "aiden.nakamura@orchidphysio.com",
+     "billing",
+     "2026-06-06 21:56:26",
+     "2026-06-11 13:33:20"
+    ],
+    [
+     "aiden.nakamura@orchidphysio.com",
+     "login",
+     "2026-08-11 22:38:28",
+     "2026-08-13 19:47:12"
+    ],
+    [
+     "aiden.rossi@kestrelveterinary.com",
+     "notifications",
+     "2026-08-18 16:49:28",
+     "2026-08-19 14:29:37"
+    ],
+    [
+     "ava.dubois@wrenphysio.com",
+     "account settings",
+     "2026-04-10 02:02:09",
+     "2026-04-16 13:41:27"
+    ],
+    [
+     "ava.foster@hearthdental.com",
+     "notifications",
+     "2026-04-10 11:13:55",
+     "2026-04-12 18:12:09"
+    ],
+    [
+     "ava.kim@foxgloveoptometry.com",
+     "scheduling",
+     "2026-08-29 21:55:17",
+     "2026-09-05 20:50:18"
+    ],
+    [
+     "ava.nakamura@cedaryoga.com",
+     "login",
+     "2026-07-25 20:43:33",
+     "2026-07-29 00:19:42"
+    ],
+    [
+     "ava.turner@pioneeryoga.com",
+     "scheduling",
+     "2026-09-09 22:03:26",
+     "2026-09-11 18:44:34"
+    ],
+    [
+     "bea.garcia@kestreltutoring.com",
+     "billing",
+     "2026-05-27 21:19:52",
+     "2026-06-03 06:40:19"
+    ],
+    [
+     "bea.garcia@kestreltutoring.com",
+     "integrations",
+     "2026-07-09 11:32:23",
+     "2026-07-09 17:38:04"
+    ],
+    [
+     "bea.garcia@kestreltutoring.com",
+     "login",
+     "2026-09-18 21:22:59",
+     "2026-09-20 19:29:09"
+    ],
+    [
+     "bea.garcia@kestreltutoring.com",
+     "login",
+     "2026-09-22 22:43:12",
+     "2026-09-24 12:43:00"
+    ],
+    [
+     "bea.jensen@oaklineconsulting.com",
+     "billing",
+     "2026-04-11 03:27:53",
+     "2026-04-17 16:48:13"
+    ],
+    [
+     "bea.jensen@oaklineconsulting.com",
+     "notifications",
+     "2026-08-03 03:00:57",
+     "2026-08-04 04:55:25"
+    ],
+    [
+     "bea.singh@meadowfitness.com",
+     "account settings",
+     "2026-07-04 22:05:56",
+     "2026-07-11 12:19:18"
+    ],
+    [
+     "bea.singh@wrentutoring.com",
+     "account settings",
+     "2026-09-19 19:24:00",
+     "2026-09-20 19:46:25"
+    ],
+    [
+     "bea.young@brightyoga.com",
+     "notifications",
+     "2026-09-09 14:24:23",
+     "2026-09-11 17:17:20"
+    ],
+    [
+     "ben.ellis@foxglovephysio.com",
+     "notifications",
+     "2026-04-18 07:54:52",
+     "2026-04-19 07:59:54"
+    ],
+    [
+     "ben.ellis@quarryacademy.com",
+     "bug",
+     "2026-04-22 10:52:20",
+     "2026-04-24 04:13:42"
+    ],
+    [
+     "ben.ellis@quarryacademy.com",
+     "bug",
+     "2026-04-25 03:39:45",
+     "2026-04-27 12:57:09"
+    ],
+    [
+     "ben.garcia@kestrelpetcare.com",
+     "bug",
+     "2026-04-12 14:16:22",
+     "2026-04-19 12:42:43"
+    ],
+    [
+     "ben.garcia@kestrelpetcare.com",
+     "reporting",
+     "2026-05-09 23:52:20",
+     "2026-05-12 22:53:31"
+    ],
+    [
+     "ben.hughes@beaconclinic.com",
+     "login",
+     "2026-07-15 08:07:39",
+     "2026-07-16 22:27:59"
+    ],
+    [
+     "ben.hughes@beaconclinic.com",
+     "scheduling",
+     "2026-09-06 14:18:58",
+     "2026-09-09 16:39:49"
+    ],
+    [
+     "chloe.alvarez@goldenbarbers.com",
+     "scheduling",
+     "2026-07-25 14:12:14",
+     "2026-07-28 15:28:30"
+    ],
+    [
+     "chloe.ellis@meadowautocare.com",
+     "billing",
+     "2026-06-01 11:16:42",
+     "2026-06-03 22:41:13"
+    ],
+    [
+     "chloe.ibrahim@summitacademy.com",
+     "notifications",
+     "2026-07-26 21:33:59",
+     "2026-07-29 02:00:29"
+    ],
+    [
+     "chloe.nakamura@northgatewellness.com",
+     "integrations",
+     "2026-04-19 13:36:16",
+     "2026-04-24 11:24:40"
+    ],
+    [
+     "chloe.usman@tidewatertutoring.com",
+     "account settings",
+     "2026-08-03 04:53:00",
+     "2026-08-06 19:00:42"
+    ],
+    [
+     "cyrus.jensen@pebblestudios.com",
+     "scheduling",
+     "2026-08-02 00:16:31",
+     "2026-08-08 22:22:16"
+    ],
+    [
+     "cyrus.lopez@junipertutoring.com",
+     "reporting",
+     "2026-08-30 23:55:13",
+     "2026-09-04 21:23:01"
+    ],
+    [
+     "cyrus.okafor@yarrowyoga.com",
+     "billing",
+     "2026-05-11 18:02:22",
+     "2026-05-12 22:50:54"
+    ],
+    [
+     "cyrus.okafor@yarrowyoga.com",
+     "billing",
+     "2026-06-10 23:49:27",
+     "2026-06-17 21:44:15"
+    ],
+    [
+     "cyrus.okafor@yarrowyoga.com",
+     "scheduling",
+     "2026-04-03 10:43:11",
+     "2026-04-06 08:42:55"
+    ],
+    [
+     "cyrus.turner@ironwoodbarbers.com",
+     "login",
+     "2026-05-29 07:47:22",
+     "2026-05-31 02:10:28"
+    ],
+    [
+     "cyrus.vega@hearthclinic.com",
+     "integrations",
+     "2026-06-08 04:56:57",
+     "2026-06-13 14:25:36"
+    ],
+    [
+     "cyrus.vega@hearthclinic.com",
+     "login",
+     "2026-05-29 16:04:58",
+     "2026-06-04 13:27:02"
+    ],
+    [
+     "cyrus.vega@magnoliaphysio.com",
+     "login",
+     "2026-07-18 21:22:53",
+     "2026-07-20 19:17:49"
+    ],
+    [
+     "cyrus.vega@uplandoptometry.com",
+     "integrations",
+     "2026-05-28 14:39:31",
+     "2026-06-04 12:46:51"
+    ],
+    [
+     "cyrus.young@cloverwellness.com",
+     "integrations",
+     "2026-08-09 06:11:14",
+     "2026-08-14 12:38:24"
+    ],
+    [
+     "dana.chen@mapledental.com",
+     "scheduling",
+     "2026-05-04 05:58:44",
+     "2026-05-09 14:17:26"
+    ],
+    [
+     "dana.chen@quarryveterinary.com",
+     "scheduling",
+     "2026-08-07 15:52:00",
+     "2026-08-11 23:07:31"
+    ],
+    [
+     "dana.ellis@juniperwellness.com",
+     "login",
+     "2026-05-05 18:52:52",
+     "2026-05-11 21:41:41"
+    ],
+    [
+     "dana.ellis@juniperwellness.com",
+     "login",
+     "2026-05-12 13:07:02",
+     "2026-05-16 09:46:03"
+    ],
+    [
+     "dana.nakamura@brightpetcarellc.com",
+     "scheduling",
+     "2026-06-13 19:58:33",
+     "2026-06-17 22:57:42"
+    ],
+    [
+     "dana.okafor@cedaryoga.com",
+     "scheduling",
+     "2026-04-29 08:36:11",
+     "2026-05-01 20:38:14"
+    ],
+    [
+     "dana.quinn@driftwoodchiroprac.com",
+     "billing",
+     "2026-05-28 04:39:26",
+     "2026-06-02 21:22:23"
+    ],
+    [
+     "dana.vega@vistaacademyllc.com",
+     "billing",
+     "2026-09-01 11:44:22",
+     "2026-09-02 14:28:13"
+    ],
+    [
+     "dana.vega@vistaacademyllc.com",
+     "integrations",
+     "2026-07-10 22:11:58",
+     "2026-07-17 11:45:24"
+    ],
+    [
+     "dana.vega@vistaacademyllc.com",
+     "login",
+     "2026-08-01 19:34:53",
+     "2026-08-07 18:24:53"
+    ],
+    [
+     "diego.hughes@beaconsalon.com",
+     "notifications",
+     "2026-07-16 06:51:25",
+     "2026-07-20 18:23:26"
+    ],
+    [
+     "diego.hughes@beaconsalon.com",
+     "scheduling",
+     "2026-07-17 18:06:14",
+     "2026-07-21 18:03:28"
+    ],
+    [
+     "diego.hughes@beaconsalon.com",
+     "scheduling",
+     "2026-07-22 06:29:47",
+     "2026-07-22 17:03:57"
+    ],
+    [
+     "diego.patel@beaconbarbers.com",
+     "bug",
+     "2026-08-07 21:26:38",
+     "2026-08-12 16:03:59"
+    ],
+    [
+     "diego.rossi@brightyoga.com",
+     "reporting",
+     "2026-09-20 19:32:11",
+     "2026-09-25 11:07:57"
+    ],
+    [
+     "diego.rossi@ironwoodoptometry.com",
+     "notifications",
+     "2026-04-04 23:16:41",
+     "2026-04-10 03:30:56"
+    ],
+    [
+     "diego.rossi@oaklinespa.com",
+     "billing",
+     "2026-08-12 22:22:42",
+     "2026-08-16 14:47:43"
+    ],
+    [
+     "diego.turner@bluebirddental.com",
+     "account settings",
+     "2026-05-21 23:38:14",
+     "2026-05-27 13:37:33"
+    ],
+    [
+     "diego.turner@bluebirddental.com",
+     "billing",
+     "2026-05-28 11:28:16",
+     "2026-05-31 12:10:59"
+    ],
+    [
+     "diego.turner@bluebirddental.com",
+     "billing",
+     "2026-08-03 17:22:25",
+     "2026-08-07 18:27:34"
+    ],
+    [
+     "diego.turner@bluebirddental.com",
+     "bug",
+     "2026-07-24 17:06:14",
+     "2026-07-27 15:08:01"
+    ],
+    [
+     "diego.turner@bluebirddental.com",
+     "notifications",
+     "2026-06-07 16:27:14",
+     "2026-06-09 22:34:26"
+    ],
+    [
+     "diego.turner@bluebirddental.com",
+     "reporting",
+     "2026-07-17 07:04:04",
+     "2026-07-21 21:49:55"
+    ],
+    [
+     "diego.turner@bluebirddental.com",
+     "scheduling",
+     "2026-06-03 12:23:33",
+     "2026-06-07 17:58:32"
+    ],
+    [
+     "diego.turner@bluebirddental.com",
+     "scheduling",
+     "2026-06-09 03:15:59",
+     "2026-06-12 18:52:10"
+    ],
+    [
+     "elena.alvarez@meadowspa.com",
+     "account settings",
+     "2026-04-08 08:03:37",
+     "2026-04-10 21:20:47"
+    ],
+    [
+     "elena.chen@goldenclinic.com",
+     "scheduling",
+     "2026-04-14 15:03:16",
+     "2026-04-17 20:37:25"
+    ],
+    [
+     "elena.garcia@hearthdental.com",
+     "billing",
+     "2026-09-08 18:02:15",
+     "2026-09-10 02:01:01"
+    ],
+    [
+     "elena.nakamura@ironwoodautocare.com",
+     "billing",
+     "2026-08-13 23:38:03",
+     "2026-08-14 15:47:12"
+    ],
+    [
+     "elena.rossi@ironwoodspa.com",
+     "billing",
+     "2026-05-01 19:20:47",
+     "2026-05-08 18:42:34"
+    ],
+    [
+     "eli.ellis@cedarspa.com",
+     "bug",
+     "2026-04-05 01:52:46",
+     "2026-04-09 00:11:07"
+    ],
+    [
+     "eli.ellis@cedarspa.com",
+     "login",
+     "2026-07-08 14:03:22",
+     "2026-07-10 10:07:51"
+    ],
+    [
+     "eli.garcia@kestrelpetcare.com",
+     "billing",
+     "2026-04-27 16:42:01",
+     "2026-05-04 15:20:47"
+    ],
+    [
+     "eli.lopez@pebblespa.com",
+     "integrations",
+     "2026-05-17 19:11:27",
+     "2026-05-22 14:40:45"
+    ],
+    [
+     "eli.rossi@juniperwellness.com",
+     "bug",
+     "2026-04-23 10:27:56",
+     "2026-04-24 20:59:18"
+    ],
+    [
+     "eli.rossi@juniperwellness.com",
+     "scheduling",
+     "2026-04-16 08:51:25",
+     "2026-04-20 19:33:35"
+    ],
+    [
+     "eli.vega@silverlinechiropra.com",
+     "billing",
+     "2026-06-12 21:29:31",
+     "2026-06-16 11:57:35"
+    ],
+    [
+     "farah.kim@meadowwellnessllc.com",
+     "login",
+     "2026-05-08 08:03:19",
+     "2026-05-10 18:05:11"
+    ],
+    [
+     "fiona.dubois@fernwoodstudios.com",
+     "login",
+     "2026-07-07 17:39:09",
+     "2026-07-10 15:58:19"
+    ],
+    [
+     "fiona.dubois@harborspa.com",
+     "bug",
+     "2026-04-17 20:47:23",
+     "2026-04-22 16:04:38"
+    ],
+    [
+     "fiona.dubois@harborspa.com",
+     "integrations",
+     "2026-08-12 16:17:46",
+     "2026-08-19 15:24:54"
+    ],
+    [
+     "fiona.dubois@harborspa.com",
+     "scheduling",
+     "2026-08-15 14:43:53",
+     "2026-08-19 12:49:45"
+    ],
+    [
+     "fiona.dubois@harborspa.com",
+     "scheduling",
+     "2026-08-26 06:08:22",
+     "2026-08-27 12:59:52"
+    ],
+    [
+     "fiona.ellis@foxglovewellness.com",
+     "login",
+     "2026-05-03 23:32:42",
+     "2026-05-06 04:55:14"
+    ],
+    [
+     "fiona.garcia@meadowpetcare.com",
+     "integrations",
+     "2026-08-19 06:13:00",
+     "2026-08-19 15:11:10"
+    ],
+    [
+     "fiona.garcia@meadowpetcare.com",
+     "scheduling",
+     "2026-07-03 07:05:51",
+     "2026-07-08 02:49:33"
+    ],
+    [
+     "fiona.garcia@summitfitness.com",
+     "integrations",
+     "2026-04-04 22:23:27",
+     "2026-04-08 13:20:29"
+    ],
+    [
+     "fiona.patel@driftwoodphysio.com",
+     "billing",
+     "2026-08-20 20:22:53",
+     "2026-08-24 20:11:59"
+    ],
+    [
+     "fiona.patel@driftwoodphysio.com",
+     "login",
+     "2026-05-16 17:48:28",
+     "2026-05-20 22:59:29"
+    ],
+    [
+     "fiona.patel@ironwoodspa.com",
+     "login",
+     "2026-04-06 13:54:53",
+     "2026-04-09 22:57:34"
+    ],
+    [
+     "fiona.turner@kestrelphysio.com",
+     "billing",
+     "2026-07-16 19:49:35",
+     "2026-07-19 16:39:29"
+    ],
+    [
+     "fiona.usman@brightconsulting.com",
+     "scheduling",
+     "2026-07-11 14:14:31",
+     "2026-07-15 18:29:33"
+    ],
+    [
+     "fiona.vega@maplephysio.com",
+     "integrations",
+     "2026-08-17 16:35:04",
+     "2026-08-20 12:41:08"
+    ],
+    [
+     "fiona.vega@maplephysio.com",
+     "notifications",
+     "2026-05-09 01:10:30",
+     "2026-05-11 17:33:54"
+    ],
+    [
+     "fiona.vega@meadowchiropractic.com",
+     "reporting",
+     "2026-06-28 10:51:38",
+     "2026-06-30 13:57:25"
+    ],
+    [
+     "gabe.foster@bluebirdacademy.com",
+     "integrations",
+     "2026-06-17 20:52:56",
+     "2026-06-23 14:42:43"
+    ],
+    [
+     "gabe.foster@silverlineyoga.com",
+     "bug",
+     "2026-05-06 04:27:43",
+     "2026-05-07 16:45:16"
+    ],
+    [
+     "gabe.hughes@uplandpetcare.com",
+     "scheduling",
+     "2026-07-28 03:07:55",
+     "2026-08-01 09:04:39"
+    ],
+    [
+     "gabe.lopez@fernwoodveterinary.com",
+     "login",
+     "2026-08-15 06:52:49",
+     "2026-08-20 20:35:26"
+    ],
+    [
+     "gabe.morgan@ironwoodspa.com",
+     "scheduling",
+     "2026-05-08 18:01:46",
+     "2026-05-12 18:09:41"
+    ],
+    [
+     "gabe.usman@pebblepetcare.com",
+     "login",
+     "2026-06-04 14:02:39",
+     "2026-06-08 13:40:45"
+    ],
+    [
+     "grant.hughes@maplecounseling.com",
+     "billing",
+     "2026-08-14 08:28:12",
+     "2026-08-15 22:26:34"
+    ],
+    [
+     "grant.quinn@foxgloveacademy.com",
+     "bug",
+     "2026-08-18 03:05:40",
+     "2026-08-20 10:30:46"
+    ],
+    [
+     "grant.usman@pebblestudios.com",
+     "scheduling",
+     "2026-08-09 15:34:49",
+     "2026-08-15 16:34:02"
+    ],
+    [
+     "grant.vega@cedarchiropractic.com",
+     "reporting",
+     "2026-06-06 18:26:54",
+     "2026-06-06 19:08:08"
+    ],
+    [
+     "hana.brooks@vistaconsulting.com",
+     "scheduling",
+     "2026-06-27 08:31:51",
+     "2026-06-28 22:51:44"
+    ],
+    [
+     "hana.singh@meadowautocare.com",
+     "billing",
+     "2026-06-23 01:51:25",
+     "2026-06-28 11:22:47"
+    ],
+    [
+     "hana.singh@uplandpetcare.com",
+     "account settings",
+     "2026-04-28 03:53:06",
+     "2026-05-01 14:28:34"
+    ],
+    [
+     "hana.turner@cedarcounseling.com",
+     "notifications",
+     "2026-09-17 21:09:41",
+     "2026-09-22 15:44:36"
+    ],
+    [
+     "hana.walsh@summitveterinary.com",
+     "billing",
+     "2026-07-05 23:39:57",
+     "2026-07-09 22:09:47"
+    ],
+    [
+     "isaac.alvarez@driftwoodfitness.com",
+     "login",
+     "2026-07-04 12:52:51",
+     "2026-07-08 21:35:59"
+    ],
+    [
+     "isaac.alvarez@driftwoodfitness.com",
+     "reporting",
+     "2026-06-09 10:29:53",
+     "2026-06-12 07:44:25"
+    ],
+    [
+     "isaac.dubois@pioneeracademy.com",
+     "account settings",
+     "2026-08-11 01:37:52",
+     "2026-08-13 16:38:51"
+    ],
+    [
+     "isaac.dubois@pioneeracademy.com",
+     "account settings",
+     "2026-08-16 09:29:52",
+     "2026-08-19 04:37:10"
+    ],
+    [
+     "isaac.dubois@pioneeracademy.com",
+     "billing",
+     "2026-08-07 12:32:30",
+     "2026-08-10 16:17:10"
+    ],
+    [
+     "isaac.dubois@pioneeracademy.com",
+     "bug",
+     "2026-06-25 14:31:36",
+     "2026-06-29 10:00:25"
+    ],
+    [
+     "isaac.dubois@pioneeracademy.com",
+     "bug",
+     "2026-09-19 12:18:21",
+     "2026-09-22 18:22:09"
+    ],
+    [
+     "isaac.dubois@pioneeracademy.com",
+     "login",
+     "2026-06-03 22:41:10",
+     "2026-06-08 01:57:48"
+    ],
+    [
+     "isaac.dubois@pioneeracademy.com",
+     "scheduling",
+     "2026-06-27 15:05:29",
+     "2026-07-02 12:30:19"
+    ],
+    [
+     "isaac.dubois@pioneeracademy.com",
+     "scheduling",
+     "2026-07-16 00:02:58",
+     "2026-07-20 08:45:00"
+    ],
+    [
+     "isaac.dubois@pioneeracademy.com",
+     "scheduling",
+     "2026-07-22 04:37:42",
+     "2026-07-24 08:46:45"
+    ],
+    [
+     "isaac.dubois@pioneeracademy.com",
+     "scheduling",
+     "2026-07-26 06:32:46",
+     "2026-07-28 09:25:57"
+    ],
+    [
+     "isaac.dubois@pioneeracademy.com",
+     "scheduling",
+     "2026-07-31 23:15:59",
+     "2026-08-04 15:12:11"
+    ],
+    [
+     "isaac.dubois@pioneeracademy.com",
+     "scheduling",
+     "2026-08-06 16:03:28",
+     "2026-08-10 18:52:25"
+    ],
+    [
+     "isaac.dubois@pioneeracademy.com",
+     "scheduling",
+     "2026-08-12 13:46:57",
+     "2026-08-19 12:22:56"
+    ],
+    [
+     "isaac.dubois@pioneeracademy.com",
+     "scheduling",
+     "2026-09-03 04:44:59",
+     "2026-09-03 08:44:08"
+    ],
+    [
+     "isaac.dubois@pioneeracademy.com",
+     "scheduling",
+     "2026-09-11 03:41:23",
+     "2026-09-14 17:47:38"
+    ],
+    [
+     "isaac.dubois@pioneeracademy.com",
+     "scheduling",
+     "2026-09-15 22:58:10",
+     "2026-09-16 18:01:29"
+    ],
+    [
+     "isaac.dubois@pioneeracademy.com",
+     "scheduling",
+     "2026-09-17 19:44:47",
+     "2026-09-20 07:46:30"
+    ],
+    [
+     "isaac.kim@pebblepetcare.com",
+     "notifications",
+     "2026-08-10 21:04:32",
+     "2026-08-13 18:50:48"
+    ],
+    [
+     "isaac.kim@pebblepetcare.com",
+     "notifications",
+     "2026-08-16 09:56:52",
+     "2026-08-22 08:41:39"
+    ],
+    [
+     "isaac.kim@pebblepetcare.com",
+     "scheduling",
+     "2026-06-05 20:36:07",
+     "2026-06-06 23:36:21"
+    ],
+    [
+     "isaac.kim@pebblepetcare.com",
+     "scheduling",
+     "2026-06-11 03:48:47",
+     "2026-06-12 15:32:57"
+    ],
+    [
+     "isaac.morgan@hearthconsulting.com",
+     "bug",
+     "2026-08-12 22:03:21",
+     "2026-08-18 03:35:54"
+    ],
+    [
+     "isaac.morgan@wrenphysio.com",
+     "scheduling",
+     "2026-06-19 02:29:57",
+     "2026-06-22 16:47:53"
+    ],
+    [
+     "isaac.usman@granitefitness.com",
+     "billing",
+     "2026-05-21 22:49:50",
+     "2026-05-22 20:06:59"
+    ],
+    [
+     "isaac.usman@granitefitness.com",
+     "login",
+     "2026-09-17 23:46:15",
+     "2026-09-19 14:32:16"
+    ],
+    [
+     "isaac.usman@granitefitness.com",
+     "notifications",
+     "2026-07-15 12:37:38",
+     "2026-07-16 15:30:17"
+    ],
+    [
+     "isaac.young@copperwellness.com",
+     "scheduling",
+     "2026-08-27 21:46:33",
+     "2026-09-02 13:13:30"
+    ],
+    [
+     "isaac.young@fernwoodstudios.com",
+     "bug",
+     "2026-08-10 01:31:50",
+     "2026-08-12 01:19:55"
+    ],
+    [
+     "ivy.dubois@bluebirdconsulting.com",
+     "billing",
+     "2026-04-29 08:47:06",
+     "2026-04-30 20:50:12"
+    ],
+    [
+     "ivy.dubois@bluebirdconsulting.com",
+     "billing",
+     "2026-05-01 17:55:21",
+     "2026-05-03 08:25:57"
+    ],
+    [
+     "ivy.dubois@bluebirdconsulting.com",
+     "billing",
+     "2026-05-04 12:10:56",
+     "2026-05-08 15:08:44"
+    ],
+    [
+     "ivy.dubois@bluebirdconsulting.com",
+     "scheduling",
+     "2026-08-27 00:45:08",
+     "2026-09-01 14:56:07"
+    ],
+    [
+     "ivy.dubois@vistawellness.com",
+     "account settings",
+     "2026-05-19 19:51:08",
+     "2026-05-21 18:26:03"
+    ],
+    [
+     "ivy.foster@vistawellness.com",
+     "scheduling",
+     "2026-04-08 15:56:38",
+     "2026-04-13 13:28:01"
+    ],
+    [
+     "ivy.garcia@harborcounseling.com",
+     "scheduling",
+     "2026-06-07 01:06:16",
+     "2026-06-08 15:18:09"
+    ],
+    [
+     "ivy.turner@evergreenpetcare.com",
+     "billing",
+     "2026-04-05 21:33:52",
+     "2026-04-09 12:49:29"
+    ],
+    [
+     "ivy.turner@evergreenpetcare.com",
+     "billing",
+     "2026-07-30 10:50:39",
+     "2026-07-30 19:22:41"
+    ],
+    [
+     "ivy.turner@evergreenpetcare.com",
+     "bug",
+     "2026-05-18 03:25:11",
+     "2026-05-21 14:39:52"
+    ],
+    [
+     "ivy.turner@kestrelbarbers.com",
+     "billing",
+     "2026-06-13 04:50:32",
+     "2026-06-15 16:53:16"
+    ],
+    [
+     "ivy.turner@kestrelbarbers.com",
+     "bug",
+     "2026-04-15 11:20:58",
+     "2026-04-20 14:41:20"
+    ],
+    [
+     "ivy.turner@riverbendveterinar.com",
+     "bug",
+     "2026-08-29 20:39:46",
+     "2026-09-01 23:08:24"
+    ],
+    [
+     "ivy.turner@riverbendveterinar.com",
+     "integrations",
+     "2026-07-08 23:34:33",
+     "2026-07-13 00:31:12"
+    ],
+    [
+     "ivy.turner@riverbendveterinar.com",
+     "scheduling",
+     "2026-05-06 19:57:07",
+     "2026-05-08 13:03:11"
+    ],
+    [
+     "ivy.turner@riverbendveterinar.com",
+     "scheduling",
+     "2026-05-29 16:28:42",
+     "2026-06-04 18:23:32"
+    ],
+    [
+     "jada.dubois@bluebirdcounseling.com",
+     "reporting",
+     "2026-09-12 01:08:36",
+     "2026-09-16 14:08:18"
+    ],
+    [
+     "jada.foster@silverlinefitness.com",
+     "login",
+     "2026-04-07 08:19:49",
+     "2026-04-10 02:22:49"
+    ],
+    [
+     "jada.morgan@meadowpetcare.com",
+     "billing",
+     "2026-06-14 17:44:55",
+     "2026-06-19 10:28:30"
+    ],
+    [
+     "jada.morgan@meadowpetcare.com",
+     "integrations",
+     "2026-07-20 17:08:22",
+     "2026-07-22 12:40:07"
+    ],
+    [
+     "jada.nakamura@copperdental.com",
+     "billing",
+     "2026-08-30 08:32:05",
+     "2026-09-04 22:41:02"
+    ],
+    [
+     "jada.nakamura@copperdental.com",
+     "billing",
+     "2026-09-07 02:24:42",
+     "2026-09-13 10:45:23"
+    ],
+    [
+     "jada.rossi@harbortutoringinc.com",
+     "billing",
+     "2026-04-17 05:10:19",
+     "2026-04-20 19:01:11"
+    ],
+    [
+     "jon.ellis@brightspa.com",
+     "integrations",
+     "2026-06-18 05:56:21",
+     "2026-06-22 13:53:18"
+    ],
+    [
+     "jon.ellis@brightspa.com",
+     "login",
+     "2026-06-17 18:00:56",
+     "2026-06-23 07:30:43"
+    ],
+    [
+     "jon.ellis@brightspa.com",
+     "login",
+     "2026-06-25 06:21:14",
+     "2026-06-30 18:06:19"
+    ],
+    [
+     "jon.jensen@silverlineveterina.com",
+     "billing",
+     "2026-04-12 15:37:56",
+     "2026-04-17 22:02:16"
+    ],
+    [
+     "jon.okafor@ironwoodveterinary.com",
+     "scheduling",
+     "2026-09-09 02:07:42",
+     "2026-09-14 01:43:20"
+    ],
+    [
+     "jon.patel@summitcounseling.com",
+     "bug",
+     "2026-09-07 13:01:07",
+     "2026-09-12 13:21:26"
+    ],
+    [
+     "kai.ellis@larkspurdental.com",
+     "billing",
+     "2026-06-02 17:38:42",
+     "2026-06-03 13:42:26"
+    ],
+    [
+     "kai.ellis@larkspurdental.com",
+     "billing",
+     "2026-08-18 08:26:55",
+     "2026-08-20 17:56:14"
+    ],
+    [
+     "kai.ellis@larkspurdental.com",
+     "bug",
+     "2026-08-25 04:18:02",
+     "2026-08-29 20:13:15"
+    ],
+    [
+     "kai.ellis@larkspurdental.com",
+     "integrations",
+     "2026-04-17 23:17:41",
+     "2026-04-20 17:42:53"
+    ],
+    [
+     "kai.ellis@larkspurdental.com",
+     "integrations",
+     "2026-04-22 17:55:24",
+     "2026-04-24 21:44:29"
+    ],
+    [
+     "kai.ellis@larkspurdental.com",
+     "login",
+     "2026-09-21 11:18:01",
+     "2026-09-24 21:13:39"
+    ],
+    [
+     "kai.ellis@larkspurdental.com",
+     "reporting",
+     "2026-05-31 22:52:36",
+     "2026-06-03 22:44:38"
+    ],
+    [
+     "kai.ellis@larkspurdental.com",
+     "scheduling",
+     "2026-07-17 09:19:01",
+     "2026-07-17 20:13:00"
+    ],
+    [
+     "kai.ibrahim@rosewoodacademy.com",
+     "account settings",
+     "2026-07-18 10:13:45",
+     "2026-07-22 18:14:55"
+    ],
+    [
+     "kai.ibrahim@rosewoodacademy.com",
+     "login",
+     "2026-09-15 17:10:18",
+     "2026-09-22 13:53:17"
+    ],
+    [
+     "kai.morgan@vistaphysio.com",
+     "billing",
+     "2026-06-30 07:02:09",
+     "2026-07-03 17:00:57"
+    ],
+    [
+     "kai.morgan@vistaphysio.com",
+     "bug",
+     "2026-08-26 18:44:20",
+     "2026-08-29 01:47:55"
+    ],
+    [
+     "kai.morgan@vistaphysio.com",
+     "login",
+     "2026-07-18 01:32:29",
+     "2026-07-21 20:01:25"
+    ],
+    [
+     "kai.morgan@vistaphysio.com",
+     "scheduling",
+     "2026-05-31 23:10:45",
+     "2026-06-04 23:45:58"
+    ],
+    [
+     "kai.morgan@vistaphysio.com",
+     "scheduling",
+     "2026-09-03 16:05:07",
+     "2026-09-08 22:24:39"
+    ],
+    [
+     "kai.nakamura@meadowsalon.com",
+     "login",
+     "2026-09-19 22:54:01",
+     "2026-09-21 17:02:51"
+    ],
+    [
+     "kai.rossi@fernwoodstudios.com",
+     "bug",
+     "2026-07-09 09:25:00",
+     "2026-07-10 10:18:47"
+    ],
+    [
+     "kai.usman@tidewaterdental.com",
+     "bug",
+     "2026-06-09 18:32:29",
+     "2026-06-14 17:43:07"
+    ],
+    [
+     "kira.jensen@cloverspallc.com",
+     "scheduling",
+     "2026-07-17 01:50:32",
+     "2026-07-23 11:17:33"
+    ],
+    [
+     "kira.nakamura@oaklineconsulting.com",
+     "bug",
+     "2026-06-22 20:53:39",
+     "2026-06-26 13:37:14"
+    ],
+    [
+     "kira.nakamura@oaklineconsulting.com",
+     "reporting",
+     "2026-05-28 18:44:23",
+     "2026-06-03 19:35:02"
+    ],
+    [
+     "kira.patel@uplandconsulting.com",
+     "scheduling",
+     "2026-08-28 04:32:50",
+     "2026-08-29 19:40:55"
+    ],
+    [
+     "kira.rossi@maplecounseling.com",
+     "billing",
+     "2026-06-12 04:08:43",
+     "2026-06-12 22:29:20"
+    ],
+    [
+     "kira.rossi@maplecounseling.com",
+     "billing",
+     "2026-06-15 01:01:18",
+     "2026-06-16 18:33:19"
+    ],
+    [
+     "kira.vega@foxglovewellness.com",
+     "login",
+     "2026-07-21 15:02:27",
+     "2026-07-24 10:03:30"
+    ],
+    [
+     "kira.vega@foxglovewellness.com",
+     "login",
+     "2026-07-25 23:21:27",
+     "2026-07-28 19:35:57"
+    ],
+    [
+     "kira.vega@foxglovewellness.com",
+     "login",
+     "2026-07-29 16:56:57",
+     "2026-07-31 01:11:06"
+    ],
+    [
+     "kira.vega@foxglovewellness.com",
+     "scheduling",
+     "2026-06-24 04:51:45",
+     "2026-06-25 22:25:21"
+    ],
+    [
+     "lena.alvarez@saffronlawgroup.com",
+     "scheduling",
+     "2026-04-25 13:37:59",
+     "2026-04-27 01:41:06"
+    ],
+    [
+     "lena.alvarez@saffronlawgroup.com",
+     "scheduling",
+     "2026-06-23 10:20:49",
+     "2026-06-23 19:47:08"
+    ],
+    [
+     "lena.hughes@foxgloveyogainc.com",
+     "bug",
+     "2026-09-21 00:39:11",
+     "2026-09-26 05:28:36"
+    ],
+    [
+     "lena.jensen@brightwellness.com",
+     "scheduling",
+     "2026-06-02 19:42:57",
+     "2026-06-03 15:03:00"
+    ],
+    [
+     "lena.patel@bluebirdbarbers.com",
+     "bug",
+     "2026-09-12 04:53:12",
+     "2026-09-15 02:15:19"
+    ],
+    [
+     "lena.patel@bluebirdbarbers.com",
+     "notifications",
+     "2026-08-28 11:52:40",
+     "2026-09-01 14:52:09"
+    ],
+    [
+     "lena.patel@bluebirdbarbers.com",
+     "scheduling",
+     "2026-08-30 10:30:50",
+     "2026-09-04 14:47:59"
+    ],
+    [
+     "lena.patel@bluebirdbarbers.com",
+     "scheduling",
+     "2026-09-06 14:23:58",
+     "2026-09-10 15:50:12"
+    ],
+    [
+     "lena.quinn@fernwoodclinic.com",
+     "scheduling",
+     "2026-06-27 01:56:54",
+     "2026-07-01 16:19:44"
+    ],
+    [
+     "lena.rossi@maplechiropractic.com",
+     "scheduling",
+     "2026-04-13 21:33:03",
+     "2026-04-14 17:52:49"
+    ],
+    [
+     "lena.usman@cedarcounseling.com",
+     "scheduling",
+     "2026-06-22 23:36:59",
+     "2026-06-28 19:14:16"
+    ],
+    [
+     "marco.brooks@brightpetcarellc.com",
+     "scheduling",
+     "2026-04-15 15:21:47",
+     "2026-04-21 07:55:21"
+    ],
+    [
+     "marco.morgan@foxglovewellness.com",
+     "billing",
+     "2026-05-02 20:54:06",
+     "2026-05-04 12:05:05"
+    ],
+    [
+     "marco.morgan@foxglovewellness.com",
+     "billing",
+     "2026-05-20 12:08:47",
+     "2026-05-22 19:11:57"
+    ],
+    [
+     "marco.morgan@foxglovewellness.com",
+     "notifications",
+     "2026-06-18 20:57:54",
+     "2026-06-24 08:30:44"
+    ],
+    [
+     "marco.nakamura@ironwoodphysio.com",
+     "billing",
+     "2026-08-01 11:33:20",
+     "2026-08-04 21:52:09"
+    ],
+    [
+     "marco.patel@thistlewellness.com",
+     "reporting",
+     "2026-05-01 06:53:17",
+     "2026-05-06 01:11:10"
+    ],
+    [
+     "marco.rossi@harborfitness.com",
+     "login",
+     "2026-04-06 02:00:17",
+     "2026-04-11 13:54:21"
+    ],
+    [
+     "nia.lopez@bluebirdconsulting.com",
+     "login",
+     "2026-08-03 21:59:42",
+     "2026-08-07 18:00:20"
+    ],
+    [
+     "nia.morgan@summitacademy.com",
+     "scheduling",
+     "2026-04-15 17:14:20",
+     "2026-04-20 19:53:16"
+    ],
+    [
+     "nia.nakamura@northgatephysiollc.com",
+     "integrations",
+     "2026-05-14 17:33:14",
+     "2026-05-20 09:59:18"
+    ],
+    [
+     "nia.usman@silverlinesalon.com",
+     "integrations",
+     "2026-07-18 10:07:46",
+     "2026-07-20 14:15:27"
+    ],
+    [
+     "nia.usman@silverlinesalon.com",
+     "scheduling",
+     "2026-08-06 18:31:36",
+     "2026-08-11 17:18:06"
+    ],
+    [
+     "omar.alvarez@thistlestudiosinc.com",
+     "billing",
+     "2026-05-15 10:54:43",
+     "2026-05-20 14:47:36"
+    ],
+    [
+     "omar.alvarez@thistlestudiosinc.com",
+     "billing",
+     "2026-06-09 12:29:15",
+     "2026-06-13 20:29:32"
+    ],
+    [
+     "omar.alvarez@thistlestudiosinc.com",
+     "billing",
+     "2026-06-15 19:31:39",
+     "2026-06-20 21:00:39"
+    ],
+    [
+     "omar.alvarez@thistlestudiosinc.com",
+     "billing",
+     "2026-08-02 01:50:47",
+     "2026-08-03 23:44:40"
+    ],
+    [
+     "omar.alvarez@thistlestudiosinc.com",
+     "billing",
+     "2026-08-04 07:56:30",
+     "2026-08-10 19:00:52"
+    ],
+    [
+     "omar.alvarez@thistlestudiosinc.com",
+     "login",
+     "2026-06-22 03:31:19",
+     "2026-06-23 20:55:49"
+    ],
+    [
+     "omar.alvarez@thistlestudiosinc.com",
+     "login",
+     "2026-08-21 22:24:40",
+     "2026-08-23 08:45:16"
+    ],
+    [
+     "omar.alvarez@thistlestudiosinc.com",
+     "notifications",
+     "2026-09-19 00:57:43",
+     "2026-09-22 07:49:00"
+    ],
+    [
+     "omar.alvarez@thistlestudiosinc.com",
+     "scheduling",
+     "2026-07-07 20:26:06",
+     "2026-07-14 14:19:48"
+    ],
+    [
+     "omar.alvarez@thistlestudiosinc.com",
+     "scheduling",
+     "2026-08-02 16:47:30",
+     "2026-08-07 19:32:00"
+    ],
+    [
+     "omar.brooks@harboracademy.com",
+     "login",
+     "2026-08-13 20:07:02",
+     "2026-08-19 19:08:31"
+    ],
+    [
+     "omar.brooks@harboracademy.com",
+     "scheduling",
+     "2026-04-09 18:39:58",
+     "2026-04-14 18:29:00"
+    ],
+    [
+     "omar.brooks@harboracademy.com",
+     "scheduling",
+     "2026-07-13 12:01:20",
+     "2026-07-15 20:20:54"
+    ],
+    [
+     "omar.brooks@harboracademy.com",
+     "scheduling",
+     "2026-08-29 15:26:37",
+     "2026-09-01 15:51:44"
+    ],
+    [
+     "omar.dubois@brightyoga.com",
+     "bug",
+     "2026-07-01 04:27:51",
+     "2026-07-01 08:16:47"
+    ],
+    [
+     "omar.ellis@wrenoptometry.com",
+     "login",
+     "2026-06-01 12:31:01",
+     "2026-06-03 23:16:27"
+    ],
+    [
+     "omar.ibrahim@maplesalonllc.com",
+     "billing",
+     "2026-05-24 12:24:12",
+     "2026-05-26 09:25:20"
+    ],
+    [
+     "omar.lopez@evergreenlawgroup.com",
+     "billing",
+     "2026-05-22 05:54:29",
+     "2026-05-22 09:11:40"
+    ],
+    [
+     "omar.lopez@evergreenlawgroup.com",
+     "login",
+     "2026-07-29 02:11:37",
+     "2026-07-31 15:43:39"
+    ],
+    [
+     "priya.nakamura@beaconbarbers.com",
+     "billing",
+     "2026-07-25 01:47:12",
+     "2026-07-26 17:30:21"
+    ],
+    [
+     "priya.nakamura@beaconbarbers.com",
+     "billing",
+     "2026-07-27 20:17:23",
+     "2026-07-28 00:39:44"
+    ],
+    [
+     "priya.nakamura@cloverconsulting.com",
+     "scheduling",
+     "2026-04-25 16:14:15",
+     "2026-04-28 15:47:06"
+    ],
+    [
+     "priya.nakamura@summitwellness.com",
+     "account settings",
+     "2026-08-15 14:03:39",
+     "2026-08-19 07:11:28"
+    ],
+    [
+     "priya.nakamura@summitwellness.com",
+     "account settings",
+     "2026-08-20 13:37:07",
+     "2026-08-22 15:24:59"
+    ],
+    [
+     "priya.nakamura@summitwellness.com",
+     "login",
+     "2026-06-20 20:30:41",
+     "2026-06-23 18:11:15"
+    ],
+    [
+     "priya.nakamura@summitwellness.com",
+     "reporting",
+     "2026-06-20 09:41:14",
+     "2026-06-22 10:29:31"
+    ],
+    [
+     "priya.vega@thistlewellness.com",
+     "scheduling",
+     "2026-08-02 15:32:38",
+     "2026-08-06 14:44:50"
+    ],
+    [
+     "quinn.brooks@cedarfitness.com",
+     "integrations",
+     "2026-08-13 20:27:11",
+     "2026-08-17 09:51:52"
+    ],
+    [
+     "quinn.chen@kestrelpetcare.com",
+     "scheduling",
+     "2026-08-22 14:48:26",
+     "2026-08-23 15:06:05"
+    ],
+    [
+     "quinn.garcia@fernwoodspa.com",
+     "scheduling",
+     "2026-05-31 20:43:37",
+     "2026-06-02 14:22:13"
+    ],
+    [
+     "quinn.garcia@fernwoodspa.com",
+     "scheduling",
+     "2026-06-18 14:52:16",
+     "2026-06-21 06:19:19"
+    ],
+    [
+     "quinn.garcia@fernwoodspa.com",
+     "scheduling",
+     "2026-09-20 12:15:25",
+     "2026-09-24 14:00:03"
+    ],
+    [
+     "quinn.turner@kestrelphysio.com",
+     "integrations",
+     "2026-04-23 11:48:14",
+     "2026-04-28 00:43:02"
+    ],
+    [
+     "quinn.turner@yarrowautocare.com",
+     "scheduling",
+     "2026-08-26 20:44:02",
+     "2026-08-31 22:14:02"
+    ],
+    [
+     "quinn.usman@driftwoodyoga.com",
+     "billing",
+     "2026-05-14 15:24:35",
+     "2026-05-15 20:19:21"
+    ],
+    [
+     "rosa.chen@lanternfitness.com",
+     "integrations",
+     "2026-05-02 12:49:43",
+     "2026-05-06 19:45:13"
+    ],
+    [
+     "rosa.kim@graniteoptometry.com",
+     "account settings",
+     "2026-05-15 20:56:08",
+     "2026-05-16 12:02:15"
+    ],
+    [
+     "rosa.kim@graniteoptometry.com",
+     "account settings",
+     "2026-05-17 18:30:07",
+     "2026-05-21 21:28:43"
+    ],
+    [
+     "rosa.okafor@evergreensalon.com",
+     "account settings",
+     "2026-04-18 12:22:10",
+     "2026-04-20 21:30:19"
+    ],
+    [
+     "rosa.okafor@evergreensalon.com",
+     "notifications",
+     "2026-07-30 16:33:52",
+     "2026-08-03 16:32:49"
+    ],
+    [
+     "rosa.okafor@evergreensalon.com",
+     "scheduling",
+     "2026-08-10 11:24:06",
+     "2026-08-14 22:26:59"
+    ],
+    [
+     "rosa.rossi@cedarspa.com",
+     "scheduling",
+     "2026-07-03 07:56:18",
+     "2026-07-03 14:15:31"
+    ],
+    [
+     "rosa.rossi@harbortutoringinc.com",
+     "billing",
+     "2026-05-01 05:03:30",
+     "2026-05-05 18:15:05"
+    ],
+    [
+     "rosa.vega@goldenbarbers.com",
+     "billing",
+     "2026-07-15 15:42:32",
+     "2026-07-19 13:43:39"
+    ],
+    [
+     "sam.chen@fernwoodveterinary.com",
+     "scheduling",
+     "2026-08-29 20:52:33",
+     "2026-09-03 12:14:43"
+    ],
+    [
+     "sam.jensen@rosewoodveterinary.com",
+     "reporting",
+     "2026-04-05 20:21:13",
+     "2026-04-06 16:27:56"
+    ],
+    [
+     "sam.morgan@oaklinestudios.com",
+     "bug",
+     "2026-05-05 23:07:20",
+     "2026-05-10 19:04:24"
+    ],
+    [
+     "sam.nakamura@ironwoodautocare.com",
+     "billing",
+     "2026-07-24 18:42:25",
+     "2026-07-26 08:14:37"
+    ],
+    [
+     "sam.nakamura@northgatesalon.com",
+     "billing",
+     "2026-09-04 18:20:23",
+     "2026-09-08 20:22:21"
+    ],
+    [
+     "sam.nakamura@northgatesalon.com",
+     "billing",
+     "2026-09-12 03:50:16",
+     "2026-09-18 16:31:28"
+    ],
+    [
+     "sam.rossi@cedarphysio.com",
+     "scheduling",
+     "2026-06-25 10:58:21",
+     "2026-06-28 20:09:02"
+    ],
+    [
+     "tara.chen@foxglovephysio.com",
+     "billing",
+     "2026-04-25 15:14:39",
+     "2026-04-30 13:11:14"
+    ],
+    [
+     "tara.morgan@beaconclinic.com",
+     "scheduling",
+     "2026-09-10 03:21:57",
+     "2026-09-16 20:29:55"
+    ],
+    [
+     "tara.nakamura@cedarlawgroupinc.com",
+     "bug",
+     "2026-05-28 03:08:11",
+     "2026-05-31 13:28:08"
+    ],
+    [
+     "uma.foster@rosewoodstudiosllc.com",
+     "bug",
+     "2026-08-29 04:20:18",
+     "2026-09-03 17:01:09"
+    ],
+    [
+     "uma.foster@rosewoodstudiosllc.com",
+     "integrations",
+     "2026-04-18 00:17:05",
+     "2026-04-20 10:09:19"
+    ],
+    [
+     "uma.foster@rosewoodstudiosllc.com",
+     "scheduling",
+     "2026-07-26 21:41:08",
+     "2026-07-30 22:51:16"
+    ],
+    [
+     "uma.garcia@meadowlawgroup.com",
+     "login",
+     "2026-04-15 11:28:40",
+     "2026-04-16 14:59:54"
+    ],
+    [
+     "uma.garcia@meadowlawgroup.com",
+     "login",
+     "2026-04-16 19:45:23",
+     "2026-04-17 22:43:04"
+    ],
+    [
+     "uma.jensen@kestreltutoring.com",
+     "reporting",
+     "2026-07-27 10:51:10",
+     "2026-07-30 15:59:40"
+    ],
+    [
+     "uma.okafor@evergreencounselin.com",
+     "login",
+     "2026-05-11 23:47:28",
+     "2026-05-14 01:56:40"
+    ],
+    [
+     "uma.walsh@cloverconsulting.com",
+     "billing",
+     "2026-04-24 07:25:39",
+     "2026-05-01 06:52:20"
+    ],
+    [
+     "uma.walsh@cloverconsulting.com",
+     "billing",
+     "2026-05-05 00:54:43",
+     "2026-05-09 14:54:32"
+    ],
+    [
+     "uma.walsh@cloverconsulting.com",
+     "scheduling",
+     "2026-04-17 21:58:28",
+     "2026-04-19 21:20:05"
+    ],
+    [
+     "victor.dubois@ironwoodoptometry.com",
+     "scheduling",
+     "2026-09-21 21:21:01",
+     "2026-09-22 16:52:12"
+    ],
+    [
+     "victor.jensen@pebblesalon.com",
+     "account settings",
+     "2026-05-18 21:45:15",
+     "2026-05-21 09:38:08"
+    ],
+    [
+     "victor.patel@riverbendconsultin.com",
+     "bug",
+     "2026-09-08 04:11:41",
+     "2026-09-08 20:58:41"
+    ],
+    [
+     "victor.turner@rosewoodconsulting.com",
+     "login",
+     "2026-04-23 23:08:59",
+     "2026-04-29 12:23:51"
+    ],
+    [
+     "victor.walsh@lanternfitness.com",
+     "billing",
+     "2026-05-21 21:46:07",
+     "2026-05-25 12:23:44"
+    ],
+    [
+     "wes.brooks@lanterntutoring.com",
+     "notifications",
+     "2026-05-14 10:51:29",
+     "2026-05-14 12:50:33"
+    ],
+    [
+     "wes.brooks@lanterntutoring.com",
+     "reporting",
+     "2026-08-22 07:28:59",
+     "2026-08-23 17:26:51"
+    ],
+    [
+     "wes.jensen@thistletutoring.com",
+     "login",
+     "2026-06-25 08:48:30",
+     "2026-06-28 20:50:43"
+    ],
+    [
+     "wes.okafor@rosewoodveterinary.com",
+     "integrations",
+     "2026-05-29 16:26:04",
+     "2026-05-31 21:49:21"
+    ],
+    [
+     "wes.turner@pioneerphysio.com",
+     "bug",
+     "2026-07-06 19:13:38",
+     "2026-07-10 11:57:50"
+    ],
+    [
+     "wes.vega@uplandconsulting.com",
+     "bug",
+     "2026-07-16 21:47:18",
+     "2026-07-19 14:33:47"
+    ],
+    [
+     "ximena.ellis@pebblespa.com",
+     "account settings",
+     "2026-06-08 14:09:32",
+     "2026-06-14 07:00:17"
+    ],
+    [
+     "ximena.ellis@pebblespa.com",
+     "billing",
+     "2026-06-06 19:03:56",
+     "2026-06-07 16:38:44"
+    ],
+    [
+     "ximena.ellis@pebblespa.com",
+     "billing",
+     "2026-06-08 03:35:01",
+     "2026-06-10 16:12:14"
+    ],
+    [
+     "ximena.ellis@pebblespa.com",
+     "scheduling",
+     "2026-07-18 07:21:00",
+     "2026-07-20 15:44:13"
+    ],
+    [
+     "ximena.ellis@pebblespa.com",
+     "scheduling",
+     "2026-08-07 07:19:55",
+     "2026-08-11 09:13:18"
+    ],
+    [
+     "ximena.foster@silverlineyoga.com",
+     "bug",
+     "2026-09-19 03:47:36",
+     "2026-09-21 09:01:43"
+    ],
+    [
+     "ximena.nakamura@meadowoptometry.com",
+     "scheduling",
+     "2026-07-28 01:53:47",
+     "2026-08-01 18:03:53"
+    ],
+    [
+     "ximena.quinn@meadowoptometry.com",
+     "billing",
+     "2026-09-11 09:24:51",
+     "2026-09-13 21:37:44"
+    ],
+    [
+     "ximena.quinn@meadowoptometry.com",
+     "scheduling",
+     "2026-05-03 13:20:11",
+     "2026-05-08 13:57:33"
+    ],
+    [
+     "ximena.singh@driftwooddental.com",
+     "reporting",
+     "2026-04-28 11:26:25",
+     "2026-05-04 04:38:58"
+    ],
+    [
+     "ximena.singh@driftwooddental.com",
+     "scheduling",
+     "2026-05-30 15:05:55",
+     "2026-05-31 20:18:25"
+    ],
+    [
+     "ximena.turner@driftwoodyoga.com",
+     "scheduling",
+     "2026-05-08 14:51:46",
+     "2026-05-13 08:32:53"
+    ],
+    [
+     "ximena.turner@evergreenconsultin.com",
+     "bug",
+     "2026-07-04 16:20:38",
+     "2026-07-09 23:14:42"
+    ],
+    [
+     "yusuf.alvarez@fernwoodveterinary.com",
+     "billing",
+     "2026-08-09 04:42:41",
+     "2026-08-09 22:16:47"
+    ],
+    [
+     "yusuf.kim@vistacounseling.com",
+     "login",
+     "2026-07-18 03:19:40",
+     "2026-07-22 22:13:35"
+    ],
+    [
+     "yusuf.lopez@uplandconsulting.com",
+     "notifications",
+     "2026-09-19 03:34:00",
+     "2026-09-23 17:57:35"
+    ],
+    [
+     "yusuf.quinn@cloverwellness.com",
+     "scheduling",
+     "2026-09-02 23:09:10",
+     "2026-09-05 02:06:29"
+    ],
+    [
+     "yusuf.quinn@hearthwellness.com",
+     "bug",
+     "2026-07-25 18:20:31",
+     "2026-07-28 13:42:36"
+    ],
+    [
+     "yusuf.quinn@hearthwellness.com",
+     "scheduling",
+     "2026-05-24 09:38:41",
+     "2026-05-30 03:50:00"
+    ],
+    [
+     "yusuf.quinn@hearthwellness.com",
+     "scheduling",
+     "2026-06-02 10:40:40",
+     "2026-06-07 16:19:45"
+    ],
+    [
+     "yusuf.quinn@hearthwellness.com",
+     "scheduling",
+     "2026-06-08 13:59:26",
+     "2026-06-14 07:20:47"
+    ],
+    [
+     "yusuf.rossi@larkspurbarbers.com",
+     "integrations",
+     "2026-05-13 20:51:45",
+     "2026-05-18 04:41:15"
+    ],
+    [
+     "yusuf.usman@vistaacademyllc.com",
+     "account settings",
+     "2026-08-13 09:26:23",
+     "2026-08-17 10:07:46"
+    ],
+    [
+     "yusuf.usman@vistaacademyllc.com",
+     "scheduling",
+     "2026-08-04 10:07:50",
+     "2026-08-05 20:39:10"
+    ],
+    [
+     "yusuf.vega@evergreenpetcare.com",
+     "scheduling",
+     "2026-09-06 03:01:51",
+     "2026-09-10 17:12:55"
+    ],
+    [
+     "yusuf.vega@evergreenpetcare.com",
+     "scheduling",
+     "2026-09-12 09:34:38",
+     "2026-09-14 15:47:29"
+    ],
+    [
+     "yusuf.vega@uplandfitnessinc.com",
+     "login",
+     "2026-04-11 08:23:56",
+     "2026-04-15 17:03:17"
+    ],
+    [
+     "yusuf.vega@uplandfitnessinc.com",
+     "notifications",
+     "2026-05-27 22:18:34",
+     "2026-05-27 22:53:21"
+    ],
+    [
+     "zoe.alvarez@brightyoga.com",
+     "login",
+     "2026-08-09 01:16:44",
+     "2026-08-11 22:15:02"
+    ],
+    [
+     "zoe.foster@yarrowsalon.com",
+     "scheduling",
+     "2026-08-17 13:21:51",
+     "2026-08-21 00:57:58"
+    ],
+    [
+     "zoe.morgan@quarryveterinary.com",
+     "notifications",
+     "2026-09-03 21:45:03",
+     "2026-09-03 23:28:24"
+    ],
+    [
+     "zoe.morgan@quarryveterinary.com",
+     "notifications",
+     "2026-09-05 03:30:31",
+     "2026-09-07 16:50:52"
+    ],
+    [
+     "zoe.rossi@evergreenlawgroup.com",
+     "reporting",
+     "2026-05-21 02:51:54",
+     "2026-05-26 17:11:50"
+    ],
+    [
+     "zoe.rossi@evergreenlawgroup.com",
+     "reporting",
+     "2026-05-29 01:39:10",
+     "2026-05-30 16:13:07"
+    ],
+    [
+     "zoe.rossi@orchidlawgroup.com",
+     "integrations",
+     "2026-05-01 15:35:29",
+     "2026-05-05 10:03:20"
+    ],
+    [
+     "zoe.usman@larkspurclinic.com",
+     "account settings",
+     "2026-05-09 07:20:27",
+     "2026-05-10 06:22:28"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "14",
+  "level": "advanced",
+  "title": "Satisfaction you can trust",
+  "rules": [
+   "Some tickets were rated twice. Keep only the latest response per ticket.",
+   "Ignore responses whose ticket_id doesn't match a real ticket.",
+   "The agent is the ticket's assignee. avg_rating is rounded to 2 decimal places."
+  ],
+  "returns": [
+   "agent_name",
+   "rated_tickets",
+   "avg_rating"
+  ],
+  "ordered": false,
+  "tables": [
+   "csat_responses",
+   "tickets",
+   "agents"
+  ],
+  "skills": [
+   "ROW_NUMBER",
+   "de-duplicating",
+   "INNER JOIN"
+  ],
+  "prompt": "Average satisfaction (CSAT) by agent, but only from responses you can trust.",
+  "expected": {
+   "columns": [
+    "agent_name",
+    "rated_tickets",
+    "avg_rating"
+   ],
+   "rows": [
+    [
+     "Ava Alvarez",
+     65,
+     3.77
+    ],
+    [
+     "Ben Brooks",
+     71,
+     3.93
+    ],
+    [
+     "Chloe Chen",
+     89,
+     4.18
+    ],
+    [
+     "Diego Dubois",
+     70,
+     3.96
+    ],
+    [
+     "Elena Ellis",
+     26,
+     4.42
+    ],
+    [
+     "Farah Foster",
+     77,
+     4.12
+    ],
+    [
+     "Gabe Garcia",
+     51,
+     3.98
+    ],
+    [
+     "Hana Hughes",
+     66,
+     4
+    ],
+    [
+     "Isaac Ibrahim",
+     61,
+     3.69
+    ],
+    [
+     "Jada Jensen",
+     73,
+     4
+    ],
+    [
+     "Kai Kim",
+     42,
+     4.02
+    ],
+    [
+     "Lena Lopez",
+     71,
+     4.15
+    ],
+    [
+     "Marco Morgan",
+     69,
+     3.99
+    ],
+    [
+     "Nia Nakamura",
+     70,
+     3.9
+    ],
+    [
+     "Omar Okafor",
+     76,
+     4.09
+    ],
+    [
+     "Priya Patel",
+     59,
+     3.97
+    ],
+    [
+     "Quinn Quinn",
+     78,
+     4.17
+    ],
+    [
+     "Rosa Rossi",
+     73,
+     3.92
+    ],
+    [
+     "Sam Singh",
+     72,
+     4.19
+    ],
+    [
+     "Tara Turner",
+     60,
+     4.17
+    ],
+    [
+     "Uma Usman",
+     155,
+     3.97
+    ],
+    [
+     "Victor Vega",
+     167,
+     4.01
+    ],
+    [
+     "Wes Walsh",
+     179,
+     3.96
+    ],
+    [
+     "Ximena Young",
+     175,
+     3.86
+    ]
+   ]
+  }
+ },
+ {
+  "id": "15",
+  "level": "advanced",
+  "title": "The real SLA report",
+  "rules": [
+   "Only tickets from CRM customers that have had a reply from a person, created at or after the customer's plan_changed_at.",
+   "The dashboard's way: from tickets.created_at to the first auto_reply or public_reply, against the target for helpdesk_orgs.sla_tier.",
+   "The correct way: from the ticket's 'created' event to the first public_reply by an agent, against the target for customers.plan_tier.",
+   "A ticket was judged wrong when the two ways disagree on whether the SLA was met (met means minutes <= first_response_minutes).",
+   "Cause: phone tickets are timezone_shift; otherwise auto_reply_counted if the dashboard's first response was an auto_reply; otherwise wrong_plan_tier."
+  ],
+  "returns": [
+   "likely_cause",
+   "tickets"
+  ],
+  "ordered": false,
+  "tables": [
+   "tickets",
+   "ticket_events",
+   "helpdesk_orgs",
+   "customers",
+   "sla_policies"
+  ],
+  "skills": [
+   "several CTEs",
+   "CASE",
+   "combining every fix"
+  ],
+  "prompt": "The dashboard says 92.3% of tickets met their first-response SLA. Recalculate it correctly (84.0% is the real number), then count the tickets the dashboard judged wrong, by cause.",
+  "expected": {
+   "columns": [
+    "likely_cause",
+    "tickets"
+   ],
+   "rows": [
+    [
+     "auto_reply_counted",
+     645
+    ],
+    [
+     "timezone_shift",
+     277
+    ],
+    [
+     "wrong_plan_tier",
+     26
+    ]
+   ]
+  }
+ }
+]
