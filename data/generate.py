@@ -3,7 +3,8 @@
 Everything here is invented. The generator is seeded, so running it again
 produces exactly the same data (and the same answer keys).
 
-Output: data/out/<table>.parquet for the 8 tables.
+Output: data/out/<table>.parquet for the 8 tables (used by cases/build.py)
+and data/arrow/<table>.arrow (loaded by the browser app).
 """
 import random
 from datetime import datetime, timedelta, date
@@ -524,3 +525,17 @@ for name, schema in SCHEMAS.items():
                     [[trunc(r[c]) for c in cols] for r in rows])
     con.execute(f"COPY {name} TO '{OUT / (name + '.parquet')}' (FORMAT PARQUET, COMPRESSION ZSTD)")
     print(f"{name:22s} {con.execute(f'SELECT count(*) FROM {name}').fetchone()[0]:>7,} rows")
+
+# The browser app loads Arrow IPC files: DuckDB-WASM reads them without downloading
+# its Parquet extension from a third-party host at runtime.
+import pyarrow as pa  # noqa: E402
+
+ARROW = Path(__file__).parent / "arrow"
+ARROW.mkdir(exist_ok=True)
+for name in SCHEMAS:
+    tbl = con.execute(f"SELECT * FROM {name}").arrow()
+    if hasattr(tbl, "read_all"):
+        tbl = tbl.read_all()
+    with pa.OSFile(str(ARROW / f"{name}.arrow"), "wb") as sink:
+        with pa.ipc.new_stream(sink, tbl.schema) as writer:
+            writer.write_table(tbl)
