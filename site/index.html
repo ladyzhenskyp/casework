@@ -1,4 +1,10 @@
-<title>Casework Square</title>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="SQL practice on real support operations data, with an AI tutor that gives hints instead of answers.">
+<title>Casework</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..800&family=Unbounded:wght@600&family=Geist+Mono:wght@400;500;600&display=swap">
@@ -196,7 +202,7 @@ table.grid tr:last-child td{border-bottom:0}
 .verdict b{color:var(--wine)}
 .verdict.ok b{color:var(--ok)}
 /* progress demo */
-.cells{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.cells{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
 .cell{aspect-ratio:1;border-radius:9px;background:var(--cream);border:1px solid var(--line);display:grid;place-items:center;font-family:var(--mono);font-size:11px;color:var(--mocha);max-width:100%}
 .cell.s{background:var(--wine);color:#fff;border-color:transparent}
 .cell.h{background:var(--rose);color:var(--stage);border-color:transparent}
@@ -207,7 +213,7 @@ table.grid tr:last-child td{border-bottom:0}
 
 /* ---------- curriculum ---------- */
 .cases{border-top:1px solid var(--line)}
-.case-row{display:grid;grid-template-columns:70px minmax(0,1.3fr) minmax(0,1fr) 120px;gap:20px;align-items:center;padding:20px 4px;border-bottom:1px solid var(--line);transition:background .2s,padding .25s}
+.case-row{color:inherit;text-decoration:none;display:grid;grid-template-columns:70px minmax(0,1.3fr) minmax(0,1fr) 120px;gap:20px;align-items:center;padding:20px 4px;border-bottom:1px solid var(--line);transition:background .2s,padding .25s}
 .case-row:hover{background:#fff}
 .case-row .no{font-family:var(--mono);font-size:14px;color:var(--mocha)}
 .case-row .t{font-weight:600;font-size:18px;letter-spacing:-.015em}
@@ -259,7 +265,8 @@ table.grid tr:last-child td{border-bottom:0}
   .btn,.case-row,.bar span{transition:none}
 }
 </style>
-
+</head>
+<body>
 <header class="nav" id="nav">
   <div class="wrap">
     <a class="logo" href="#top" aria-label="Casework home">
@@ -306,45 +313,41 @@ table.grid tr:last-child td{border-bottom:0}
     <div class="wrap">
       <div class="sec-head">
         <h2 id="ws-h">Write the query. See if the rows match.</h2>
-        <p>Every case runs on a small benefits database right in the browser. Your result is compared to the expected rows, so any correct query passes.</p>
+        <p>Every case runs on a support operations database right in your browser. Your result is compared to the expected rows, so any correct query passes.</p>
       </div>
 
       <div class="window" id="win">
-        <div class="win-bar"><div class="lights"><i></i><i></i><i></i></div><div class="url">casework.app/cases/14</div></div>
+        <div class="win-bar"><div class="lights"><i></i><i></i><i></i></div><div class="url">casework.app/cases/15</div></div>
         <div class="app">
           <aside class="side" aria-label="Case list">
-            <h4>Benefits enrollment</h4>
-            <div class="case-link"><span class="n">11</span>Wrong pay period<span class="st done"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5.2 4.2 7.4 8 3" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-            <div class="case-link"><span class="n">12</span>Missing dependents<span class="st done"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5.2 4.2 7.4 8 3" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-            <div class="case-link"><span class="n">13</span>Duplicate members<span class="st part"></span></div>
-            <div class="case-link on"><span class="n">14</span>Carrier file mismatch<span class="st"></span></div>
-            <div class="case-link"><span class="n">15</span>Late enrollments<span class="st"></span></div>
-            <div class="case-link"><span class="n">16</span>Latest election<span class="st"></span></div>
-            <div class="case-link"><span class="n">17</span>Coverage gaps<span class="st"></span></div>
-            <div class="case-link"><span class="n">18</span>Month over month<span class="st"></span></div>
+            <h4>Support operations</h4>
+            <div class="case-link"><span class="n">10</span>Customers on the wrong clock<span class="st done"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5.2 4.2 7.4 8 3" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="case-link"><span class="n">11</span>Why the syncs failed<span class="st done"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5.2 4.2 7.4 8 3" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="case-link"><span class="n">12</span>Still stuck after retries<span class="st done"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5.2 4.2 7.4 8 3" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="case-link"><span class="n">13</span>Came back within a week<span class="st part"></span></div>
+            <div class="case-link"><span class="n">14</span>Satisfaction you can trust<span class="st"></span></div>
+            <div class="case-link on"><span class="n">15</span>The real SLA report<span class="st"></span></div>
           </aside>
 
           <div class="main">
             <div class="brief">
-              <div class="tags"><span class="tag">Case 14</span><span class="tag n">CTE</span><span class="tag n">LEFT JOIN</span><span class="tag n">CASE</span></div>
-              <h3>The carrier's file disagrees with our enrollment records</h3>
-              <p>Find every employee whose coverage doesn't match the carrier, and group the mismatches by likely cause before the October invoice is paid.</p>
+              <div class="tags"><span class="tag">Case 15</span><span class="tag n">several CTEs</span><span class="tag n">CASE</span><span class="tag n">comparing systems</span></div>
+              <h3>The real SLA report</h3>
+              <p>The dashboard says 92.3% of tickets met their first-response SLA. The real number is 84.0%. Count the tickets the dashboard judged wrong, by cause.</p>
             </div>
             <div class="editor">
               <div class="ed-top"><span>query.sql</span><button class="run" type="button" tabindex="-1"><svg viewBox="0 0 10 10"><path d="M2 1l7 4-7 4z" fill="currentColor"/></svg>Run</button></div>
               <div class="code"><div class="gutter" id="gut"></div><pre id="sql"></pre></div>
             </div>
             <div class="results">
-              <div class="res-top"><span class="status" id="status"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.3 5 8.8 9.5 3.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="status-t">5 of 5 rows match</span></span><span class="ms">DuckDB &middot; 41 ms</span></div>
+              <div class="res-top"><span class="status" id="status"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.3 5 8.8 9.5 3.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="status-t">3 of 3 rows match</span></span><span class="ms">DuckDB &middot; 41 ms</span></div>
               <div class="tbl-wrap">
                 <table class="grid">
-                  <thead><tr><th>likely_cause</th><th>employees</th></tr></thead>
+                  <thead><tr><th>likely_cause</th><th>tickets</th></tr></thead>
                   <tbody id="rows">
-                    <tr><td><span class="cause"><i style="background:var(--c1)"></i>not_on_carrier_file</span></td><td>9</td></tr>
-                    <tr><td><span class="cause"><i style="background:var(--c2)"></i>termed_still_covered</span></td><td>6</td></tr>
-                    <tr><td><span class="cause"><i style="background:var(--c3)"></i>dependent_missing</span></td><td>4</td></tr>
-                    <tr><td><span class="cause"><i style="background:var(--c4)"></i>plan_mismatch</span></td><td>3</td></tr>
-                    <tr><td><span class="cause"><i style="background:var(--c5);outline:1px solid var(--nude)"></i>duplicate_on_carrier</span></td><td>2</td></tr>
+                    <tr><td><span class="cause"><i style="background:var(--c1)"></i>auto_reply_counted</span></td><td>645</td></tr>
+                    <tr><td><span class="cause"><i style="background:var(--c2)"></i>timezone_shift</span></td><td>277</td></tr>
+                    <tr><td><span class="cause"><i style="background:var(--c4)"></i>wrong_plan_tier</span></td><td>26</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -353,8 +356,8 @@ table.grid tr:last-child td{border-bottom:0}
 
           <aside class="tutor" aria-label="AI tutor">
             <h4>Tutor <span class="badge">2 of 3 hints used</span></h4>
-            <div class="step"><div class="lv">Nudge <span>level 1</span></div>Compare everyone who elected coverage against the carrier file, including people the carrier never heard of.</div>
-            <div class="step"><div class="lv">Structure <span>level 2</span></div>A CTE for this year's elections, then a LEFT JOIN to the carrier. NULLs on the carrier side are your first group.</div>
+            <div class="step"><div class="lv">Nudge <span>level 1</span></div>Judge every ticket twice, once the dashboard's way and once the correct way. You want the tickets where the two verdicts disagree.</div>
+            <div class="step"><div class="lv">Structure <span>level 2</span></div>One CTE that computes both verdicts per ticket, then a CASE that labels why they differ. Check which created time each side uses.</div>
             <div class="step locked"><div class="lv"><svg viewBox="0 0 12 12" fill="none"><rect x="2.5" y="5.5" width="7" height="5" rx="1.2" stroke="currentColor" stroke-width="1.2"/><path d="M4 5.5V4a2 2 0 0 1 4 0v1.5" stroke="currentColor" stroke-width="1.2"/></svg>Skeleton <span>level 3</span></div>A partial query with blanks to fill in.</div>
             <button class="hint-btn" type="button" tabindex="-1">Show level 3 hint</button>
           </aside>
@@ -365,7 +368,7 @@ table.grid tr:last-child td{border-bottom:0}
 
   <section class="statement" aria-label="What makes Casework different">
     <div class="wrap">
-      <p id="statement">Every case is a request an ops team actually gets: <span class="hl">terminated employees still covered,</span> <span class="hl">dependents the carrier never received,</span> and <span class="hl">a deduction keyed in dollars instead of cents.</span></p>
+      <p id="statement">Every case is a request a support ops team actually gets: <span class="hl">an SLA dashboard that looks too good,</span> <span class="hl">enterprise customers stuck on the basic clock,</span> and <span class="hl">a sync that quietly failed for a week in July.</span></p>
     </div>
   </section>
 
@@ -381,9 +384,9 @@ table.grid tr:last-child td{border-bottom:0}
           <p class="sub">The AI tutor sees your schema, query and error. It is instructed never to write the finished solution.</p>
           <div class="demo">
             <div class="ladder" id="ladder">
-              <div class="rung"><div class="lv">Level 1 &middot; Nudge</div><div class="txt">You're comparing two sources. Start from everyone who elected coverage.</div></div>
-              <div class="rung hidden-step"><div class="lv">Level 2 &middot; Structure</div><div class="txt">A CTE, then a LEFT JOIN to the carrier file.</div></div>
-              <div class="rung hidden-step"><div class="lv">Level 3 &middot; Skeleton</div><div class="txt">SELECT &hellip; CASE WHEN c.member_id IS NULL THEN ____</div></div>
+              <div class="rung"><div class="lv">Level 1 &middot; Nudge</div><div class="txt">The CRM and the helpdesk each store a plan. Find the customers where they disagree.</div></div>
+              <div class="rung hidden-step"><div class="lv">Level 2 &middot; Structure</div><div class="txt">Join customers to helpdesk_orgs on the CRM ID, then compare the two plan columns.</div></div>
+              <div class="rung hidden-step"><div class="lv">Level 3 &middot; Skeleton</div><div class="txt">SELECT c.customer_id, c.plan_tier, o.sla_tier &hellip; WHERE ____</div></div>
               <div class="rung never"><div class="lv">Full solution</div><div class="txt">Never unlocks. You write the final query.</div></div>
               <button class="ladder-btn" id="ladder-btn" type="button">Get the next hint</button>
             </div>
@@ -392,16 +395,16 @@ table.grid tr:last-child td{border-bottom:0}
 
         <article class="card card-b">
           <h3>Checked by result, with the reason when it's wrong</h3>
-          <p class="sub">Switch the join and watch the check respond.</p>
+          <p class="sub">Case 04 asks for helpdesk organizations the CRM doesn't know. Switch the join and watch the check respond.</p>
           <div class="demo">
             <div class="seg" role="group" aria-label="Join type">
               <button type="button" aria-pressed="false" data-j="inner">INNER JOIN</button>
               <button type="button" aria-pressed="true" data-j="left">LEFT JOIN</button>
             </div>
             <div class="meter">
-              <div class="row"><span>Rows that match expected</span><b id="mcount">24 / 24</b></div>
+              <div class="row"><span>Rows that match expected</span><b id="mcount">17 / 17</b></div>
               <div class="bar"><span id="mbar"></span></div>
-              <p class="verdict ok" id="mverdict" aria-live="polite"><b>Match.</b> Same 24 employees as the answer key, so the case is solved.</p>
+              <p class="verdict ok" id="mverdict" aria-live="polite"><b>Solved.</b> The same 17 organizations as the answer key.</p>
             </div>
           </div>
         </article>
@@ -410,10 +413,8 @@ table.grid tr:last-child td{border-bottom:0}
           <h3>Progress you can see at a glance</h3>
           <p class="sub">Solved cases, and which ones took hints, so you know what to revisit before an interview.</p>
           <div class="demo">
-            <div class="cells" aria-label="Example progress across 18 cases">
-              <span class="cell s">01</span><span class="cell s">02</span><span class="cell s">03</span><span class="cell h">04</span><span class="cell s">05</span><span class="cell s">06</span>
-              <span class="cell h">07</span><span class="cell s">08</span><span class="cell s">09</span><span class="cell h">10</span><span class="cell s">11</span><span class="cell s">12</span>
-              <span class="cell p">13</span><span class="cell">14</span><span class="cell">15</span><span class="cell">16</span><span class="cell">17</span><span class="cell">18</span>
+            <div class="cells" aria-label="Example progress across 15 cases">
+              <span class="cell s">01</span><span class="cell s">02</span><span class="cell s">03</span><span class="cell h">04</span><span class="cell s">05</span><span class="cell s">06</span><span class="cell h">07</span><span class="cell s">08</span><span class="cell p">09</span><span class="cell">10</span><span class="cell">11</span><span class="cell">12</span><span class="cell">13</span><span class="cell">14</span><span class="cell">15</span>
             </div>
             <div class="key"><span><i style="background:var(--wine)"></i>Solved</span><span><i style="background:var(--rose)"></i>Solved with hints</span><span><i style="background:var(--blush)"></i>Started</span></div>
           </div>
@@ -425,18 +426,25 @@ table.grid tr:last-child td{border-bottom:0}
   <section class="sec" id="cases" aria-labelledby="cs-h" style="padding-top:0">
     <div class="wrap">
       <div class="sec-head">
-        <h2 id="cs-h">Eighteen cases, from lookup to reconciliation</h2>
-        <p>One benefits database, ordered the way the skills build: single-table lookups first, full reconciliations and window functions last.</p>
+        <h2 id="cs-h">Fifteen cases, from lookup to reconciliation</h2>
+        <p>One support operations database, ordered the way the skills build: single-table lookups first, then time math and events, then reconciling systems that disagree.</p>
       </div>
       <div class="cases">
-        <div class="case-row" id="case-01"><span class="no">01</span><span class="t">Who's on the census?<span>Active employees hired this year.</span></span><span class="sk">SELECT, WHERE</span><span class="lvl l1">Foundations</span></div>
-        <div class="case-row"><span class="no">03</span><span class="t">Enrolled with no election<span>Active employees who never picked a plan.</span></span><span class="sk">LEFT JOIN, IS NULL</span><span class="lvl l1">Foundations</span></div>
-        <div class="case-row"><span class="no">06</span><span class="t">Headcount by plan and tier<span>The numbers Finance asks for every month.</span></span><span class="sk">GROUP BY</span><span class="lvl l2">Core</span></div>
-        <div class="case-row"><span class="no">08</span><span class="t">A deduction in the wrong units<span>Someone keyed dollars where cents belong.</span></span><span class="sk">JOIN, HAVING</span><span class="lvl l2">Core</span></div>
-        <div class="case-row"><span class="no">11</span><span class="t">Wrong pay period<span>Deductions posted before the election started.</span></span><span class="sk">CTE, date logic</span><span class="lvl l2">Core</span></div>
-        <div class="case-row"><span class="no">14</span><span class="t">The carrier's file disagrees<span>Every mismatch, grouped by likely cause.</span></span><span class="sk">CTE, LEFT JOIN, CASE</span><span class="lvl l3">Advanced</span></div>
-        <div class="case-row"><span class="no">16</span><span class="t">Each employee's latest election<span>One row per person, most recent change wins.</span></span><span class="sk">ROW_NUMBER()</span><span class="lvl l3">Advanced</span></div>
-        <div class="case-row"><span class="no">18</span><span class="t">Month over month, by plan<span>Where enrollment moved, and by how much.</span></span><span class="sk">LAG(), window frames</span><span class="lvl l3">Advanced</span></div>
+        <a class="case-row" id="case-01" href="/app/#case-01"><span class="no">01</span><span class="t">Today&#39;s urgent queue<span>Every urgent ticket still waiting, oldest first.</span></span><span class="sk">SELECT, WHERE, IN</span><span class="lvl l1">Foundations</span></a>
+        <a class="case-row" id="case-02" href="/app/#case-02"><span class="no">02</span><span class="t">Tickets owned by people who left<span>Open tickets assigned to agents who already left.</span></span><span class="sk">JOIN, IS NOT NULL, date_diff</span><span class="lvl l1">Foundations</span></a>
+        <a class="case-row" id="case-03" href="/app/#case-03"><span class="no">03</span><span class="t">What are customers writing in about?<span>The top five topics, once the labels are cleaned.</span></span><span class="sk">lower, trim, replace</span><span class="lvl l1">Foundations</span></a>
+        <a class="case-row" id="case-04" href="/app/#case-04"><span class="no">04</span><span class="t">Customers the CRM doesn&#39;t know<span>Helpdesk organizations with no match in the CRM.</span></span><span class="sk">LEFT JOIN, IS NULL</span><span class="lvl l1">Foundations</span></a>
+        <a class="case-row" id="case-05" href="/app/#case-05"><span class="no">05</span><span class="t">Weekly volume by channel<span>Tickets per week on each channel.</span></span><span class="sk">date_trunc, COUNT with FILTER or CASE, GROUP BY</span><span class="lvl l2">Core</span></a>
+        <a class="case-row" id="case-06" href="/app/#case-06"><span class="no">06</span><span class="t">How fast do we really reply?<span>Median minutes to the first reply from a person.</span></span><span class="sk">CTE, MIN, median</span><span class="lvl l2">Core</span></a>
+        <a class="case-row" id="case-07" href="/app/#case-07"><span class="no">07</span><span class="t">Two clocks for one ticket<span>Tickets that disagree with their own created event.</span></span><span class="sk">JOIN, date_diff, GROUP BY</span><span class="lvl l2">Core</span></a>
+        <a class="case-row" id="case-08" href="/app/#case-08"><span class="no">08</span><span class="t">Solved, then reopened<span>Which topics come back after being solved.</span></span><span class="sk">LEFT JOIN, COUNT, HAVING</span><span class="lvl l2">Core</span></a>
+        <a class="case-row" id="case-09" href="/app/#case-09"><span class="no">09</span><span class="t">The same problem, twice<span>The same person, the same problem, minutes apart.</span></span><span class="sk">self-join, time windows, NOT IN</span><span class="lvl l2">Core</span></a>
+        <a class="case-row" id="case-10" href="/app/#case-10"><span class="no">10</span><span class="t">Customers on the wrong clock<span>Helpdesk plans that don&#39;t match the CRM.</span></span><span class="sk">JOIN, DISTINCT, comparing systems</span><span class="lvl l3">Advanced</span></a>
+        <a class="case-row" id="case-11" href="/app/#case-11"><span class="no">11</span><span class="t">Why the syncs failed<span>Failed syncs by week and error code.</span></span><span class="sk">GROUP BY, bool_or / MAX, latest value in a group</span><span class="lvl l3">Advanced</span></a>
+        <a class="case-row" id="case-12" href="/app/#case-12"><span class="no">12</span><span class="t">Still stuck after retries<span>Customers whose latest sync still fails.</span></span><span class="sk">ROW_NUMBER, PARTITION BY, latest record</span><span class="lvl l3">Advanced</span></a>
+        <a class="case-row" id="case-13" href="/app/#case-13"><span class="no">13</span><span class="t">Came back within a week<span>People back on the same topic within 7 days.</span></span><span class="sk">LEAD, window functions, intervals</span><span class="lvl l3">Advanced</span></a>
+        <a class="case-row" id="case-14" href="/app/#case-14"><span class="no">14</span><span class="t">Satisfaction you can trust<span>CSAT by agent, without orphans or double ratings.</span></span><span class="sk">ROW_NUMBER, de-duplicating, INNER JOIN</span><span class="lvl l3">Advanced</span></a>
+        <a class="case-row" id="case-15" href="/app/#case-15"><span class="no">15</span><span class="t">The real SLA report<span>What the SLA dashboard got wrong, and why.</span></span><span class="sk">several CTEs, CASE, combining every fix</span><span class="lvl l3">Advanced</span></a>
       </div>
     </div>
   </section>
@@ -450,14 +458,14 @@ table.grid tr:last-child td{border-bottom:0}
         <p>Built by Patricia, an operations and customer success professional, as a portfolio project and her own interview practice.</p>
         <dl class="facts">
           <dt>Stack</dt><dd>DuckDB-WASM, JavaScript, FastAPI, Claude</dd>
-          <dt>Data</dt><dd>Fully synthetic benefits database</dd>
+          <dt>Data</dt><dd>Fully synthetic support operations database</dd>
           <dt>AI use</dt><dd>Hints only, capped per day, never full solutions</dd>
         </dl>
         <a class="btn primary" href="/app/#case-01">Start case 01
           <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9m-3.5-4L12 8l-3.5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
     </div>
-    <div class="foot"><span>Casework &middot; design preview. Links stay on this page until the app is live.</span><span>All names and records are invented.</span></div>
+    <div class="foot"><span>Casework &middot; a portfolio project by Patricia</span><span>All names and records are invented.</span></div>
   </div>
 </footer>
 
@@ -470,19 +478,19 @@ table.grid tr:last-child td{border-bottom:0}
 
   /* ---------------- SQL editor content ---------------- */
   var SQL = [
-    '<span class="k">WITH</span> elected <span class="k">AS</span> (',
-    '  <span class="k">SELECT</span> employee_id, plan_code, tier',
-    '  <span class="k">FROM</span> plan_elections',
-    '  <span class="k">WHERE</span> plan_year = <span class="nn">2026</span>',
+    '<span class="k">WITH</span> judged <span class="k">AS</span> (',
+    '  <span class="c">-- the dashboard verdict and the correct verdict, per ticket</span>',
+    '  <span class="k">SELECT</span> t.ticket_id, t.channel, fa.first_type,',
+    '         fa.minutes <= hd.first_response_minutes <span class="k">AS</span> dashboard_met,',
+    '         fh.minutes <= crm.first_response_minutes <span class="k">AS</span> real_met',
+    '  <span class="k">FROM</span> tickets t <span class="c">-- joins to events, orgs, customers, sla_policies</span>',
     ')',
-    '<span class="k">SELECT</span> <span class="k">CASE</span>',
-    '    <span class="k">WHEN</span> c.member_id <span class="k">IS NULL</span> <span class="k">THEN</span> <span class="s">\'not_on_carrier_file\'</span>',
-    '    <span class="k">WHEN</span> h.term_date <span class="k">IS NOT NULL</span> <span class="k">THEN</span> <span class="s">\'termed_still_covered\'</span>',
-    '    <span class="c">-- dependents, plan, duplicates ...</span>',
-    '  <span class="k">END AS</span> likely_cause, <span class="f">COUNT</span>(*) <span class="k">AS</span> employees',
-    '<span class="k">FROM</span> elected e',
-    '<span class="k">LEFT JOIN</span> carrier_file c <span class="k">ON</span> c.member_id = e.employee_id',
-    '<span class="k">GROUP BY</span> <span class="nn">1</span> <span class="k">ORDER BY</span> <span class="nn">2</span> <span class="k">DESC</span>;'
+    '<span class="k">SELECT</span> <span class="k">CASE</span> <span class="k">WHEN</span> channel = <span class="s">\'phone\'</span> <span class="k">THEN</span> <span class="s">\'timezone_shift\'</span>',
+    '            <span class="k">WHEN</span> first_type = <span class="s">\'auto_reply\'</span> <span class="k">THEN</span> <span class="s">\'auto_reply_counted\'</span>',
+    '            <span class="k">ELSE</span> <span class="s">\'wrong_plan_tier\'</span> <span class="k">END AS</span> likely_cause,',
+    '       <span class="f">count</span>(*) <span class="k">AS</span> tickets',
+    '<span class="k">FROM</span> judged <span class="k">WHERE</span> dashboard_met &lt;&gt; real_met',
+    '<span class="k">GROUP BY</span> <span class="nn">1</span>;'
   ];
   var pre = document.getElementById('sql'), gut = document.getElementById('gut');
   pre.innerHTML = SQL.map(function(l){ return '<span class="ln">'+l+'</span>'; }).join('\n') + '<span class="caret"></span>';
@@ -505,11 +513,11 @@ table.grid tr:last-child td{border-bottom:0}
     b.addEventListener('click', function(){
       segs.forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
       if(b.dataset.j === 'inner'){
-        mcount.textContent = '15 / 24'; mbar.style.width = '62.5%'; mbar.style.background = 'var(--wine)';
-        mv.className = 'verdict'; mv.innerHTML = '<b>9 rows short.</b> The missing employees have no carrier record at all. That usually means an INNER JOIN where you need a LEFT JOIN.';
+        mcount.textContent = '0 / 17'; mbar.style.width = '3%'; mbar.style.background = 'var(--wine)';
+        mv.className = 'verdict'; mv.innerHTML = '<b>17 rows short.</b> An INNER JOIN drops every organization without a CRM match, and those are exactly the ones this case wants. That usually means you need a LEFT JOIN.';
       } else {
-        mcount.textContent = '24 / 24'; mbar.style.width = '100%'; mbar.style.background = 'var(--ok)';
-        mv.className = 'verdict ok'; mv.innerHTML = '<b>Match.</b> Same 24 employees as the answer key, so the case is solved.';
+        mcount.textContent = '17 / 17'; mbar.style.width = '100%'; mbar.style.background = 'var(--ok)';
+        mv.className = 'verdict ok'; mv.innerHTML = '<b>Solved.</b> The same 17 organizations as the answer key.';
       }
     });
   });
@@ -694,3 +702,6 @@ table.grid tr:last-child td{border-bottom:0}
   gsap.from('.case-row', {y:18, opacity:0, stagger:.05, duration:.7, ease:'expo.out', scrollTrigger:{trigger:'.cases', start:'top 85%'}});
 })();
 </script>
+
+</body>
+</html>
