@@ -38,7 +38,7 @@
           <ul class="rules" id="case-rules"></ul>
         </div>
         <div>
-          <h2 class="label">Return these columns, in this order</h2>
+          <h2 class="label">Return these columns</h2>
           <div class="cols" id="case-returns"></div>
           <h2 class="label">Tables you'll need</h2>
           <div class="cols" id="case-tables"></div>
@@ -53,7 +53,7 @@
           <button class="ghost-btn" id="reset-btn" type="button">Reset</button>
           <button class="run-btn" id="run-btn" type="button" disabled>
             <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1l7 4-7 4z" fill="currentColor"/></svg>
-            Run <kbd id="run-kbd">Ctrl Enter</kbd>
+            <span id="run-label">Run</span> <kbd id="run-kbd">Ctrl Enter</kbd>
           </button>
         </span>
       </div>
@@ -66,12 +66,15 @@
         <p class="res-summary" id="res-summary">Getting the support database ready in your browser. This takes a second or two.</p>
         <span class="res-meta" id="res-meta"></span>
       </div>
+      <div id="res-tabs" class="res-tabs" role="tablist" aria-label="Query results" hidden></div>
+      <p id="tab-note" class="tab-note" hidden></p>
       <div id="diff" class="diff" hidden></div>
       <div id="next-wrap" class="next-wrap" hidden>
         <button class="next-btn" id="next-btn" type="button">Next case
           <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9m-3.5-4L12 8l-3.5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
+      <h3 class="grid-title" id="grid-title" hidden>Your full result</h3>
       <div class="grid-wrap" id="grid-wrap" hidden><table class="grid" id="grid"></table></div>
     </section>
   </main>

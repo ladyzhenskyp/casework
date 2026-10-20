@@ -352,23 +352,23 @@
    "rows": [
     [
      "scheduling",
-     615
+     582
     ],
     [
      "billing",
-     466
+     439
     ],
     [
      "login",
-     409
+     382
     ],
     [
      "bug",
-     361
+     338
     ],
     [
      "integrations",
-     281
+     261
     ]
    ]
   }
@@ -824,51 +824,51 @@
    "rows": [
     [
      "account settings",
-     380,
+     371,
      20,
-     5.3
+     5.4
     ],
     [
      "billing",
-     857,
+     832,
      45,
-     5.3
+     5.4
     ],
     [
      "bug",
-     629,
-     73,
-     11.6
+     606,
+     72,
+     11.9
     ],
     [
      "integrations",
-     552,
-     92,
-     16.7
+     533,
+     88,
+     16.5
     ],
     [
      "login",
-     719,
-     41,
-     5.7
+     694,
+     39,
+     5.6
     ],
     [
      "notifications",
-     460,
-     27,
-     5.9
-    ],
-    [
-     "reporting",
-     403,
-     23,
+     455,
+     26,
      5.7
     ],
     [
+     "reporting",
+     383,
+     23,
+     6
+    ],
+    [
      "scheduling",
-     1144,
-     64,
-     5.6
+     1118,
+     60,
+     5.4
     ]
    ]
   }
@@ -1031,11 +1031,6 @@
      28
     ],
     [
-     12609,
-     15272,
-     25
-    ],
-    [
      12764,
      15071,
      9
@@ -1084,11 +1079,6 @@
      14410,
      15321,
      16
-    ],
-    [
-     14890,
-     15248,
-     12
     ],
     [
      15027,
@@ -1176,11 +1166,6 @@
      22
     ],
     [
-     5426,
-     15081,
-     15
-    ],
-    [
      5436,
      15344,
      6
@@ -1234,11 +1219,6 @@
      6433,
      15135,
      25
-    ],
-    [
-     6478,
-     15242,
-     28
     ],
     [
      6799,
@@ -1339,11 +1319,6 @@
      9858,
      15265,
      27
-    ],
-    [
-     9895,
-     15231,
-     13
     ],
     [
      9925,
@@ -2107,12 +2082,6 @@
      "2026-07-29 00:19:42"
     ],
     [
-     "ava.turner@pioneeryoga.com",
-     "scheduling",
-     "2026-09-09 22:03:26",
-     "2026-09-11 18:44:34"
-    ],
-    [
      "bea.garcia@kestreltutoring.com",
      "billing",
      "2026-05-27 21:19:52",
@@ -2353,18 +2322,6 @@
      "2026-09-02 14:28:13"
     ],
     [
-     "dana.vega@vistaacademyllc.com",
-     "integrations",
-     "2026-07-10 22:11:58",
-     "2026-07-17 11:45:24"
-    ],
-    [
-     "dana.vega@vistaacademyllc.com",
-     "login",
-     "2026-08-01 19:34:53",
-     "2026-08-07 18:24:53"
-    ],
-    [
      "diego.hughes@beaconsalon.com",
      "notifications",
      "2026-07-16 06:51:25",
@@ -2381,12 +2338,6 @@
      "scheduling",
      "2026-07-22 06:29:47",
      "2026-07-22 17:03:57"
-    ],
-    [
-     "diego.patel@beaconbarbers.com",
-     "bug",
-     "2026-08-07 21:26:38",
-     "2026-08-12 16:03:59"
     ],
     [
      "diego.rossi@brightyoga.com",
@@ -2435,12 +2386,6 @@
      "notifications",
      "2026-06-07 16:27:14",
      "2026-06-09 22:34:26"
-    ],
-    [
-     "diego.turner@bluebirddental.com",
-     "reporting",
-     "2026-07-17 07:04:04",
-     "2026-07-21 21:49:55"
     ],
     [
      "diego.turner@bluebirddental.com",
@@ -2553,12 +2498,6 @@
     [
      "fiona.dubois@harborspa.com",
      "scheduling",
-     "2026-08-15 14:43:53",
-     "2026-08-19 12:49:45"
-    ],
-    [
-     "fiona.dubois@harborspa.com",
-     "scheduling",
      "2026-08-26 06:08:22",
      "2026-08-27 12:59:52"
     ],
@@ -2567,12 +2506,6 @@
      "login",
      "2026-05-03 23:32:42",
      "2026-05-06 04:55:14"
-    ],
-    [
-     "fiona.garcia@meadowpetcare.com",
-     "integrations",
-     "2026-08-19 06:13:00",
-     "2026-08-19 15:11:10"
     ],
     [
      "fiona.garcia@meadowpetcare.com",
@@ -2677,12 +2610,6 @@
      "2026-08-15 22:26:34"
     ],
     [
-     "grant.quinn@foxgloveacademy.com",
-     "bug",
-     "2026-08-18 03:05:40",
-     "2026-08-20 10:30:46"
-    ],
-    [
      "grant.usman@pebblestudios.com",
      "scheduling",
      "2026-08-09 15:34:49",
@@ -2762,12 +2689,6 @@
     ],
     [
      "isaac.dubois@pioneeracademy.com",
-     "bug",
-     "2026-09-19 12:18:21",
-     "2026-09-22 18:22:09"
-    ],
-    [
-     "isaac.dubois@pioneeracademy.com",
      "login",
      "2026-06-03 22:41:10",
      "2026-06-08 01:57:48"
@@ -2777,12 +2698,6 @@
      "scheduling",
      "2026-06-27 15:05:29",
      "2026-07-02 12:30:19"
-    ],
-    [
-     "isaac.dubois@pioneeracademy.com",
-     "scheduling",
-     "2026-07-16 00:02:58",
-     "2026-07-20 08:45:00"
     ],
     [
      "isaac.dubois@pioneeracademy.com",
@@ -2847,7 +2762,7 @@
     [
      "isaac.kim@pebblepetcare.com",
      "notifications",
-     "2026-08-16 09:56:52",
+     "2026-08-16 19:48:59",
      "2026-08-22 08:41:39"
     ],
     [
@@ -3001,12 +2916,6 @@
      "2026-06-04 18:23:32"
     ],
     [
-     "jada.dubois@bluebirdcounseling.com",
-     "reporting",
-     "2026-09-12 01:08:36",
-     "2026-09-16 14:08:18"
-    ],
-    [
      "jada.foster@silverlinefitness.com",
      "login",
      "2026-04-07 08:19:49",
@@ -3152,12 +3061,6 @@
     ],
     [
      "kai.morgan@vistaphysio.com",
-     "login",
-     "2026-07-18 01:32:29",
-     "2026-07-21 20:01:25"
-    ],
-    [
-     "kai.morgan@vistaphysio.com",
      "scheduling",
      "2026-05-31 23:10:45",
      "2026-06-04 23:45:58"
@@ -3205,12 +3108,6 @@
      "2026-06-03 19:35:02"
     ],
     [
-     "kira.patel@uplandconsulting.com",
-     "scheduling",
-     "2026-08-28 04:32:50",
-     "2026-08-29 19:40:55"
-    ],
-    [
      "kira.rossi@maplecounseling.com",
      "billing",
      "2026-06-12 04:08:43",
@@ -3232,12 +3129,6 @@
      "kira.vega@foxglovewellness.com",
      "login",
      "2026-07-25 23:21:27",
-     "2026-07-28 19:35:57"
-    ],
-    [
-     "kira.vega@foxglovewellness.com",
-     "login",
-     "2026-07-29 16:56:57",
      "2026-07-31 01:11:06"
     ],
     [
@@ -3439,18 +3330,6 @@
      "2026-07-14 14:19:48"
     ],
     [
-     "omar.alvarez@thistlestudiosinc.com",
-     "scheduling",
-     "2026-08-02 16:47:30",
-     "2026-08-07 19:32:00"
-    ],
-    [
-     "omar.brooks@harboracademy.com",
-     "login",
-     "2026-08-13 20:07:02",
-     "2026-08-19 19:08:31"
-    ],
-    [
      "omar.brooks@harboracademy.com",
      "scheduling",
      "2026-04-09 18:39:58",
@@ -3461,18 +3340,6 @@
      "scheduling",
      "2026-07-13 12:01:20",
      "2026-07-15 20:20:54"
-    ],
-    [
-     "omar.brooks@harboracademy.com",
-     "scheduling",
-     "2026-08-29 15:26:37",
-     "2026-09-01 15:51:44"
-    ],
-    [
-     "omar.dubois@brightyoga.com",
-     "bug",
-     "2026-07-01 04:27:51",
-     "2026-07-01 08:16:47"
     ],
     [
      "omar.ellis@wrenoptometry.com",
@@ -3781,12 +3648,6 @@
      "2026-05-21 09:38:08"
     ],
     [
-     "victor.patel@riverbendconsultin.com",
-     "bug",
-     "2026-09-08 04:11:41",
-     "2026-09-08 20:58:41"
-    ],
-    [
      "victor.turner@rosewoodconsulting.com",
      "login",
      "2026-04-23 23:08:59",
@@ -3878,12 +3739,6 @@
     ],
     [
      "ximena.quinn@meadowoptometry.com",
-     "billing",
-     "2026-09-11 09:24:51",
-     "2026-09-13 21:37:44"
-    ],
-    [
-     "ximena.quinn@meadowoptometry.com",
      "scheduling",
      "2026-05-03 13:20:11",
      "2026-05-08 13:57:33"
@@ -3911,12 +3766,6 @@
      "bug",
      "2026-07-04 16:20:38",
      "2026-07-09 23:14:42"
-    ],
-    [
-     "yusuf.alvarez@fernwoodveterinary.com",
-     "billing",
-     "2026-08-09 04:42:41",
-     "2026-08-09 22:16:47"
     ],
     [
      "yusuf.kim@vistacounseling.com",
@@ -4007,12 +3856,6 @@
      "login",
      "2026-08-09 01:16:44",
      "2026-08-11 22:15:02"
-    ],
-    [
-     "zoe.foster@yarrowsalon.com",
-     "scheduling",
-     "2026-08-17 13:21:51",
-     "2026-08-21 00:57:58"
     ],
     [
      "zoe.morgan@quarryveterinary.com",

@@ -49,7 +49,7 @@ See `docs/dataset.html` for the full reference. Summary:
 ## Answer-checking rules (approved)
 
 - Row order doesn't count unless the case has `ordered: true`.
-- Column names don't count; values are compared column by column, in order.
+- Column names and column order don't count. If the values match the expected columns in any order, it's a match (the summary notes the different order). When it isn't a match and the column names line up in another order, mismatch samples are shown in that order. Built Oct 20.
 - Numbers match to the precision of the expected value (if the key says 153.3, then 153.27 passes).
 - Timestamps compare as `YYYY-MM-DD HH:MM:SS`, and midnight values as `YYYY-MM-DD`, so DATE and TIMESTAMP results both pass.
 - Duplicate rows count (returning a row twice fails).
@@ -69,15 +69,35 @@ See `docs/dataset.html` for the full reference. Summary:
 ## Status and plan
 
 Done:
-- Landing page design (hero and nav final; sections below the hero still describe the old benefits domain and must be rewritten for support data).
+- Landing page (`site/index.html`), rewritten for support operations, links into the workspace.
 - Dataset, 15 cases, verified answer keys.
+- Workspace (`site/app/`): case list, brief, CodeMirror editor, DuckDB-WASM loading `data/arrow/*.arrow`, result checking (`checker.js`) that never reveals expected rows, progress in localStorage. All 15 reference solutions verified to match inside DuckDB-WASM.
+- `server/main.py`: FastAPI serving the site, `/data`, and `/cases.json` only (never `solutions.json`).
 
 Next, in order:
-1. Workspace: case list, case brief, CodeMirror editor, DuckDB-WASM runner, results grid.
-2. Answer checking with mismatch details, plus progress saved in the browser.
-3. Tutor: FastAPI on Railway, three hint levels, guard that blocks complete solutions, daily hint cap. Patricia needs her Claude API key with a spending limit by this point.
-4. Rewrite landing sections for support data, connect landing to the workspace, README, demo video script.
+1. Patricia finished Foundations (01 to 04) on Oct 20; fixes from that are built. She tests Core and Advanced (05 to 15) with the real tutor once it exists. Until then, give hints in chat the way the tutor will.
+2. Tutor: FastAPI endpoint, three hint levels, guard that blocks complete solutions, daily hint cap, Claude Haiku. Needs Patricia's API key (set as a Railway variable, never pasted in chat).
+3. Deploy to Railway (Serverless off). Then README, demo video script, update `docs/DESIGN.md` for the Lens logo, square corners, Query Filter hero and the workspace.
+
+Built Oct 20 (from Patricia's testing of cases 01 to 04):
+- Checker accepts columns in any order; brief heading is now "Return these columns".
+- Extra-rows sample says "First 5 of N, in your query's order." The full grid has its own heading ("Your full result").
+- Results grid marks empty text ("empty"), space-only values ("1 space") and leading/trailing spaces (faint dots).
+- Run selection: highlight text and Run / Cmd+Enter runs only that; the button reads "Run selection"; summary starts "Ran your selection."
+- Several queries at once (`site/app/statements.js` splits on semicolons outside quotes and comments): each gets a result tab, the last is checked and labeled CHECKED, runs stop at the first error.
+- Case 03: from July 2026 about 7% more tickets have a blank category ("" or " "), made in a separate RNG pass so the rest of the dataset is unchanged. Without the blank rule, an empty category ranks 5th (316) ahead of integrations (261). This also changed the answer keys for cases 08 (integrations reopen rate now 16.5%), 09 and 13, which use cleaned categories. All 15 solutions re-verified in DuckDB-WASM.
+
+Tutor rules and decisions:
+- ONE small hint per request, the smallest that unblocks, then stop and wait. Never lay out the whole plan or several steps at once, and no runnable queries for the case's steps. When the learner asks "where do I start?", name only the first step. The same applies when Claude helps Patricia in chat.
+- Full answer (decided Oct 20): unlocks only after real attempts (all three hint levels used plus several runs). Even then, work through it slowly: walk the learner toward the answer one piece at a time, checking understanding, rather than dumping the finished query. The case is marked "solved with help". The "Full solution: Never unlocks" card in the tutor panel must change to match.
+
+After launch (Patricia's ideas, not v1):
+- Quizzes and exams (Oct 20). Solving every case in a level unlocks an optional quiz: 3 to 5 new short questions on the same skills and tables, no tutor, checked the same way. Advanced levels get an exam instead: a longer case, timed, no hints, ending in a score summary. Reuses the existing checker; the new work is writing questions and answer keys (extend cases.py / build.py). Ties into the interview-prep mode from the original brief.
+  - Patricia's direction: quiz questions should look like the questions a learner actually asks while working, to test understanding, not just repeat the case. Mix formats: spot the bug, predict the output, explain why, plus short queries. Later: personalize from each learner's own sticking points (errors hit, hints used), stored in the browser.
+  - Seed questions from Patricia's own testing (Foundations): IN vs chained OR, and why OR needs parentheses next to AND; DESC vs ASC and what a tie-breaker column does; DISTINCT vs GROUP BY; unquoted 2026-10-01 being math; nesting functions vs joining them with AND; replace's three inputs; empty text vs spaces vs NULL, and why <> '' also drops NULL; a comma between tables pairs every row; what LEFT means in LEFT JOIN; why ON uses = and != makes unmatched rows "match everyone"; where the NULL after a LEFT JOIN comes from.
+- Brainstorm later: other ways people learn (Patricia notes everyone works differently), to shape features after launch.
+- Tutor visuals: show a small before-and-after table for the case's own join (the walkthrough that helped on case 04).
 
 Open items:
-- Patricia will give more feedback on the 15 cases after testing them in the app.
 - A phone-width navigation menu is still missing on the landing page.
+- Local run: `python3 -m venv .venv`, `source .venv/bin/activate`, `pip install -r server/requirements.txt`, `uvicorn server.main:app --reload`.

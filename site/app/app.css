@@ -123,6 +123,18 @@ table.grid td{padding:7px 12px;border-bottom:1px solid var(--line);white-space:n
 table.grid tr:last-child td{border-bottom:0}
 table.grid td.num{text-align:right}
 table.grid .null{color:#B49A90;font-style:italic}
+table.grid .blank{display:inline-block;font-family:var(--sans);font-size:11px;font-style:italic;color:var(--mocha);background:var(--cream);border:1px dashed #D9C2BA;border-radius:4px;padding:0 6px;line-height:1.6}
+table.grid .ws{color:#D49AA4;letter-spacing:.05em}
+.res-tabs{display:flex;flex-wrap:wrap;gap:4px;margin-top:14px;border-bottom:1px solid var(--line)}
+.res-tab{display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;padding:7px 10px;font-size:13px;font-weight:500;color:var(--mocha);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;border-radius:6px 6px 0 0}
+.res-tab:hover:not(:disabled){color:var(--cocoa);background:var(--cream)}
+.res-tab[aria-selected="true"]{color:var(--cocoa);border-bottom-color:var(--wine)}
+.res-tab.failed{color:var(--wine)}
+.res-tab:disabled{opacity:.45;cursor:default}
+.res-tab .chk{font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--wine);background:var(--warn-bg);border-radius:4px;padding:1px 5px}
+.tab-note{margin:12px 0 0;font-size:13px;color:var(--mocha)}
+.grid-title{margin:16px 0 0;font-size:12.5px;font-weight:600;color:var(--mocha)}
+.grid-title + .grid-wrap{margin-top:6px}
 .mini{border:1px solid var(--line);border-radius:8px;overflow:auto;max-height:180px}
 .mini table.grid td,.mini table.grid th{padding:5px 10px}
 

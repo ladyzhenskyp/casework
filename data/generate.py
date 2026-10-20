@@ -451,6 +451,14 @@ for i, e in enumerate(events):
     e["event_id"] = 700001 + i
 tickets.sort(key=lambda t: t["ticket_id"])
 
+# From July the new ticket form made category optional, so agents skipped it more.
+# Blank ("" or " ") rather than NULL, so case 03's "no category after cleaning"
+# rule changes the top 5. Separate RNG so nothing else in the dataset shifts.
+blank_rng = random.Random(SEED + 3)
+for tk in tickets:
+    if tk["created_at"] >= datetime(2026, 7, 1) and tk["category"] is not None and blank_rng.random() < .07:
+        tk["category"] = blank_rng.choice(["", " "])
+
 # ---------------------------------------------------------------- csat_responses
 csat = []
 rid = 30000

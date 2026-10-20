@@ -5,6 +5,7 @@ import {
   sql, PostgreSQL, HighlightStyle, syntaxHighlighting, tags, indentWithTab,
 } from "../vendor/codemirror.js";
 import { compareResults, normalizeValue, statusLabel } from "./checker.js";
+import { splitStatements } from "./statements.js";
 
 const TABLES = ["customers", "helpdesk_orgs", "tickets", "ticket_events", "agents", "sla_policies", "csat_responses", "integration_sync_log"];
 const SYSTEMS = [
@@ -122,6 +123,7 @@ function buildEditor() {
         Prec.highest(keymap.of([{ key: "Mod-Enter", run: () => { runQuery(); return true; } }])),
         keymap.of([indentWithTab]),
         EditorView.updateListener.of((u) => {
+          if (u.selectionSet || u.docChanged) updateRunLabel();
           if (u.docChanged && current && !loadingDoc) {
             const st = caseState(current.id);
             st.query = u.state.doc.toString();
@@ -197,89 +199,167 @@ function readTable(result) {
 }
 
 /* ---------------- running and checking ---------------- */
+// One run can hold several statements (separated by semicolons). Each gets a
+// result tab; only the last one is checked against the answer key.
+let runs = [];        // [{ columns, rows, ms, error }]
+let checked = null;   // { actual, result } for the last statement, if it ran
+let activeTab = 0;
+
 function resetResults(pill, text) {
   const p = $("status-pill");
   p.className = "pill pending"; p.textContent = pill;
   $("res-summary").textContent = text;
   $("res-meta").textContent = "";
+  runs = []; checked = null; activeTab = 0;
+  $("res-tabs").hidden = true; $("res-tabs").innerHTML = "";
+  $("tab-note").hidden = true;
   $("diff").hidden = true; $("diff").innerHTML = "";
+  $("grid-title").hidden = true;
   $("grid-wrap").hidden = true; $("grid").innerHTML = "";
   $("next-wrap").hidden = true;
+}
+
+/** Show text values so blanks and stray spaces are visible. */
+function cell(v) {
+  if (v === null) return '<td class="null">NULL</td>';
+  if (typeof v === "number") return `<td class="num">${esc(v)}</td>`;
+  const s = String(v);
+  if (s === "") return '<td><span class="blank" title="Empty text: zero characters">empty</span></td>';
+  if (/^\s+$/.test(s)) {
+    const k = s.length;
+    return `<td><span class="blank" title="Only spaces">${k} space${k === 1 ? "" : "s"}</span></td>`;
+  }
+  const lead = s.match(/^\s*/)[0].length, trail = s.match(/\s*$/)[0].length;
+  if (!lead && !trail) return `<td>${esc(s)}</td>`;
+  const dot = (k) => `<span class="ws" title="${k} extra space${k === 1 ? "" : "s"}">${"·".repeat(k)}</span>`;
+  return `<td>${lead ? dot(lead) : ""}${esc(s.slice(lead, s.length - trail))}${trail ? dot(trail) : ""}</td>`;
 }
 
 function renderGrid(el, columns, rows, limit = MAX_ROWS_SHOWN) {
   const numeric = columns.map((_, i) => rows.length > 0 && rows.slice(0, 20).every((r) => r[i] === null || typeof r[i] === "number"));
   const head = `<thead><tr>${columns.map((c, i) => `<th${numeric[i] ? ' class="num"' : ""}>${esc(c)}</th>`).join("")}</tr></thead>`;
-  const body = rows.slice(0, limit).map((r) => `<tr>${r.map((v) =>
-    v === null ? '<td class="null">NULL</td>' : `<td${typeof v === "number" ? ' class="num"' : ""}>${esc(v)}</td>`).join("")}</tr>`).join("");
+  const body = rows.slice(0, limit).map((r) => `<tr>${r.map(cell).join("")}</tr>`).join("");
   el.innerHTML = head + `<tbody>${body}</tbody>`;
 }
 
-function miniTable(title, columns, rows, more) {
+function miniTable(title, columns, rows, total) {
   const t = document.createElement("table"); t.className = "grid";
   renderGrid(t, columns, rows);
-  return `<div><h3>${title}</h3><div class="mini">${t.outerHTML}</div>${more > rows.length ? `<p class="note">Showing ${rows.length} of ${more}.</p>` : ""}</div>`;
+  const note = total > rows.length ? `<p class="note">First ${rows.length} of ${total.toLocaleString()}, in your query's order.</p>` : "";
+  return `<div><h3>${title}</h3><div class="mini">${t.outerHTML}</div>${note}</div>`;
+}
+
+function selectedText() {
+  const { from, to } = view.state.selection.main;
+  return from === to ? "" : view.state.sliceDoc(from, to);
+}
+function updateRunLabel() {
+  $("run-label").textContent = selectedText().trim() ? "Run selection" : "Run";
 }
 
 let running = false;
 async function runQuery() {
   if (!conn || running || !current) return;
-  const text = view.state.doc.toString().trim();
-  if (!text) return;
+  const selection = selectedText().trim();
+  const statements = splitStatements(selection || view.state.doc.toString());
+  if (!statements.length) return;
   running = true; $("run-btn").disabled = true;
   const p = $("status-pill");
   p.className = "pill pending"; p.textContent = "Running";
-  const t0 = performance.now();
-  try {
-    const res = await conn.query(text.replace(/;\s*$/, ""));
-    const ms = Math.round(performance.now() - t0);
-    const actual = readTable(res);
-    const result = compareResults(actual, current.expected, { ordered: current.ordered });
-    showResult(actual, result, ms);
-  } catch (e) {
-    p.className = "pill error"; p.textContent = "Error";
-    $("res-summary").textContent = "DuckDB couldn't run that query. Here's what it said:";
-    $("res-meta").textContent = "";
-    $("diff").hidden = false;
-    $("diff").innerHTML = `<div class="err">${esc(cleanError(e))}</div>`;
-    $("grid-wrap").hidden = true; $("next-wrap").hidden = true;
-  } finally {
-    running = false; $("run-btn").disabled = false;
+  const out = [];
+  for (const stmt of statements) {
+    const t0 = performance.now();
+    try {
+      const res = await conn.query(stmt);
+      out.push({ ...readTable(res), ms: Math.round(performance.now() - t0) });
+    } catch (e) {
+      out.push({ error: cleanError(e) });
+      break; // stop at the first error, like most SQL tools
+    }
   }
+  running = false; $("run-btn").disabled = false;
+  showRuns(out, statements.length, Boolean(selection));
 }
 
 function cleanError(e) {
   return String(e && e.message ? e.message : e).replace(/^Error:\s*/, "").trim();
 }
 
-function showResult(actual, result, ms) {
+function showRuns(out, total, fromSelection) {
+  runs = out;
+  const last = out[out.length - 1];
+  const lastRan = out.length === total && !last.error;
+  checked = lastRan ? { actual: last, result: compareResults(last, current.expected, { ordered: current.ordered }) } : null;
   const p = $("status-pill");
-  p.className = `pill ${result.match ? "match" : "miss"}`;
-  p.textContent = statusLabel(result);
-  $("res-summary").textContent = result.summary;
-  const n = actual.rows.length;
-  $("res-meta").textContent = `${n.toLocaleString()} row${n === 1 ? "" : "s"} · ${ms} ms`;
+  const ranWhat = fromSelection ? "Ran your selection. " : "";
 
-  const d = result.details;
-  const parts = [];
-  if (!result.match && result.status !== "columns") {
-    if (d.extraCount && d.extraCount < actual.rows.length) parts.push(miniTable("Rows in your result that shouldn't be there", actual.columns, d.extra, d.extraCount));
-    if (d.repeatedCount) parts.push(miniTable("Returned more times than expected", actual.columns, d.repeated, d.repeatedCount));
-  }
-  $("diff").hidden = !parts.length;
-  $("diff").innerHTML = parts.join("");
-
-  if (n) { renderGrid($("grid"), actual.columns, actual.rows); $("grid-wrap").hidden = false; }
-  else { $("grid-wrap").hidden = true; }
-
-  const st = caseState(current.id);
-  if (result.match) {
-    if (st.status !== "solved") { st.status = "solved"; st.solvedAt = new Date().toISOString(); saveProgress(); renderNav(); }
-    const idx = CASES.indexOf(current);
-    $("next-wrap").hidden = idx >= CASES.length - 1;
+  if (checked) {
+    const { actual, result } = checked;
+    p.className = `pill ${result.match ? "match" : "miss"}`;
+    p.textContent = statusLabel(result);
+    $("res-summary").textContent = ranWhat + result.summary;
+    const n = actual.rows.length;
+    $("res-meta").textContent = `${n.toLocaleString()} row${n === 1 ? "" : "s"} · ${actual.ms} ms`;
+    const st = caseState(current.id);
+    if (result.match && st.status !== "solved") { st.status = "solved"; st.solvedAt = new Date().toISOString(); saveProgress(); renderNav(); }
   } else {
-    $("next-wrap").hidden = true;
+    p.className = "pill error"; p.textContent = "Error";
+    const which = total > 1 ? `Query ${out.length} of ${total} didn't run, so nothing was checked. ` : "";
+    $("res-summary").textContent = ranWhat + which + "DuckDB couldn't run it. Here's what it said:";
+    $("res-meta").textContent = "";
   }
+
+  const tabs = $("res-tabs");
+  if (total > 1) {
+    tabs.hidden = false;
+    tabs.innerHTML = Array.from({ length: total }, (_, i) => {
+      const r = out[i];
+      const tag = i === total - 1 ? '<span class="chk">checked</span>' : "";
+      const state = !r ? " skipped" : r.error ? " failed" : "";
+      return `<button type="button" role="tab" class="res-tab${state}" data-i="${i}" ${r ? "" : "disabled"}>Result ${i + 1}${tag}</button>`;
+    }).join("");
+    tabs.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => showTab(Number(b.dataset.i))));
+  } else {
+    tabs.hidden = true; tabs.innerHTML = "";
+  }
+  showTab(out.length - 1);
+}
+
+function showTab(i) {
+  activeTab = i;
+  const total = $("res-tabs").children.length || 1;
+  $("res-tabs").querySelectorAll("button").forEach((b) => b.setAttribute("aria-selected", String(Number(b.dataset.i) === i)));
+  const r = runs[i];
+  const isChecked = i === total - 1 && checked;
+  const note = $("tab-note");
+  note.hidden = isChecked || r.error || total === 1;
+  note.textContent = "Not checked. Only the last query is checked against the answer key.";
+
+  const diff = $("diff");
+  const parts = [];
+  if (r.error) {
+    parts.push(`<div class="err">${esc(r.error)}</div>`);
+  } else if (isChecked) {
+    const { actual, result } = checked;
+    const d = result.details;
+    if (!result.match && result.status !== "columns") {
+      const cols = d.columns || actual.columns;
+      if (d.extraCount && d.extraCount < actual.rows.length) parts.push(miniTable("Rows in your result that shouldn't be there", cols, d.extra, d.extraCount));
+      if (d.repeatedCount) parts.push(miniTable("Returned more times than expected", cols, d.repeated, d.repeatedCount));
+    }
+  }
+  diff.hidden = !parts.length; diff.innerHTML = parts.join("");
+
+  const idx = CASES.indexOf(current);
+  $("next-wrap").hidden = !(isChecked && checked.result.match && idx < CASES.length - 1);
+
+  const hasRows = !r.error && r.rows.length > 0;
+  $("grid-title").hidden = !hasRows;
+  $("grid-title").textContent = total > 1 ? `Result ${i + 1}: ${r.rows?.length.toLocaleString() ?? 0} rows` : "Your full result";
+  $("grid-wrap").hidden = !hasRows;
+  if (hasRows) renderGrid($("grid"), r.columns, r.rows);
+  else $("grid").innerHTML = "";
+  if (!r.error && !r.rows.length) { note.hidden = false; note.textContent = isChecked ? "Your query returned no rows." : "This query returned no rows. It isn't checked."; }
 }
 
 /* ---------------- tables panel ---------------- */

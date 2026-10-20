@@ -56,27 +56,95 @@ function counts(rows, prec) {
   return m;
 }
 
+/** A column's values as one comparable string (sorted, rounded like the expected column). */
+function columnSignature(rows, i, d) {
+  const vals = rows.map((r) => (typeof r[i] === "number" && d !== null ? roundTo(r[i], d) : r[i]));
+  return JSON.stringify(vals.map((v) => JSON.stringify(v)).sort());
+}
+
+/**
+ * Column orders worth trying: for each expected column, the actual columns that hold
+ * exactly the same values. Returns up to `limit` permutations (perm[j] = actual index).
+ */
+function candidateOrders(actual, expected, prec, limit = 24) {
+  const n = expected.columns.length;
+  const cand = [];
+  for (let j = 0; j < n; j++) {
+    const sig = columnSignature(expected.rows, j, prec[j]);
+    cand.push([...Array(n).keys()].filter((i) => columnSignature(actual.rows, i, prec[j]) === sig));
+    if (!cand[j].length) return [];
+  }
+  const out = [], perm = [], used = new Set();
+  (function walk(j) {
+    if (out.length >= limit) return;
+    if (j === n) { out.push([...perm]); return; }
+    for (const i of cand[j]) {
+      if (used.has(i)) continue;
+      used.add(i); perm.push(i); walk(j + 1); perm.pop(); used.delete(i);
+    }
+  })(0);
+  return out;
+}
+
+/** Column order by matching names, when every expected name appears exactly once. */
+function orderByName(actual, expected) {
+  const names = actual.columns.map((c) => String(c).toLowerCase());
+  const perm = expected.columns.map((c) => names.indexOf(String(c).toLowerCase()));
+  return perm.every((i, j) => i >= 0 && names.lastIndexOf(names[i]) === i && perm.indexOf(i) === j) ? perm : null;
+}
+
+const isIdentity = (perm) => perm.every((i, j) => i === j);
+const reorder = (rows, perm) => rows.map((r) => perm.map((i) => r[i]));
+
 /**
  * Compare actual rows to the expected answer.
+ * Column order doesn't count: if the values match the expected columns in a
+ * different order, it's still a match.
  * Returns { match, status, summary, details } where details hold samples of
  * missing / extra / repeated rows for the UI and for the tutor's explanation.
+ * details.columns is the column order the samples are shown in.
  */
 export function compareResults(actual, expected, { ordered = false } = {}) {
   const expCols = expected.columns.length;
   const actCols = actual.columns.length;
-  const base = { expectedRows: expected.rows.length, actualRows: actual.rows.length };
 
   if (actCols !== expCols) {
     return {
       match: false, status: "columns",
       summary: `Your result has ${actCols} column${actCols === 1 ? "" : "s"}. This case expects ${expCols}: ${expected.columns.join(", ")}.`,
-      details: { ...base, expectedColumns: expected.columns, actualColumns: actual.columns },
+      details: { expectedRows: expected.rows.length, actualRows: actual.rows.length, expectedColumns: expected.columns, actualColumns: actual.columns },
     };
   }
 
   const prec = columnPrecision(expected.rows, expCols);
+  const identity = [...Array(expCols).keys()];
+  const asWritten = compareRows(actual, identity, expected, prec, ordered);
+  if (asWritten.match) return asWritten;
+
+  // Same values, columns in another order? That still counts.
+  for (const perm of candidateOrders(actual, expected, prec)) {
+    if (isIdentity(perm)) continue;
+    const r = compareRows(actual, perm, expected, prec, ordered);
+    if (r.match || r.status === "order") {
+      r.reordered = true;
+      r.summary += " Your columns are in a different order than the brief lists them, which is fine.";
+      return r;
+    }
+  }
+
+  // Not a match. If the column names line up in another order, explain the
+  // difference in that order so the samples make sense.
+  const byName = orderByName(actual, expected);
+  if (byName && !isIdentity(byName)) return compareRows(actual, byName, expected, prec, ordered);
+  return asWritten;
+}
+
+function compareRows(actual, perm, expected, prec, ordered) {
+  const rows = isIdentity(perm) ? actual.rows : reorder(actual.rows, perm);
+  const columns = perm.map((i) => actual.columns[i]);
+  const base = { expectedRows: expected.rows.length, actualRows: actual.rows.length, columns };
   const exp = counts(expected.rows, prec);
-  const act = counts(actual.rows, prec);
+  const act = counts(rows, prec);
 
   const missing = [], extra = [], repeated = [];
   for (const [k, n] of exp) {
@@ -99,12 +167,12 @@ export function compareResults(actual, expected, { ordered = false } = {}) {
 
   if (!missing.length && !extra.length && !repeated.length) {
     if (ordered) {
-      const sameOrder = actual.rows.every((r, i) => rowKey(r, prec) === rowKey(expected.rows[i], prec));
+      const sameOrder = rows.every((r, i) => rowKey(r, prec) === rowKey(expected.rows[i], prec));
       if (!sameOrder) {
         return { match: false, status: "order", summary: "You have exactly the right rows, but this case asks for a specific order.", details };
       }
     }
-    return { match: true, status: "match", summary: `Solved. Your ${actual.rows.length} row${actual.rows.length === 1 ? "" : "s"} are the same as the answer key.`, details };
+    return { match: true, status: "match", summary: `Solved. Your ${rows.length} row${rows.length === 1 ? "" : "s"} are the same as the answer key.`, details };
   }
 
   const parts = [];
