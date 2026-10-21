@@ -81,6 +81,54 @@ def main():
     (HERE / "cases.json").write_text(json.dumps(public, indent=1))
     (HERE / "solutions.json").write_text(json.dumps(private, indent=1))
     print(f"\nwrote cases.json ({(HERE / 'cases.json').stat().st_size:,} bytes) and solutions.json")
+    build_quizzes(con)
+
+
+def build_quizzes(con):
+    """Verify every quiz answer that can be checked by running SQL, then write quizzes.json."""
+    from quizzes import QUIZZES
+    out = []
+    for quiz in QUIZZES:
+        qs = []
+        for i, q in enumerate(quiz["questions"], 1):
+            q = dict(q)
+            tag = f"quiz {quiz['id']} q{i}"
+            if q["type"] == "spot":
+                bug = "\n".join(q["lines"])
+                fixed = "\n".join(q["fixed_line"] if n == q["answer"] else l for n, l in enumerate(q["lines"], 1))
+                _, bug_rows = run(con, bug)
+                _, fix_rows = run(con, fixed)
+                assert not same(bug_rows, fix_rows, False), f"{tag}: the bug doesn't change the result"
+                print(f"{tag} spot: bug {len(bug_rows)} rows, fixed {len(fix_rows)} rows")
+                del q["fixed_line"]
+            elif q["type"] == "predict":
+                cols, rows = run(con, q["setup"] + "\n" + q["code"])
+                right = q["options"][q["answer"]]
+                assert same(rows, right["rows"], False), f"{tag}: answer option doesn't match {rows}"
+                for j, opt in enumerate(q["options"]):
+                    assert j == q["answer"] or not same(rows, opt["rows"], False), f"{tag}: option {j} is also right"
+                print(f"{tag} predict: verified")
+                del q["setup"]
+            elif q["type"] == "choice" and "proof" in q:
+                _, rows = run(con, q["proof"]["sql"])
+                assert rows == q["proof"]["expect"], f"{tag}: proof gave {rows}"
+                print(f"{tag} choice: claim verified")
+                del q["proof"]
+            elif q["type"] == "fix":
+                cols, rows = run(con, q["solution"])
+                assert cols == q["returns"], (tag, cols)
+                try:
+                    run(con, q["broken"])
+                    raise AssertionError(f"{tag}: the broken query runs")
+                except duckdb.Error:
+                    pass
+                q["expected"] = {"columns": cols, "rows": sorted(rows, key=lambda r: json.dumps(r))}
+                print(f"{tag} fix: {len(rows)} expected rows")
+                del q["solution"]
+            qs.append(q)
+        out.append({k: quiz[k] for k in ("id", "level", "title", "intro")} | {"questions": qs})
+    (HERE / "quizzes.json").write_text(json.dumps(out, indent=1))
+    print(f"wrote quizzes.json ({(HERE / 'quizzes.json').stat().st_size:,} bytes)")
 
 
 if __name__ == "__main__":

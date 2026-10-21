@@ -76,7 +76,7 @@ Done:
 
 Next, in order:
 1. Patricia finished Foundations (01 to 04) on Oct 20; fixes from that are built. She tests Core and Advanced (05 to 15) with the real tutor once it exists. Until then, give hints in chat the way the tutor will.
-2. Tutor: FastAPI endpoint, three hint levels, guard that blocks complete solutions, daily hint cap, Claude Haiku. Needs Patricia's API key (set as a Railway variable, never pasted in chat).
+2. Tutor: built Oct 20 (see "Tutor" below). Patricia tests it with her real key and reports how the hints feel.
 3. Deploy to Railway (Serverless off). Then README, demo video script, update `docs/DESIGN.md` for the Lens logo, square corners, Query Filter hero and the workspace.
 
 Built Oct 20 (from Patricia's testing of cases 01 to 04):
@@ -87,12 +87,29 @@ Built Oct 20 (from Patricia's testing of cases 01 to 04):
 - Several queries at once (`site/app/statements.js` splits on semicolons outside quotes and comments): each gets a result tab, the last is checked and labeled CHECKED, runs stop at the first error.
 - Case 03: from July 2026 about 7% more tickets have a blank category ("" or " "), made in a separate RNG pass so the rest of the dataset is unchanged. Without the blank rule, an empty category ranks 5th (316) ahead of integrations (261). This also changed the answer keys for cases 08 (integrations reopen rate now 16.5%), 09 and 13, which use cleaned categories. All 15 solutions re-verified in DuckDB-WASM.
 
+Tutor (built Oct 20):
+- Server: `server/tutor.py`, routes in `server/main.py`. `GET /api/tutor` returns replies left today and whether it's in sample mode; `POST /api/tutor` takes case_id, mode (hint / ask / walkthrough), level, question, the editor text, a description of the last run (checker facts only), recent thread, and run count.
+- Model `claude-haiku-5-5` (override with CASEWORK_MODEL), effort low, no temperature (Haiku 5.5 rejects sampling params). Raw HTTPS with httpx, anthropic-version 2023-06-01.
+- Key: ANTHROPIC_API_KEY from the environment, or from the project's `.env` (gitignored; Patricia created it Oct 20; Claude never reads its contents). No key = sample mode with canned replies.
+- Prompt: system rules + case brief, schema, the reference solution and the trap query marked private. Learner text is treated as data.
+- Guard: every SQL snippet in a reply runs against the real data in a locked DuckDB (no external access, 3 s limit, SELECT/WITH only). If it returns the case's exact answer (any row or column order), Claude is asked once more; if that leaks too, a safe fallback is shown.
+- Limits: 25 replies per visitor per day (by forwarded IP), 600 per server per day (CASEWORK_HINTS_PER_DAY / CASEWORK_HINTS_SERVER_DAY). Failed replies are refunded. Plus Patricia's Console credit ($4.85 prepaid, auto-reload off).
+- Panel (`site/app/tutor.js`): hint ladder Nudge, Structure, Skeleton, Walkthrough; "Get a hint" climbs one level per press (then more skeleton hints); an ask box (Enter sends); thread saved per case in localStorage. Walkthrough unlocks after the level 3 hint plus 3 more runs; once started, the case shows "Solved with help" when solved.
+- Tested with a fake Claude server (guard retry and fallback, refunds, limits, errors) and in the browser at desktop and phone widths. Not yet tested against real Haiku output.
+
 Tutor rules and decisions:
 - ONE small hint per request, the smallest that unblocks, then stop and wait. Never lay out the whole plan or several steps at once, and no runnable queries for the case's steps. When the learner asks "where do I start?", name only the first step. The same applies when Claude helps Patricia in chat.
 - Full answer (decided Oct 20): unlocks only after real attempts (all three hint levels used plus several runs). Even then, work through it slowly: walk the learner toward the answer one piece at a time, checking understanding, rather than dumping the finished query. The case is marked "solved with help". The "Full solution: Never unlocks" card in the tutor panel must change to match.
 
+Quizzes (built Oct 21, Foundations only so far):
+- Questions live in `cases/quizzes.py`; `cases/build.py` verifies every answer it can (spot: the bug changes the real result and the fixed line corrects it; predict: runs the small example tables; choice: runs a proof query; fix: the broken query fails and the solution's rows become the answer key) and writes `cases/quizzes.json`, served at `/quizzes.json`.
+- Foundations quiz: 6 questions from Patricia's own sticking points (AND before OR, unquoted date, nesting functions, blank vs NULL, what LEFT JOIN returns, = in ON). Types: spot the bug, why (multiple choice), fix it (real editor + checker), predict the output (pick a result table).
+- Decisions: feedback right after each question with a short explanation; 6 questions; always open (no unlock); tutor off during quizzes; results card links each question to the case that teaches it; best score saved in localStorage and shown in the case list.
+- UI: `site/app/quiz.js`; quiz row at the end of its level in the case list (and in the phone dropdown); address `#quiz-foundations`.
+- Next: Core quiz and the Advanced exam (timed, one long case, no hints), written from Patricia's sticking points on cases 05 to 15.
+
 After launch (Patricia's ideas, not v1):
-- Quizzes and exams (Oct 20). Solving every case in a level unlocks an optional quiz: 3 to 5 new short questions on the same skills and tables, no tutor, checked the same way. Advanced levels get an exam instead: a longer case, timed, no hints, ending in a score summary. Reuses the existing checker; the new work is writing questions and answer keys (extend cases.py / build.py). Ties into the interview-prep mode from the original brief.
+- Quizzes and exams (Oct 20; Foundations quiz built Oct 21, see above). Solving every case in a level unlocks an optional quiz: 3 to 5 new short questions on the same skills and tables, no tutor, checked the same way. Advanced levels get an exam instead: a longer case, timed, no hints, ending in a score summary. Reuses the existing checker; the new work is writing questions and answer keys (extend cases.py / build.py). Ties into the interview-prep mode from the original brief.
   - Patricia's direction: quiz questions should look like the questions a learner actually asks while working, to test understanding, not just repeat the case. Mix formats: spot the bug, predict the output, explain why, plus short queries. Later: personalize from each learner's own sticking points (errors hit, hints used), stored in the browser.
   - Seed questions from Patricia's own testing (Foundations): IN vs chained OR, and why OR needs parentheses next to AND; DESC vs ASC and what a tie-breaker column does; DISTINCT vs GROUP BY; unquoted 2026-10-01 being math; nesting functions vs joining them with AND; replace's three inputs; empty text vs spaces vs NULL, and why <> '' also drops NULL; a comma between tables pairs every row; what LEFT means in LEFT JOIN; why ON uses = and != makes unmatched rows "match everyone"; where the NULL after a LEFT JOIN comes from.
 - Brainstorm later: other ways people learn (Patricia notes everyone works differently), to shape features after launch.

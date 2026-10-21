@@ -6,6 +6,8 @@ import {
 } from "../vendor/codemirror.js";
 import { compareResults, normalizeValue, statusLabel } from "./checker.js";
 import { splitStatements } from "./statements.js";
+import { createTutor } from "./tutor.js";
+import { createQuiz } from "./quiz.js";
 
 const TABLES = ["customers", "helpdesk_orgs", "tickets", "ticket_events", "agents", "sla_policies", "csat_responses", "integration_sync_log"];
 const SYSTEMS = [
@@ -26,6 +28,10 @@ let view = null;
 let schema = {};
 let tableCounts = {};
 let loadingDoc = false;
+let tutor = null;
+let QUIZZES = [];
+let quiz = null; // quiz controller; quiz.active while a quiz is open
+const lastRun = {}; // case id -> short description of the latest run, for the tutor
 
 /* ---------------- progress (saved in this browser only) ---------------- */
 function loadProgress() {
@@ -42,21 +48,34 @@ const caseState = (id) => (progress.cases[id] ||= { status: "new", hints: 0, que
 const CHECK = '<svg viewBox="0 0 10 10" fill="none"><path d="M2 5.2 4.2 7.4 8 3" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 function statusIcon(id) {
   const s = caseState(id);
-  if (s.status === "solved") return `<span class="st ${s.hints ? "hinted" : "solved"}" title="${s.hints ? "Solved with hints" : "Solved"}">${CHECK}</span>`;
+  if (s.status === "solved") {
+    const title = s.walkthrough ? "Solved with help" : s.hints ? "Solved with hints" : "Solved";
+    return `<span class="st ${s.hints || s.walkthrough ? "hinted" : "solved"}" title="${title}">${CHECK}</span>`;
+  }
   if (s.status === "started") return '<span class="st started" title="Started"></span>';
   return '<span class="st" title="Not started"></span>';
 }
 function renderNav() {
   const nav = $("cases-nav");
+  const inQuiz = quiz?.active;
   nav.innerHTML = LEVELS.map(([lv, name]) =>
     `<h2>${name}</h2>` + CASES.filter((c) => c.level === lv).map((c) =>
-      `<button class="case-btn" type="button" data-id="${c.id}" ${current && c.id === current.id ? 'aria-current="true"' : ""}>
-         <span class="n">${c.id}</span><span class="t">${esc(c.title)}</span>${statusIcon(c.id)}</button>`).join("")
+      `<button class="case-btn" type="button" data-id="${c.id}" ${!inQuiz && current && c.id === current.id ? 'aria-current="true"' : ""}>
+         <span class="n">${c.id}</span><span class="t">${esc(c.title)}</span>${statusIcon(c.id)}</button>`).join("") +
+    QUIZZES.filter((q) => q.level === lv).map((q) => {
+      const best = progress.quizzes?.[q.id]?.best;
+      return `<button class="case-btn quiz-btn" type="button" data-quiz="${q.id}" ${inQuiz && quiz.id === q.id ? 'aria-current="true"' : ""}>
+         <span class="n" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="M2 3h8M2 6h8M2 9h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span>
+         <span class="t">${esc(q.title)}</span><span class="qscore">${best == null ? "" : `${best}/${q.questions.length}`}</span></button>`;
+    }).join("")
   ).join("");
-  nav.querySelectorAll(".case-btn").forEach((b) => b.addEventListener("click", () => openCase(b.dataset.id)));
+  nav.querySelectorAll(".case-btn[data-id]").forEach((b) => b.addEventListener("click", () => openCase(b.dataset.id)));
+  nav.querySelectorAll(".case-btn[data-quiz]").forEach((b) => b.addEventListener("click", () => openQuiz(b.dataset.quiz)));
   const sel = $("case-select");
-  sel.innerHTML = CASES.map((c) => `<option value="${c.id}">${c.id}. ${esc(c.title)}${caseState(c.id).status === "solved" ? " (solved)" : ""}</option>`).join("");
-  if (current) sel.value = current.id;
+  sel.innerHTML = CASES.map((c) => `<option value="${c.id}">${c.id}. ${esc(c.title)}${caseState(c.id).status === "solved" ? " (solved)" : ""}</option>`).join("") +
+    QUIZZES.map((q) => `<option value="quiz-${q.id}">${esc(q.title)}</option>`).join("");
+  if (inQuiz) sel.value = `quiz-${quiz.id}`;
+  else if (current) sel.value = current.id;
   const solved = CASES.filter((c) => caseState(c.id).status === "solved").length;
   $("progress-text").textContent = `${solved} of ${CASES.length} solved`;
   $("progress-bar").style.width = `${(100 * solved) / CASES.length}%`;
@@ -70,7 +89,48 @@ function starterQuery(c) {
   return `-- Case ${c.id}: ${c.title}\n-- Look around first, then write your answer.\nSELECT *\nFROM ${c.tables[0]}\nLIMIT 10;\n`;
 }
 
+function setMode(mode) {
+  const inQuiz = mode === "quiz";
+  if (!inQuiz) quiz?.stop();
+  $("quiz-card").hidden = !inQuiz;
+  $("brief").hidden = inQuiz;
+  $("tutor-off").hidden = !inQuiz;
+  $("tutor-body").hidden = inQuiz;
+  $("editor-panel").hidden = false;
+  $("results").hidden = false;
+}
+
+function openQuiz(id) {
+  const qz = QUIZZES.find((q) => q.id === id);
+  if (!qz) return;
+  setMode("quiz");
+  quiz.start(qz);
+  history.replaceState(null, "", `#quiz-${qz.id}`);
+  renderNav();
+}
+
+let fixShown = null;
+/** Show or hide the editor during a quiz; load the broken query when a new fix question appears. */
+function quizEditor(show, question, done) {
+  $("editor-panel").hidden = !show;
+  $("results").hidden = !show;
+  if (!show) { fixShown = null; return; }
+  if (fixShown !== question) {
+    fixShown = question;
+    setEditor(question.broken);
+    resetResults(conn ? "Ready" : "Loading database", "Fix the query and run it. Your run is checked right away.");
+  }
+}
+
+function target() {
+  const fix = quiz?.active ? quiz.currentFix() : null;
+  if (fix) return { expected: fix.expected, ordered: false, quiz: true };
+  if (quiz?.active) return null;
+  return { expected: current.expected, ordered: current.ordered, quiz: false };
+}
+
 function openCase(id) {
+  setMode("case");
   current = CASES.find((c) => c.id === id) || CASES[0];
   progress.last = current.id; saveProgress();
   history.replaceState(null, "", `#case-${current.id}`);
@@ -87,6 +147,7 @@ function openCase(id) {
   setEditor(st.query ?? starterQuery(current));
   renderNav();
   markUsedTables();
+  tutor?.render();
   resetResults(conn ? "Ready" : "Loading database",
     conn ? "Run your query to see results. Each run is checked against the answer key." : "Getting the support database ready in your browser.");
   document.querySelector(".work").scrollTo?.(0, 0);
@@ -124,7 +185,7 @@ function buildEditor() {
         keymap.of([indentWithTab]),
         EditorView.updateListener.of((u) => {
           if (u.selectionSet || u.docChanged) updateRunLabel();
-          if (u.docChanged && current && !loadingDoc) {
+          if (u.docChanged && current && !loadingDoc && !quiz?.active) {
             const st = caseState(current.id);
             st.query = u.state.doc.toString();
             if (st.status === "new") { st.status = "started"; renderNav(); }
@@ -259,7 +320,7 @@ function updateRunLabel() {
 
 let running = false;
 async function runQuery() {
-  if (!conn || running || !current) return;
+  if (!conn || running || !current || !target()) return;
   const selection = selectedText().trim();
   const statements = splitStatements(selection || view.state.doc.toString());
   if (!statements.length) return;
@@ -279,6 +340,29 @@ async function runQuery() {
   }
   running = false; $("run-btn").disabled = false;
   showRuns(out, statements.length, Boolean(selection));
+  if (quiz?.active) { if (checked) quiz.fixResult(checked.result); return; }
+  lastRun[current.id] = describeRun(out, statements, Boolean(selection));
+  tutor?.recordRun();
+}
+
+/** What the tutor is told about the latest run (computed facts only, never the answer key). */
+function describeRun(out, statements, fromSelection) {
+  const lines = [];
+  if (fromSelection) lines.push("The learner ran only a highlighted selection.");
+  if (statements.length > 1) lines.push(`The learner ran ${statements.length} queries; only the last is checked.`);
+  const last = out[out.length - 1];
+  if (last.error) {
+    lines.push(`Query ${out.length} failed with this DuckDB error: ${last.error}`);
+    if (statements.length > 1) lines.push(`The failing query was:\n${statements[out.length - 1]}`);
+  } else if (checked) {
+    const { actual, result } = checked;
+    lines.push(`Checker: ${statusLabel(result)}. ${result.summary}`);
+    lines.push(`Their result has ${actual.rows.length} rows with columns: ${actual.columns.join(", ")}.`);
+    const d = result.details;
+    if (d.extra?.length) lines.push(`Sample rows that shouldn't be there: ${JSON.stringify(d.extra.slice(0, 3))}`);
+    if (d.repeated?.length) lines.push(`Sample repeated rows: ${JSON.stringify(d.repeated.slice(0, 3))}`);
+  }
+  return lines.join("\n");
 }
 
 function cleanError(e) {
@@ -289,7 +373,8 @@ function showRuns(out, total, fromSelection) {
   runs = out;
   const last = out[out.length - 1];
   const lastRan = out.length === total && !last.error;
-  checked = lastRan ? { actual: last, result: compareResults(last, current.expected, { ordered: current.ordered }) } : null;
+  const tgt = target();
+  checked = lastRan ? { actual: last, result: compareResults(last, tgt.expected, { ordered: tgt.ordered }) } : null;
   const p = $("status-pill");
   const ranWhat = fromSelection ? "Ran your selection. " : "";
 
@@ -300,8 +385,8 @@ function showRuns(out, total, fromSelection) {
     $("res-summary").textContent = ranWhat + result.summary;
     const n = actual.rows.length;
     $("res-meta").textContent = `${n.toLocaleString()} row${n === 1 ? "" : "s"} · ${actual.ms} ms`;
-    const st = caseState(current.id);
-    if (result.match && st.status !== "solved") { st.status = "solved"; st.solvedAt = new Date().toISOString(); saveProgress(); renderNav(); }
+    const st = tgt.quiz ? {} : caseState(current.id);
+    if (!tgt.quiz && result.match && st.status !== "solved") { st.status = "solved"; st.solvedAt = new Date().toISOString(); saveProgress(); renderNav(); }
   } else {
     p.className = "pill error"; p.textContent = "Error";
     const which = total > 1 ? `Query ${out.length} of ${total} didn't run, so nothing was checked. ` : "";
@@ -350,7 +435,7 @@ function showTab(i) {
   }
   diff.hidden = !parts.length; diff.innerHTML = parts.join("");
 
-  const idx = CASES.indexOf(current);
+  const idx = quiz?.active ? CASES.length : CASES.indexOf(current);
   $("next-wrap").hidden = !(isChecked && checked.result.match && idx < CASES.length - 1);
 
   const hasRows = !r.error && r.rows.length > 0;
@@ -396,20 +481,48 @@ async function main() {
   $("tab-tutor").addEventListener("click", () => selectTab("tutor"));
   $("tab-tables").addEventListener("click", () => selectTab("tables"));
   $("run-btn").addEventListener("click", runQuery);
-  $("reset-btn").addEventListener("click", () => { if (current) { setEditor(starterQuery(current)); caseState(current.id).query = null; saveProgress(); view.focus(); } });
+  $("reset-btn").addEventListener("click", () => {
+    const fix = quiz?.active && quiz.currentFix();
+    if (fix) { setEditor(fix.broken); view.focus(); return; }
+    if (current) { setEditor(starterQuery(current)); caseState(current.id).query = null; saveProgress(); view.focus(); } });
   $("next-btn").addEventListener("click", () => { const i = CASES.indexOf(current); if (i < CASES.length - 1) openCase(CASES[i + 1].id); });
-  $("case-select").addEventListener("change", (e) => openCase(e.target.value));
+  $("case-select").addEventListener("change", (e) => {
+    const v = e.target.value;
+    if (v.startsWith("quiz-")) openQuiz(v.slice(5)); else openCase(v);
+  });
 
   buildEditor();
-  CASES = await (await fetch("/cases.json")).json();
+  [CASES, QUIZZES] = await Promise.all([
+    fetch("/cases.json").then((r) => r.json()),
+    fetch("/quizzes.json").then((r) => (r.ok ? r.json() : [])).catch(() => []),
+  ]);
+  quiz = createQuiz({
+    getProgress: () => progress,
+    save: () => { saveProgress(); renderNav(); },
+    onLeave: () => openCase(progress.last || CASES[0].id),
+    openCase: (id) => openCase(id),
+    showEditor: quizEditor,
+    onChange: () => {},
+  });
+  tutor = createTutor({
+    getCase: () => current,
+    getState: () => caseState(current.id),
+    save: saveProgress,
+    getQuery: () => view.state.doc.toString(),
+    getLastRun: () => lastRun[current.id] || "",
+    onHelpUsed: () => renderNav(),
+  });
   const fromHash = (location.hash.match(/case-(\d+)/) || [])[1];
+  const quizHash = (location.hash.match(/quiz-([a-z]+)/) || [])[1];
   openCase(fromHash || progress.last || CASES[0].id);
+  if (quizHash) openQuiz(quizHash);
   try {
     conn = await initDb();
     view.dispatch({ effects: sqlConf.reconfigure(sqlExtension()) });
     renderSchema();
     $("run-btn").disabled = false;
-    resetResults("Ready", "Run your query to see results. Each run is checked against the answer key.");
+    if (!quiz?.active) resetResults("Ready", "Run your query to see results. Each run is checked against the answer key.");
+    else if (fixShown) resetResults("Ready", "Fix the query and run it. Your run is checked right away.");
     window.__casework = { conn, CASES, readTable, compareResults, setQuery: (q) => setEditor(q) }; // for automated tests
   } catch (e) {
     const p = $("status-pill"); p.className = "pill error"; p.textContent = "Couldn't load";
@@ -419,6 +532,8 @@ async function main() {
 }
 addEventListener("hashchange", () => {
   const id = (location.hash.match(/case-(\d+)/) || [])[1];
-  if (id && (!current || id !== current.id)) openCase(id);
+  const qid = (location.hash.match(/quiz-([a-z]+)/) || [])[1];
+  if (qid && !(quiz?.active && quiz.id === qid)) openQuiz(qid);
+  else if (id && (quiz?.active || !current || id !== current.id)) openCase(id);
 });
 main();

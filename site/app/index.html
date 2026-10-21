@@ -28,7 +28,8 @@
   <nav class="cases-nav" aria-label="Cases" id="cases-nav"></nav>
 
   <main class="work" id="work">
-    <section class="brief" aria-labelledby="case-title">
+    <section class="brief quiz-card" id="quiz-card" aria-live="polite" hidden></section>
+    <section class="brief" id="brief" aria-labelledby="case-title">
       <div class="tags" id="case-tags"></div>
       <h1 id="case-title">Loading cases</h1>
       <p class="prompt" id="case-prompt"></p>
@@ -46,7 +47,7 @@
       </div>
     </section>
 
-    <section class="editor-panel" aria-label="SQL editor">
+    <section class="editor-panel" id="editor-panel" aria-label="SQL editor">
       <div class="ed-bar">
         <span class="file">query.sql</span>
         <span class="ed-actions">
@@ -60,7 +61,7 @@
       <div id="editor" class="editor"></div>
     </section>
 
-    <section class="results" aria-label="Results">
+    <section class="results" id="results" aria-label="Results">
       <div class="res-head">
         <span class="pill pending" id="status-pill">Loading database</span>
         <p class="res-summary" id="res-summary">Getting the support database ready in your browser. This takes a second or two.</p>
@@ -85,13 +86,27 @@
       <button role="tab" aria-selected="false" aria-controls="tables-panel" id="tab-tables" type="button">Tables</button>
     </div>
     <div id="tutor-panel" role="tabpanel" aria-labelledby="tab-tutor" class="panel">
-      <p class="panel-intro">Stuck? Hints unlock one level at a time. The tutor never writes the finished query.</p>
-      <div class="hint locked" data-level="1"><div class="lv">Nudge <span>level 1</span></div><p>What the case is really asking.</p></div>
-      <div class="hint locked" data-level="2"><div class="lv">Structure <span>level 2</span></div><p>Which SQL tools fit.</p></div>
-      <div class="hint locked" data-level="3"><div class="lv">Skeleton <span>level 3</span></div><p>A partial query with blanks to fill in.</p></div>
-      <div class="hint never"><div class="lv">Full solution</div><p>Never unlocks. You write the final query.</p></div>
-      <button class="hint-btn" id="hint-btn" type="button" disabled>Get a hint</button>
-      <p class="panel-note" id="hint-note">The AI tutor connects in the next build step.</p>
+      <p class="panel-intro" id="tutor-off" hidden>The tutor is off during quizzes, so the score shows what you know. Afterward, each question links to the case that teaches it, where the tutor is back on.</p>
+      <div class="tutor-body" id="tutor-body">
+      <p class="panel-intro">Stuck? Hints unlock one level at a time, or ask the tutor anything about this case. It never writes your finished query.</p>
+      <ol class="ladder" aria-label="Hint levels">
+        <li class="rung" data-level="1"><span class="dot" aria-hidden="true"></span><span><b>Nudge</b> What the case is really asking</span></li>
+        <li class="rung" data-level="2"><span class="dot" aria-hidden="true"></span><span><b>Structure</b> Which SQL tools fit</span></li>
+        <li class="rung" data-level="3"><span class="dot" aria-hidden="true"></span><span><b>Skeleton</b> A partial query with blanks</span></li>
+        <li class="rung walk" id="walk-rung"><span class="dot" aria-hidden="true"></span><span><b>Walkthrough</b> <span id="walk-text">Unlocks after all three hints and 3 more runs</span></span></li>
+      </ol>
+      <div class="tutor-actions">
+        <button class="hint-btn" id="hint-btn" type="button">Get a hint</button>
+        <button class="walk-btn" id="walk-btn" type="button" hidden>Walk me through it</button>
+      </div>
+      <div class="thread" id="thread" aria-live="polite"></div>
+      <form class="ask" id="ask-form">
+        <label class="sr" for="ask-input">Ask the tutor a question</label>
+        <textarea id="ask-input" rows="2" maxlength="1500" placeholder="Ask about this case, an error, or a SQL idea"></textarea>
+        <button type="submit" class="ask-btn" id="ask-btn">Ask</button>
+      </form>
+      <p class="panel-note" id="hint-note"></p>
+      </div>
     </div>
     <div id="tables-panel" role="tabpanel" aria-labelledby="tab-tables" class="panel" hidden>
       <p class="panel-intro">Click a column to add it to your query.</p>
