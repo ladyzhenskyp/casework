@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sign in to Casework</title>
+<meta name="description" content="Casework is in private beta. Sign in or create an account with your invite code.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Unbounded:wght@600&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --stage:#1F080E; --stage-2:#2E0D16; --wine:#7A1F31; --wine-hi:#922A3E;
+  --cream:#FBF4EF; --panel:#FDF9F6; --white:#FFFFFF; --blush:#F5DEDA; --rose:#E59AA6; --nude:#D9B5A2;
+  --cocoa:#2F1D18; --mocha:#77584C; --line:rgba(47,29,24,.12); --ok:#336B48;
+  --on-stage:#FBEAE6; --on-stage-2:#D7AFA9;
+  --sans:"Geist","Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:var(--cream);color:var(--cocoa);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+.split{min-height:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.stage{background:var(--stage);color:var(--on-stage);padding:40px 48px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.stage::after{content:"";position:absolute;inset:auto -20% -40% auto;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(229,154,166,.18),transparent 65%);pointer-events:none}
+.logo{display:inline-flex;align-items:center;gap:10px;color:var(--on-stage);text-decoration:none;font-family:"Unbounded",var(--sans);font-weight:600;font-size:17px;letter-spacing:-.02em}
+.logo svg{width:24px;height:24px}
+.pitch h1{font-size:clamp(30px,3.6vw,46px);line-height:1.05;letter-spacing:-.035em;margin:0 0 16px;font-weight:650;text-wrap:balance}
+.pitch p{margin:0;max-width:40ch;color:var(--on-stage-2);font-size:16px}
+.query{margin-top:28px;font:13px/1.7 "Geist Mono",ui-monospace,Menlo,monospace;color:#F3D9D4;background:var(--stage-2);border:1px solid rgba(251,234,230,.1);border-radius:12px;padding:14px 16px;max-width:420px}
+.query .k{color:#F49AAA}.query .s{color:#E8C4A4}.query .c{color:#BC958E;font-style:italic}
+.foot{font-size:12.5px;color:var(--on-stage-2)}
+.side{display:grid;place-items:center;padding:40px 24px}
+.card{width:min(420px,100%);background:var(--white);border:1px solid var(--line);border-radius:16px;padding:28px 28px 22px;box-shadow:0 24px 60px -36px rgba(74,20,32,.45);display:grid;gap:14px}
+.beta{justify-self:start;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--blush);color:var(--wine);border-radius:5px;padding:2px 7px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--cream);border-radius:9px;padding:4px;gap:4px}
+.tabs button{border:0;background:transparent;border-radius:6px;padding:8px;font:600 13.5px var(--sans);color:var(--mocha);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--white);color:var(--cocoa);box-shadow:0 1px 2px rgba(47,29,24,.1)}
+h2{margin:2px 0 0;font-size:22px;letter-spacing:-.02em}
+.sub{margin:-6px 0 2px;font-size:13.5px;color:var(--mocha)}
+form{display:grid;gap:12px}
+label{display:grid;gap:5px;font-size:13px;font-weight:600}
+input{font:14.5px var(--sans);color:var(--cocoa);border:1px solid #D9C2BA;border-radius:8px;padding:10px 11px;background:var(--panel)}
+input:focus{outline:2px solid var(--rose);outline-offset:0;border-color:transparent}
+small{font-weight:400;color:var(--mocha);font-size:12px}
+.privacy{margin:0;font-size:12px;line-height:1.5;color:var(--mocha);background:var(--cream);border-radius:8px;padding:8px 10px}
+.err{margin:0;font-size:13px;color:var(--wine);font-weight:500}
+.err:empty{display:none}
+.go{border:0;background:var(--wine);color:#fff;border-radius:9px;padding:11px;font:600 15px var(--sans);cursor:pointer}
+.go:hover:not(:disabled){background:var(--wine-hi)}
+.go:disabled{opacity:.6;cursor:default}
+.help{margin:2px 0 0;font-size:12.5px;color:var(--mocha);text-align:center}
+.help a{color:var(--wine)}
+@media (max-width:860px){
+  .split{grid-template-columns:minmax(0,1fr)}
+  .stage{padding:22px 20px 26px;gap:18px}
+  .pitch h1{font-size:28px}.query,.foot{display:none}
+  .side{padding:22px 16px 40px;place-items:start center}
+}
+@media (prefers-reduced-motion:no-preference){
+  .card{animation:rise .55s cubic-bezier(.2,.75,.2,1) both}
+  .pitch{animation:rise .6s .08s cubic-bezier(.2,.75,.2,1) both}
+  @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+}
+</style>
+</head>
+<body>
+<div class="split">
+  <section class="stage" aria-label="About Casework">
+    <a class="logo" href="/" aria-label="Casework home">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 1 22 7v10l-10 6L2 17V7z" fill="#7A1F31" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 1v22M2 7l20 10M22 7 2 17" stroke="#E59AA6" stroke-width="1" opacity=".85"/></svg>
+      <span>casework</span>
+    </a>
+    <div class="pitch">
+      <h1>Real support operations problems, solved with SQL.</h1>
+      <p>Twenty cases on a messy support database, with drills, quizzes and a tutor that gives hints, never the answer.</p>
+      <div class="query" aria-hidden="true"><span class="c">-- Case 01: Today's urgent queue</span><br><span class="k">SELECT</span> ticket_id, org_id, created_at<br><span class="k">FROM</span> tickets<br><span class="k">WHERE</span> priority = <span class="s">'urgent'</span> <span class="k">AND</span> ...</div>
+    </div>
+    <p class="foot">Private beta. All names and records are invented.</p>
+  </section>
+
+  <main class="side">
+    <div class="card">
+      <span class="beta">Private beta</span>
+      <div class="tabs" role="tablist" aria-label="Sign in or create an account">
+        <button type="button" role="tab" id="tab-in" aria-selected="true">Sign in</button>
+        <button type="button" role="tab" id="tab-up" aria-selected="false">Create account</button>
+      </div>
+      <h2 id="title">Welcome back</h2>
+      <p class="sub" id="sub">Sign in to pick up where you left off.</p>
+      <form id="form" novalidate>
+        <label id="name-row" hidden>Your name<input id="name" autocomplete="name" maxlength="60"></label>
+        <label>Email<input id="email" type="email" autocomplete="email" required></label>
+        <label>Password<input id="password" type="password" autocomplete="current-password" minlength="8" required><small id="pw-help" hidden>At least 8 characters.</small></label>
+        <label id="invite-row" hidden>Invite code<input id="invite" autocomplete="off" spellcheck="false"></label>
+        <p class="privacy" id="privacy" hidden>Casework stores your name, email, progress and any feedback you send. Your password is never stored or visible to anyone. Tutor questions are sent to Anthropic's Claude to answer them, without your name or email, so please don't paste anything personal or confidential there.</p>
+        <p class="err" id="err" role="alert"></p>
+        <button class="go" id="go" type="submit">Sign in</button>
+      </form>
+      <p class="help" id="help">Forgot your password? Message Patricia and she'll reset it.</p>
+    </div>
+  </main>
+</div>
+<script>
+const $ = (id) => document.getElementById(id);
+let mode = "in";
+function setMode(m) {
+  mode = m;
+  const up = m === "up";
+  $("tab-in").setAttribute("aria-selected", String(!up));
+  $("tab-up").setAttribute("aria-selected", String(up));
+  $("title").textContent = up ? "Create your account" : "Welcome back";
+  $("sub").textContent = up ? "You'll need the invite code Patricia sent you." : "Sign in to pick up where you left off.";
+  for (const id of ["name-row", "invite-row", "privacy", "pw-help"]) $(id).hidden = !up;
+  $("password").autocomplete = up ? "new-password" : "current-password";
+  $("go").textContent = up ? "Create account" : "Sign in";
+  $("help").textContent = up ? "No invite code? Casework is in a private beta for now." : "Forgot your password? Message Patricia and she'll reset it.";
+  $("err").textContent = "";
+}
+$("tab-in").addEventListener("click", () => setMode("in"));
+$("tab-up").addEventListener("click", () => setMode("up"));
+if (new URLSearchParams(location.search).get("new") !== null) setMode("up");
+
+$("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const up = mode === "up";
+  const body = { email: $("email").value, password: $("password").value };
+  if (up) Object.assign(body, { name: $("name").value, invite: $("invite").value });
+  $("go").disabled = true; $("err").textContent = "";
+  try {
+    const res = await fetch(up ? "/api/signup" : "/api/login", {
+      method: "POST", credentials: "same-origin",
+      headers: { "content-type": "application/json" }, body: JSON.stringify(body),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || "Something went wrong. Try again.");
+    location.replace("/app/" + (location.hash || "#case-01"));
+  } catch (err) {
+    $("err").textContent = err.message;
+    $("go").disabled = false;
+  }
+});
+$("email").focus();
+</script>
+
+<script>
+// Start downloading the in-browser database engine while this page is open, so
+// the workspace is ready sooner. The browser keeps it in its cache.
+(function () {
+  var base = "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/";
+  var files = [base + "+esm", base + "dist/duckdb-browser-eh.worker.js", base + "dist/duckdb-eh.wasm"];
+  function warm() {
+    if (navigator.connection && navigator.connection.saveData) return;
+    files.forEach(function (href) {
+      var l = document.createElement("link");
+      l.rel = "prefetch"; l.href = href; l.as = "fetch"; l.crossOrigin = "anonymous";
+      document.head.appendChild(l);
+    });
+  }
+  if ("requestIdleCallback" in window) requestIdleCallback(warm, { timeout: 2500 });
+  else setTimeout(warm, 1200);
+})();
+</script>
+</body>
+</html>

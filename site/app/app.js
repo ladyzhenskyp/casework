@@ -251,7 +251,7 @@ function openCase(id) {
   markUsedTables();
   tutor?.render();
   resetResults(conn ? "Ready" : "Loading database",
-    conn ? "Run your query to see results. Each run is checked against the answer key." : "Getting the support database ready in your browser.");
+    conn ? "Run your query to see results. Each run is checked against the answer key." : "Getting the database ready in your browser. The first visit takes a few seconds; after that it's quicker. You can read the case and start writing meanwhile.");
   document.querySelector(".work").scrollTo?.(0, 0);
   window.scrollTo(0, 0);
   if (booted) motion.switchIn();
@@ -381,6 +381,7 @@ function resetResults(pill, text) {
   $("grid-title").hidden = true;
   $("grid-wrap").hidden = true; $("grid").innerHTML = "";
   $("next-wrap").hidden = true;
+  $("checkin").hidden = true;
 }
 
 /** Show text values so blanks and stray spaces are visible. */
@@ -543,6 +544,7 @@ function showTab(i) {
 
   const nxt = quiz?.active ? null : nextStep();
   $("next-wrap").hidden = !(isChecked && checked.result.match && nxt);
+  showCheckin(Boolean(isChecked && checked.result.match && !quiz?.active && !isDrill(current)));
   if (nxt) $("next-label").textContent = nxt.label;
 
   const hasRows = !r.error && r.rows.length > 0;
@@ -552,6 +554,50 @@ function showTab(i) {
   if (hasRows) renderGrid($("grid"), r.columns, r.rows);
   else $("grid").innerHTML = "";
   if (!r.error && !r.rows.length) { note.hidden = false; note.textContent = isChecked ? "Your query returned no rows." : "This query returned no rows. It isn't checked."; }
+}
+
+/* ---------------- check-in after solving a case (beta feedback) ---------------- */
+let ckDifficulty = null;
+function showCheckin(solved) {
+  const form = $("checkin");
+  const done = (progress.checkins ||= {})[current?.id];
+  if (!solved || done || !account?.user) { form.hidden = true; return; }
+  if (form.hidden) {
+    ckDifficulty = null;
+    form.querySelectorAll("[data-d]").forEach((b) => b.setAttribute("aria-checked", "false"));
+    $("ck-unclear").checked = false; $("ck-note").value = ""; $("ck-msg").textContent = "";
+    $("ck-send").disabled = false;
+  }
+  form.hidden = false;
+}
+function setupCheckin() {
+  const form = $("checkin");
+  form.querySelectorAll("[data-d]").forEach((b) => b.addEventListener("click", () => {
+    ckDifficulty = b.dataset.d;
+    form.querySelectorAll("[data-d]").forEach((x) => x.setAttribute("aria-checked", String(x === b)));
+  }));
+  const finish = (how, message) => {
+    progress.checkins[current.id] = how; saveProgress();
+    $("ck-msg").textContent = message;
+    setTimeout(() => { form.hidden = true; }, how === "sent" ? 1400 : 0);
+  };
+  $("ck-skip").addEventListener("click", () => finish("skipped", ""));
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const note = $("ck-note").value.trim(), unclear = $("ck-unclear").checked;
+    if (!ckDifficulty && !note && !unclear) { $("ck-msg").textContent = "Pick an answer first, or press Skip."; return; }
+    $("ck-send").disabled = true;
+    const st = caseState(current.id);
+    try {
+      const res = await fetch("/api/checkin", { method: "POST", credentials: "same-origin", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ case_id: current.id, difficulty: ckDifficulty, unclear, note, hints: st.hints || 0, runs: st.runs || 0 }) });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Couldn't send that. Try again.");
+      finish("sent", "Thanks! That helps a lot.");
+    } catch (err) {
+      $("ck-msg").textContent = err.message; $("ck-send").disabled = false;
+    }
+  });
 }
 
 /* ---------------- tables panel ---------------- */
@@ -610,6 +656,9 @@ async function main() {
   });
 
   buildEditor();
+  setupCheckin();
+  const dbReady = initDb(); // the biggest wait (the database engine); start it first
+  dbReady.catch(() => {});
   [CASES, QUIZZES, DRILL_SETS] = await Promise.all([
     fetch("/cases.json").then((r) => r.json()),
     fetch("/quizzes.json").then((r) => (r.ok ? r.json() : [])).catch(() => []),
@@ -660,7 +709,7 @@ async function main() {
   motion.entrance();
   booted = true;
   try {
-    conn = await initDb();
+    conn = await dbReady;
     view.dispatch({ effects: sqlConf.reconfigure(sqlExtension()) });
     renderSchema();
     $("run-btn").disabled = false;

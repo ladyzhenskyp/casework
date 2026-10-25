@@ -15,7 +15,9 @@ from urllib.parse import urlsplit
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
+import os
+
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from server import tutor  # loads .env first
@@ -25,6 +27,41 @@ ROOT = Path(__file__).resolve().parent.parent
 
 app = FastAPI(title="Casework", docs_url=None, redoc_url=None)
 app.add_middleware(GZipMiddleware, minimum_size=1024)
+
+
+def login_required() -> bool:
+    """Beta mode: the workspace and its data need a signed-in account.
+    Set CASEWORK_REQUIRE_LOGIN=0 to open the site to everyone (for example, for hiring managers)."""
+    return os.environ.get("CASEWORK_REQUIRE_LOGIN", "1").strip().lower() not in ("0", "false", "no", "off")
+
+
+WORKSPACE_PAGES = {"/app", "/app/", "/app/index.html"}
+PRIVATE_DATA = ("/cases.json", "/quizzes.json", "/drills.json", "/data/")
+
+
+@app.middleware("http")
+async def sign_in_gate(request, call_next):
+    path = request.url.path
+    if login_required() and (path in WORKSPACE_PAGES or path.startswith(PRIVATE_DATA)):
+        if not accounts.user_for_token(request.cookies.get(accounts.COOKIE)):
+            if path in WORKSPACE_PAGES:
+                # The browser keeps the #case-01 part of the address across this redirect.
+                return RedirectResponse("/signin/", status_code=303)
+            return JSONResponse({"error": "Sign in to use Casework."}, status_code=401)
+    return await call_next(request)
+
+
+@app.get("/signin")
+@app.get("/signin/")
+def signin_page(request: Request):
+    if accounts.user_for_token(request.cookies.get(accounts.COOKIE)):
+        return RedirectResponse("/app/", status_code=303)
+    return FileResponse(ROOT / "site" / "signin.html", media_type="text/html", headers={"cache-control": "no-store"})
+
+
+@app.get("/api/config")
+def config():
+    return {"loginRequired": login_required()}
 
 
 @app.get("/api/health")
@@ -138,6 +175,21 @@ def feedback(payload: dict, request: Request):
     return {"ok": True}
 
 
+@app.post("/api/checkin")
+def checkin(payload: dict, request: Request):
+    if not same_site(request):
+        return refuse("Request blocked.", 403)
+    user = current_user(request)
+    if not user:
+        return refuse("Sign in to send feedback.", 401)
+    try:
+        accounts.add_checkin(user["id"], payload.get("case_id"), payload.get("difficulty"), payload.get("unclear"),
+                             payload.get("note"), payload.get("hints"), payload.get("runs"))
+    except accounts.AccountError as e:
+        return refuse(str(e), e.status)
+    return {"ok": True}
+
+
 # ---------------------------------------------------------------- tutor
 @app.get("/api/tutor")
 def tutor_status(request: Request):
@@ -217,9 +269,27 @@ def admin(request: Request):
                     for u in data["users"])
     fb = "".join(f"<tr><td>{e((f['created_at'] or '')[:16].replace('T', ' '))}</td><td>{e(f['name'] or '')}</td>"
                  f"<td>{e(f['place'] or '')}</td><td class='t'>{e(f['text'])}</td></tr>" for f in data["feedback"])
+    by_case = {}
+    for c in data["checkins"]:
+        by_case.setdefault(c["case_id"], []).append(c)
+    def avg(xs):
+        xs = [x for x in xs if x is not None]
+        return f"{sum(xs) / len(xs):.1f}" if xs else ""
+    checkin_rows = "".join(
+        f"<tr><td>{e(cid)}</td>" + "".join(f"<td>{sum(1 for r in rows if r['difficulty'] == d)}</td>" for d in accounts.DIFFICULTY)
+        + f"<td>{sum(r['unclear'] for r in rows)}</td><td>{avg([r['hints'] for r in rows])}</td><td>{avg([r['runs'] for r in rows])}</td></tr>"
+        for cid, rows in by_case.items())
+    notes = [c for c in data["checkins"] if c["note"] or c["unclear"]]
+    checkin_notes = ("<table><tr><th>Case</th><th>Who</th><th>Rating</th><th>Note</th></tr>" + "".join(
+        f"<tr><td>{e(c['case_id'])}</td><td>{e(c['name'] or '')}</td><td>{e(c['difficulty'] or '')}{' · unclear' if c['unclear'] else ''}</td>"
+        f"<td class='t'>{e(c['note'] or '')}</td></tr>" for c in notes) + "</table>") if notes else ""
     page = f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Casework admin</title><style>{ADMIN_STYLE}</style></head><body>
 <h1>Casework beta</h1><p class="sub">Only you can see this page. <a href="/app/">Back to the workspace</a></p>
+<h2>Case check-ins ({len(data['checkins'])})</h2>
+<p class="sub">The quick question after someone solves a case. One row per case; notes and \u201cunclear\u201d flags below it.</p>
+<table><tr><th>Case</th><th>Too easy</th><th>About right</th><th>Too hard</th><th>Unclear</th><th>Avg hints</th><th>Avg runs</th></tr>{checkin_rows or '<tr><td colspan=7>No check-ins yet.</td></tr>'}</table>
+{checkin_notes}
 <h2>Feedback ({len(data['feedback'])})</h2>
 <table><tr><th>When (UTC)</th><th>Who</th><th>Where</th><th>Note</th></tr>{fb or '<tr><td colspan=4>No feedback yet.</td></tr>'}</table>
 <h2>Testers ({len(data['users'])})</h2>

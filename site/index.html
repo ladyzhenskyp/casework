@@ -279,6 +279,7 @@ table.grid tr:last-child td{border-bottom:0}
         <a href="#workspace">Workspace</a>
         <a href="#features">How it works</a>
         <a href="#cases">Cases</a>
+        <a href="/signin/">Sign in</a>
       </nav>
     </div>
     <a class="cta-pill" href="/app/#case-01">Start case 01
@@ -709,5 +710,24 @@ table.grid tr:last-child td{border-bottom:0}
 })();
 </script>
 
+
+<script>
+// Start downloading the in-browser database engine while this page is open, so
+// the workspace is ready sooner. The browser keeps it in its cache.
+(function () {
+  var base = "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/";
+  var files = [base + "+esm", base + "dist/duckdb-browser-eh.worker.js", base + "dist/duckdb-eh.wasm"];
+  function warm() {
+    if (navigator.connection && navigator.connection.saveData) return;
+    files.forEach(function (href) {
+      var l = document.createElement("link");
+      l.rel = "prefetch"; l.href = href; l.as = "fetch"; l.crossOrigin = "anonymous";
+      document.head.appendChild(l);
+    });
+  }
+  if ("requestIdleCallback" in window) requestIdleCallback(warm, { timeout: 2500 });
+  else setTimeout(warm, 1200);
+})();
+</script>
 </body>
 </html>

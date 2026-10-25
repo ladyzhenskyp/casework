@@ -89,6 +89,17 @@ def _init(con):
       off_topic INTEGER NOT NULL DEFAULT 0,
       PRIMARY KEY (day, who)
     );
+    CREATE TABLE IF NOT EXISTS checkins (
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      case_id TEXT NOT NULL,
+      difficulty TEXT,
+      unclear INTEGER NOT NULL DEFAULT 0,
+      note TEXT,
+      hints INTEGER,
+      runs INTEGER,
+      created_at TEXT NOT NULL,
+      PRIMARY KEY (user_id, case_id)
+    );
     CREATE TABLE IF NOT EXISTS feedback (
       id INTEGER PRIMARY KEY,
       user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
@@ -291,6 +302,30 @@ def add_feedback(user_id, place, text) -> None:
                     (user_id, str(place or "")[:200], text[:4000], now()))
 
 
+DIFFICULTY = ("too easy", "about right", "too hard")
+
+
+def add_checkin(user_id, case_id, difficulty, unclear, note, hints, runs) -> None:
+    """The short check-in after solving a case. One per person per case; a second one replaces the first."""
+    case_id = str(case_id or "")[:12]
+    if not re.fullmatch(r"[A-Za-z0-9]{1,12}", case_id):
+        raise AccountError("Unknown case.")
+    difficulty = difficulty if difficulty in DIFFICULTY else None
+    note = str(note or "").strip()[:2000]
+    if not difficulty and not note and not unclear:
+        raise AccountError("Pick an answer or write a note first.")
+    if not FEEDBACK_THROTTLE.hit(user_id):
+        raise AccountError("That's a lot of feedback for one hour. Thank you! Try again a bit later.", 429)
+    to_int = lambda v: max(0, min(int(v), 100000)) if str(v).isdigit() else None
+    with db() as con:
+        con.execute("""INSERT INTO checkins (user_id, case_id, difficulty, unclear, note, hints, runs, created_at)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                       ON CONFLICT(user_id, case_id) DO UPDATE SET difficulty = excluded.difficulty,
+                         unclear = excluded.unclear, note = excluded.note, hints = excluded.hints,
+                         runs = excluded.runs, created_at = excluded.created_at""",
+                    (user_id, case_id, difficulty, 1 if unclear else 0, note, to_int(hints), to_int(runs), now()))
+
+
 # ---------------------------------------------------------------- tutor usage (survives restarts)
 def _today() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -338,6 +373,9 @@ def admin_overview() -> dict:
         feedback = [dict(r) for r in con.execute(
             """SELECT f.created_at, f.place, f.text, u.name, u.email FROM feedback f
                LEFT JOIN users u ON u.id = f.user_id ORDER BY f.created_at DESC LIMIT 500""")]
+        checkins = [dict(r) for r in con.execute(
+            """SELECT c.case_id, c.difficulty, c.unclear, c.note, c.hints, c.runs, c.created_at, u.name
+               FROM checkins c LEFT JOIN users u ON u.id = c.user_id ORDER BY c.case_id, c.created_at""")]
     week_ago = (datetime.now(timezone.utc) - timedelta(days=6)).strftime("%Y-%m-%d")
     with db() as con:
         use = {r["who"]: dict(r) for r in con.execute(
@@ -353,7 +391,7 @@ def admin_overview() -> dict:
         cases = (data.get("cases") or {}).values()
         u["solved"] = sum(1 for c in cases if isinstance(c, dict) and c.get("status") == "solved")
         u["hints"] = sum(int(c.get("hints") or 0) for c in cases if isinstance(c, dict))
-    return {"users": users, "feedback": feedback}
+    return {"users": users, "feedback": feedback, "checkins": checkins}
 
 
 def admin_reset_password(email, new_password) -> None:

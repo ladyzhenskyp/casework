@@ -65,7 +65,7 @@
     <section class="results" id="results" aria-label="Results">
       <div class="res-head">
         <span class="pill pending" id="status-pill">Loading database</span>
-        <p class="res-summary" id="res-summary">Getting the support database ready in your browser. This takes a second or two.</p>
+        <p class="res-summary" id="res-summary">Getting the database ready in your browser. The first visit takes a few seconds; after that it's quicker. You can read the case and start writing meanwhile.</p>
         <span class="res-meta" id="res-meta"></span>
       </div>
       <div id="res-tabs" class="res-tabs" role="tablist" aria-label="Query results" hidden></div>
@@ -76,6 +76,18 @@
           <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9m-3.5-4L12 8l-3.5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
+      <form class="checkin" id="checkin" hidden>
+        <p class="ck-q">Quick check-in: how was this case?</p>
+        <div class="ck-opts" role="radiogroup" aria-label="How hard was this case?">
+          <button type="button" role="radio" aria-checked="false" data-d="too easy">Too easy</button>
+          <button type="button" role="radio" aria-checked="false" data-d="about right">About right</button>
+          <button type="button" role="radio" aria-checked="false" data-d="too hard">Too hard</button>
+        </div>
+        <label class="ck-unclear"><input type="checkbox" id="ck-unclear"> Something in the brief was unclear</label>
+        <label class="sr" for="ck-note">Anything else for Patricia (optional)</label>
+        <textarea id="ck-note" rows="2" maxlength="2000" placeholder="Anything else for Patricia? (optional)"></textarea>
+        <div class="ck-actions"><button type="submit" class="ck-send" id="ck-send">Send</button><button type="button" class="ck-skip" id="ck-skip">Skip</button><span class="ck-msg" id="ck-msg" role="status"></span></div>
+      </form>
       <h3 class="grid-title" id="grid-title" hidden>Your full result</h3>
       <div class="grid-wrap" id="grid-wrap" hidden><table class="grid" id="grid"></table></div>
     </section>

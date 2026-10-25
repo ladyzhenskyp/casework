@@ -6,15 +6,21 @@ look for the closest one.
 
 ## What testers get
 
-- A link to the site. Anyone can look around and solve cases without an account.
+- A link to the site. The home page is public, but opening any case goes to a
+  sign-in page: the whole workspace needs an account during the beta.
 - With an invite code, they create an account (name, email, password). Their
-  progress then saves to the server and follows them to any device, and they can
-  use hints and the tutor (25 replies a day each).
+  progress saves to the server and follows them to any device, and they can use
+  hints and the tutor (25 replies a day each).
 - A **Feedback** button in the workspace that sends you a note with the case they
   were on.
 
 You get a private page at `/admin` with all feedback, the list of testers and how
 far each has gotten, and a form to reset someone's password.
+
+**Opening it up later:** when you want hiring managers to try Casework without an
+invite code, add the variable `CASEWORK_REQUIRE_LOGIN` with the value `0` in
+Railway. Visitors can then use the workspace as guests; hints and the tutor still
+need an account. Delete the variable to turn sign-in back on.
 
 ## 1. Push the latest code
 
