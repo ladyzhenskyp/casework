@@ -317,3 +317,11 @@ table.grid th.fill,table.grid td.fill{width:100%;padding:0}
 table.grid th:not(.fill),table.grid td:not(.fill){padding-right:28px}
 .empty-chat{margin:0;font-size:13px;color:var(--mocha);border:1px dashed var(--line);border-radius:10px;padding:10px 12px}
 .side-tabs{z-index:3}
+
+/* motion: gliding highlights (see motion.js) */
+.cases-nav .case-btn{position:relative;z-index:1}
+.nav-ind{position:absolute;z-index:0;background:var(--blush);border-radius:7px;pointer-events:none}
+.cases-nav:has(> .nav-ind:not([hidden])) .case-btn[aria-current="true"]{background:transparent}
+.tab-ind{position:absolute;z-index:0;pointer-events:none;box-shadow:inset 0 -2px 0 var(--wine)}
+.side-tabs button{position:relative;z-index:1}
+.side-tabs:has(> .tab-ind:not([hidden])) button[aria-selected="true"]{border-bottom-color:transparent}

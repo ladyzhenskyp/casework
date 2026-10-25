@@ -8,6 +8,7 @@ import { compareResults, normalizeValue, statusLabel } from "./checker.js";
 import { splitStatements } from "./statements.js";
 import { createTutor } from "./tutor.js";
 import { createQuiz } from "./quiz.js";
+import * as motion from "./motion.js";
 
 const TABLES = ["customers", "helpdesk_orgs", "tickets", "ticket_events", "agents", "sla_policies", "csat_responses", "integration_sync_log"];
 const SYSTEMS = [
@@ -33,6 +34,7 @@ let QUIZZES = [];
 let DRILL_SETS = [];
 const DRILLS = {}; // drill id -> drill (drills work like small cases)
 let mode = "case"; // case | quiz | picker
+let booted = false; // after the first load, switching items animates
 let pickerLevel = null;
 const findItem = (id) => CASES.find((c) => c.id === id) || DRILLS[id];
 const isDrill = (item) => item?.kind === "drill";
@@ -101,6 +103,7 @@ function renderNav() {
   const solved = CASES.filter((c) => caseState(c.id).status === "solved").length;
   $("progress-text").textContent = `${solved} of ${CASES.length} solved`;
   $("progress-bar").style.width = `${(100 * solved) / CASES.length}%`;
+  motion.glide(nav, nav.querySelector('.case-btn[aria-current="true"]'), "nav", "nav-ind");
 }
 
 /* ---------------- brief ---------------- */
@@ -179,6 +182,7 @@ function openDrills(level) {
   card.querySelectorAll(".review-link").forEach((b) => b.addEventListener("click", () => openCase(b.dataset.case)));
   renderNav();
   window.scrollTo(0, 0);
+  if (booted) motion.switchIn();
 }
 
 /** What the "next" button after a match leads to. */
@@ -201,6 +205,7 @@ function openQuiz(id) {
   quiz.start(qz);
   history.replaceState(null, "", `#quiz-${qz.id}`);
   renderNav();
+  if (booted) motion.switchIn();
 }
 
 let fixShown = null;
@@ -246,6 +251,7 @@ function openCase(id) {
     conn ? "Run your query to see results. Each run is checked against the answer key." : "Getting the support database ready in your browser.");
   document.querySelector(".work").scrollTo?.(0, 0);
   window.scrollTo(0, 0);
+  if (booted) motion.switchIn();
 }
 
 /* ---------------- editor ---------------- */
@@ -504,6 +510,7 @@ function showRuns(out, total, fromSelection) {
     tabs.hidden = true; tabs.innerHTML = "";
   }
   showTab(out.length - 1);
+  motion.settle($("results"));
 }
 
 function showTab(i) {
@@ -560,12 +567,18 @@ function markUsedTables() {
   document.querySelectorAll("details.tbl").forEach((d) => d.classList.toggle("used", current.tables.includes(d.dataset.t)));
 }
 const TABS = ["hints", "tables", "tutor"];
+let currentTab = "hints";
 function selectTab(which) {
+  const dir = Math.sign(TABS.indexOf(which) - TABS.indexOf(currentTab)) || 1;
+  const changed = which !== currentTab;
+  currentTab = which;
   for (const t of TABS) {
     $(`tab-${t}`).setAttribute("aria-selected", String(t === which));
     $(`${t}-panel`).hidden = t !== which;
   }
   if (which === "tutor" && matchMedia("(min-width: 821px)").matches) requestAnimationFrame(() => $("ask-input").focus({ preventScroll: true }));
+  motion.glide(document.querySelector(".side-tabs"), $(`tab-${which}`), "tabs", "tab-ind");
+  if (changed) motion.tabIn($(`${which}-panel`), dir);
 }
 function showTable(t) {
   selectTab("tables");
@@ -624,6 +637,9 @@ async function main() {
   openCase(drillHash || fromHash || (findItem(progress.last) ? progress.last : CASES[0].id));
   if (quizHash) openQuiz(quizHash);
   else if (drillsHash) openDrills(drillsHash);
+  selectTab("hints");
+  motion.entrance();
+  booted = true;
   try {
     conn = await initDb();
     view.dispatch({ effects: sqlConf.reconfigure(sqlExtension()) });

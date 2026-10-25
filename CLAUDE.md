@@ -66,6 +66,7 @@ See `docs/dataset.html` for the full reference. Summary:
 - Hero: "The Query Filter", a three.js scene of support ticket cards gliding through a frame labeled with a live WHERE clause. Matching cards highlight the matched field and slide into a result stack with a row count. The clause cycles every 9 seconds. The scene tilts with the mouse. Reduced motion shows one still frame.
 - Rejected directions (don't bring back): rubber stamps / paper / courtroom look, the gem "lens" object, a glowing orb, video-game-like magic effects.
 - `docs/DESIGN.md` describes the SaaS world but predates the Lens logo, square corners and Query Filter hero. Update it when touching the design.
+- Workspace motion (Oct 24, Patricia asked for it to feel more dynamic; she chose subtle and quick): `site/app/motion.js` uses the browser's Web Animations API, no library. First-load entrance (top bar, staggered case list, main sections, side panel), a short glide-in of the main column when switching cases/drills/quizzes, a highlight that slides to the selected item in the case list, a sliding underline between side tabs, and a quick fade on new results. About 0.2 to 0.36 s. Everything is skipped under prefers-reduced-motion. Still no tilt or hero effects on working surfaces.
 - The workspace (the app itself) reuses the product window shown on the landing page: case list sidebar, case brief, wine SQL editor, results grid with a status pill, tutor panel with hint levels. Calm, no hero effects, no tilt on working surfaces.
 
 ## Status and plan
