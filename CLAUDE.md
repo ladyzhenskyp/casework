@@ -84,6 +84,8 @@ Sign-in gate (Oct 25, Patricia's request): during the beta the whole workspace n
 
 Case check-ins and load time (Oct 25): after solving a case (not drills or quizzes), signed-in testers see a short check-in (too easy / about right / too hard, "something in the brief was unclear", optional note), stored in a `checkins` table (one row per person per case, with their hints and runs) and summarized per case on /admin. Answered or skipped check-ins don't come back (progress.checkins). Patricia wants general feedback to stay in the top bar's Feedback button, not the side panel. Load time: the in-browser database engine (duckdb-eh.wasm, about 36 MB, 7 MB compressed) is the main wait; compiling it dominated (7 s in the test container, likely 1 to 3 s on a laptop). The landing and sign-in pages now prefetch it while idle, and the workspace starts loading the database before anything else.
 
+No flash on first load (Oct 25): Patricia saw the empty page outline flash, then disappear and fade back in. Cause: the entrance animation made already-visible elements transparent during their delays. Fix: `<body class="booting">` hides everything but the top bar and logo until main() has drawn the case, then the class is removed in the same frame the entrance starts (5 s safety timeout, and on errors). Checked frame by frame: the first visible frame already shows the real case, at opacity 0, fading in.
+
 ## Status and plan
 
 Done:

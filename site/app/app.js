@@ -706,6 +706,7 @@ async function main() {
   if (quizHash) openQuiz(quizHash);
   else if (drillsHash) openDrills(drillsHash);
   selectTab("hints");
+  document.body.classList.remove("booting"); // reveal, then play the entrance in the same frame
   motion.entrance();
   booted = true;
   try {
@@ -732,4 +733,4 @@ addEventListener("hashchange", () => {
   else if (qid && !(quiz?.active && quiz.id === qid)) openQuiz(qid);
   else if (id && (mode !== "case" || !current || id !== current.id)) openCase(id);
 });
-main();
+main().catch((e) => { document.body.classList.remove("booting"); throw e; });

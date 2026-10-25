@@ -10,7 +10,13 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@400;500;600&family=Unbounded:wght@600&display=swap">
 <link rel="stylesheet" href="app.css">
 </head>
-<body>
+<body class="booting">
+<script>
+// Keep the workspace hidden until its content is ready, so it appears once with
+// its entrance instead of flashing an empty outline first. Safety net: show it
+// after 5 seconds no matter what.
+setTimeout(function () { document.body.classList.remove("booting"); }, 5000);
+</script>
 <header class="topbar">
   <a class="logo" href="/" aria-label="Casework home">
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 1 22 7v10l-10 6L2 17V7z" fill="#7A1F31" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 1v22M2 7l20 10M22 7 2 17" stroke="#E59AA6" stroke-width="1" opacity=".85"/></svg>

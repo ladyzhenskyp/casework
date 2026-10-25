@@ -22,7 +22,7 @@ export function rise(els, { y = 8, x = 0, dur = 420, stagger = 60, delay = 0, ma
 /** The first time the workspace appears. */
 export function entrance() {
   if (still()) return;
-  rise([document.querySelector(".topbar")], { y: -6, dur: 420 });
+  rise(document.querySelectorAll(".topbar > :not(.logo)"), { y: -4, dur: 420, stagger: 50 });
   rise(document.querySelectorAll("#cases-nav h2, #cases-nav .case-btn"), { x: -10, y: 0, dur: 520, stagger: 40, delay: 120, max: 18 });
   rise(document.querySelectorAll(".work > section"), { y: 14, dur: 620, stagger: 120, delay: 180 });
   rise([document.querySelector(".side")], { x: 12, y: 0, dur: 620, delay: 320 });

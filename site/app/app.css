@@ -385,3 +385,6 @@ table.grid th:not(.fill),table.grid td:not(.fill){padding-right:28px}
 .ck-send:disabled{opacity:.6}
 .ck-skip{border:0;background:transparent;color:var(--mocha);font:500 13.5px var(--sans);cursor:pointer;text-decoration:underline}
 .ck-msg{font-size:13px;color:var(--ok);font-weight:500}
+
+/* First load: the dark top bar and logo show at once; everything else waits for content (see app.js). */
+body.booting .shell,body.booting .topbar > :not(.logo){visibility:hidden}
