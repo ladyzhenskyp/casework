@@ -104,14 +104,14 @@ const reorder = (rows, perm) => rows.map((r) => perm.map((i) => r[i]));
  * missing / extra / repeated rows for the UI and for the tutor's explanation.
  * details.columns is the column order the samples are shown in.
  */
-export function compareResults(actual, expected, { ordered = false } = {}) {
+export function compareResults(actual, expected, { ordered = false, hideColumns = false } = {}) {
   const expCols = expected.columns.length;
   const actCols = actual.columns.length;
 
   if (actCols !== expCols) {
     return {
       match: false, status: "columns",
-      summary: `Your result has ${actCols} column${actCols === 1 ? "" : "s"}. This case expects ${expCols}: ${expected.columns.join(", ")}.`,
+      summary: `Your result has ${actCols} column${actCols === 1 ? "" : "s"}. This case expects ${expCols}${hideColumns ? "" : `: ${expected.columns.join(", ")}`}.`,
       details: { expectedRows: expected.rows.length, actualRows: actual.rows.length, expectedColumns: expected.columns, actualColumns: actual.columns },
     };
   }

@@ -18,7 +18,7 @@
   </a>
   <span class="domain">Support operations</span>
   <div class="progress" aria-live="polite">
-    <span id="progress-text">0 of 15 solved</span>
+    <span id="progress-text">0 of 20 solved</span>
     <span class="bar" aria-hidden="true"><span id="progress-bar"></span></span>
   </div>
   <label class="case-select-wrap"><span class="sr">Case</span><select id="case-select"></select></label>
@@ -39,9 +39,9 @@
           <ul class="rules" id="case-rules"></ul>
         </div>
         <div>
-          <h2 class="label">Return these columns</h2>
+          <div class="label-row"><h2 class="label">Return these columns</h2><button type="button" class="peek" id="toggle-returns" aria-controls="case-returns">Hide</button></div>
           <div class="cols" id="case-returns"></div>
-          <h2 class="label">Tables you'll need</h2>
+          <div class="label-row"><h2 class="label">Tables you'll need</h2><button type="button" class="peek" id="toggle-tables" aria-controls="case-tables">Hide</button></div>
           <div class="cols" id="case-tables"></div>
         </div>
       </div>
@@ -71,7 +71,7 @@
       <p id="tab-note" class="tab-note" hidden></p>
       <div id="diff" class="diff" hidden></div>
       <div id="next-wrap" class="next-wrap" hidden>
-        <button class="next-btn" id="next-btn" type="button">Next case
+        <button class="next-btn" id="next-btn" type="button"><span id="next-label">Next case</span>
           <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9m-3.5-4L12 8l-3.5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
@@ -80,15 +80,16 @@
     </section>
   </main>
 
-  <aside class="side" aria-label="Tutor and tables">
+  <aside class="side" aria-label="Hints, tables and tutor">
     <div class="side-tabs" role="tablist">
-      <button role="tab" aria-selected="true" aria-controls="tutor-panel" id="tab-tutor" type="button">Tutor</button>
+      <button role="tab" aria-selected="true" aria-controls="hints-panel" id="tab-hints" type="button">Hints</button>
       <button role="tab" aria-selected="false" aria-controls="tables-panel" id="tab-tables" type="button">Tables</button>
+      <button role="tab" aria-selected="false" aria-controls="tutor-panel" id="tab-tutor" type="button">Tutor</button>
     </div>
-    <div id="tutor-panel" role="tabpanel" aria-labelledby="tab-tutor" class="panel">
-      <p class="panel-intro" id="tutor-off" hidden>The tutor is off during quizzes, so the score shows what you know. Afterward, each question links to the case that teaches it, where the tutor is back on.</p>
-      <div class="tutor-body" id="tutor-body">
-      <p class="panel-intro">Stuck? Hints unlock one level at a time, or ask the tutor anything about this case. It never writes your finished query.</p>
+    <div id="hints-panel" role="tabpanel" aria-labelledby="tab-hints" class="panel">
+      <p class="panel-intro off-note" hidden></p>
+      <div class="help-body">
+      <p class="panel-intro">Stuck? Hints unlock one level at a time. None of them write your finished query.</p>
       <ol class="ladder" aria-label="Hint levels">
         <li class="rung" data-level="1"><span class="dot" aria-hidden="true"></span><span><b>Nudge</b> What the case is really asking</span></li>
         <li class="rung" data-level="2"><span class="dot" aria-hidden="true"></span><span><b>Structure</b> Which SQL tools fit</span></li>
@@ -99,6 +100,18 @@
         <button class="hint-btn" id="hint-btn" type="button">Get a hint</button>
         <button class="walk-btn" id="walk-btn" type="button" hidden>Walk me through it</button>
       </div>
+      <div class="thread" id="hint-thread" aria-live="polite"></div>
+      <p class="panel-note" id="hints-note"></p>
+      </div>
+    </div>
+    <div id="tables-panel" role="tabpanel" aria-labelledby="tab-tables" class="panel" hidden>
+      <p class="panel-intro">Click a column to add it to your query.</p>
+      <div id="schema"></div>
+    </div>
+    <div id="tutor-panel" role="tabpanel" aria-labelledby="tab-tutor" class="panel" hidden>
+      <p class="panel-intro off-note" hidden></p>
+      <div class="help-body">
+      <p class="panel-intro">Ask about this case, an error, or any SQL idea. The tutor sees your query and your last result, and answers one step at a time.</p>
       <div class="thread" id="thread" aria-live="polite"></div>
       <form class="ask" id="ask-form">
         <label class="sr" for="ask-input">Ask the tutor a question</label>
@@ -107,10 +120,6 @@
       </form>
       <p class="panel-note" id="hint-note"></p>
       </div>
-    </div>
-    <div id="tables-panel" role="tabpanel" aria-labelledby="tab-tables" class="panel" hidden>
-      <p class="panel-intro">Click a column to add it to your query.</p>
-      <div id="schema"></div>
     </div>
   </aside>
 </div>

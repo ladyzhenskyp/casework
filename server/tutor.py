@@ -33,6 +33,7 @@ import httpx
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "cases"))
 from cases import CASES  # noqa: E402  (reference solutions and trap queries)
+from drills import DRILL_SETS  # noqa: E402
 
 MODEL = os.environ.get("CASEWORK_MODEL", "claude-haiku-5-5")
 API_URL = os.environ.get("CASEWORK_API_URL", "https://api.anthropic.com/v1/messages")  # override only for tests
@@ -61,6 +62,15 @@ load_env_file()
 
 PUBLIC = {c["id"]: c for c in json.loads((ROOT / "cases" / "cases.json").read_text())}
 PRIVATE = {c["id"]: c for c in CASES}
+# Drills work like small cases, so the tutor helps with them the same way.
+_drills_path = ROOT / "cases" / "drills.json"
+if _drills_path.exists():
+    for _set in json.loads(_drills_path.read_text()):
+        for _d in _set["drills"]:
+            PUBLIC[_d["id"]] = _d
+    for _set in DRILL_SETS:
+        for _i, _d in enumerate(_set["drills"], 1):
+            PRIVATE[f"{_set['id']}{_i}"] = _d
 
 
 def _connect():
@@ -217,7 +227,7 @@ def _case_context(cid):
     tables = "\n".join(f"- {t}({', '.join(SCHEMA.get(t, []))})" for t in pub["tables"])
     rules = "\n".join(f"- {r}" for r in pub["rules"])
     return f"""<case>
-Case {cid} ({pub['level']}): {pub['title']}
+{'Drill' if pub.get('kind') == 'drill' else 'Case'} {cid} ({pub['level']}): {pub['title']}
 Brief: {pub['prompt']}
 Rules shown to the learner:
 {rules}
@@ -259,6 +269,11 @@ def build_user_message(req):
     else:
         lines.append("<last_run>The learner hasn't run a query yet.</last_run>")
     lines.append(f"<runs_so_far>{req.get('runs', 0)}</runs_so_far>")
+    hidden = req.get("hidden") or {}
+    if hidden.get("columns") or hidden.get("tables"):
+        parts = [p for p, on in (("the columns to return", hidden.get("columns")), ("the tables needed", hidden.get("tables"))) if on]
+        lines.append(f"<practice_mode>The learner chose to hide {' and '.join(parts)} from the brief to practice working "
+                     "them out. Don't name those directly unless the learner asks for them; guide them to figure it out.</practice_mode>")
     mode = req["mode"]
     if mode == "hint":
         lv = req["level"]
@@ -380,4 +395,6 @@ def validate(payload):
     return {"case_id": cid, "mode": mode, "level": level, "question": question,
             "query": str(payload.get("query") or "")[:12000],
             "last_result": str(payload.get("last_result") or "")[:3000],
-            "history": history, "runs": runs}
+            "history": history, "runs": runs,
+            "hidden": {k: bool(v) for k, v in (payload.get("hidden") or {}).items() if k in ("columns", "tables")}
+            if isinstance(payload.get("hidden"), dict) else {}}

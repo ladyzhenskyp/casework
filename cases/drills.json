@@ -1,0 +1,5812 @@
+[
+ {
+  "id": "andor",
+  "level": "foundations",
+  "title": "AND, OR and IN",
+  "review": "01",
+  "intro": "Combining conditions. SQL handles AND before OR, so mixing them without parentheses changes the meaning. IN is the safe way to say \"any of these values\".",
+  "drills": [
+   {
+    "id": "andor1",
+    "kind": "drill",
+    "set": "andor",
+    "level": "foundations",
+    "title": "Phone or chat, still open",
+    "prompt": "List tickets that came in by phone or chat and are still open.",
+    "rules": [
+     "Open means status is 'open'."
+    ],
+    "returns": [
+     "ticket_id",
+     "channel"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "IN",
+     "AND"
+    ],
+    "expected": {
+     "columns": [
+      "ticket_id",
+      "channel"
+     ],
+     "rows": [
+      [
+       10090,
+       "phone"
+      ],
+      [
+       10347,
+       "chat"
+      ],
+      [
+       10352,
+       "chat"
+      ],
+      [
+       10704,
+       "chat"
+      ],
+      [
+       10758,
+       "chat"
+      ],
+      [
+       11000,
+       "phone"
+      ],
+      [
+       11160,
+       "chat"
+      ],
+      [
+       11457,
+       "chat"
+      ],
+      [
+       11508,
+       "chat"
+      ],
+      [
+       11561,
+       "chat"
+      ],
+      [
+       12029,
+       "chat"
+      ],
+      [
+       12274,
+       "chat"
+      ],
+      [
+       12284,
+       "phone"
+      ],
+      [
+       12492,
+       "phone"
+      ],
+      [
+       12635,
+       "phone"
+      ],
+      [
+       12801,
+       "chat"
+      ],
+      [
+       12829,
+       "chat"
+      ],
+      [
+       12879,
+       "chat"
+      ],
+      [
+       12923,
+       "phone"
+      ],
+      [
+       12959,
+       "chat"
+      ],
+      [
+       12997,
+       "phone"
+      ],
+      [
+       13037,
+       "phone"
+      ],
+      [
+       13092,
+       "chat"
+      ],
+      [
+       13270,
+       "chat"
+      ],
+      [
+       13551,
+       "phone"
+      ],
+      [
+       13610,
+       "chat"
+      ],
+      [
+       13870,
+       "chat"
+      ],
+      [
+       13961,
+       "chat"
+      ],
+      [
+       14044,
+       "phone"
+      ],
+      [
+       14060,
+       "phone"
+      ],
+      [
+       14112,
+       "phone"
+      ],
+      [
+       14152,
+       "chat"
+      ],
+      [
+       14549,
+       "phone"
+      ],
+      [
+       14686,
+       "chat"
+      ],
+      [
+       14775,
+       "phone"
+      ],
+      [
+       14781,
+       "chat"
+      ],
+      [
+       14783,
+       "chat"
+      ],
+      [
+       15635,
+       "chat"
+      ],
+      [
+       15638,
+       "chat"
+      ],
+      [
+       15648,
+       "phone"
+      ],
+      [
+       15652,
+       "chat"
+      ],
+      [
+       15654,
+       "phone"
+      ],
+      [
+       15656,
+       "chat"
+      ],
+      [
+       15659,
+       "chat"
+      ],
+      [
+       15665,
+       "chat"
+      ],
+      [
+       15668,
+       "phone"
+      ],
+      [
+       15672,
+       "phone"
+      ],
+      [
+       4151,
+       "chat"
+      ],
+      [
+       4325,
+       "chat"
+      ],
+      [
+       4501,
+       "chat"
+      ],
+      [
+       4718,
+       "chat"
+      ],
+      [
+       4761,
+       "chat"
+      ],
+      [
+       5067,
+       "chat"
+      ],
+      [
+       5127,
+       "chat"
+      ],
+      [
+       5180,
+       "chat"
+      ],
+      [
+       5340,
+       "chat"
+      ],
+      [
+       5467,
+       "chat"
+      ],
+      [
+       5482,
+       "chat"
+      ],
+      [
+       5591,
+       "chat"
+      ],
+      [
+       5776,
+       "chat"
+      ],
+      [
+       6022,
+       "chat"
+      ],
+      [
+       6129,
+       "phone"
+      ],
+      [
+       6222,
+       "chat"
+      ],
+      [
+       6248,
+       "chat"
+      ],
+      [
+       6283,
+       "phone"
+      ],
+      [
+       6305,
+       "phone"
+      ],
+      [
+       6382,
+       "chat"
+      ],
+      [
+       7166,
+       "chat"
+      ],
+      [
+       7348,
+       "chat"
+      ],
+      [
+       7595,
+       "phone"
+      ],
+      [
+       7914,
+       "chat"
+      ],
+      [
+       7933,
+       "chat"
+      ],
+      [
+       8106,
+       "chat"
+      ],
+      [
+       8256,
+       "phone"
+      ],
+      [
+       8341,
+       "chat"
+      ],
+      [
+       8472,
+       "chat"
+      ],
+      [
+       8523,
+       "chat"
+      ],
+      [
+       8675,
+       "phone"
+      ],
+      [
+       9001,
+       "chat"
+      ],
+      [
+       9588,
+       "chat"
+      ],
+      [
+       9699,
+       "chat"
+      ],
+      [
+       9802,
+       "phone"
+      ],
+      [
+       9819,
+       "chat"
+      ],
+      [
+       9942,
+       "chat"
+      ]
+     ]
+    }
+   },
+   {
+    "id": "andor2",
+    "kind": "drill",
+    "set": "andor",
+    "level": "foundations",
+    "title": "High stakes, waiting on the customer",
+    "prompt": "List high or urgent priority tickets that are pending.",
+    "rules": [
+     "Priority is 'high' or 'urgent'.",
+     "Status is 'pending'."
+    ],
+    "returns": [
+     "ticket_id",
+     "priority"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "OR",
+     "parentheses"
+    ],
+    "expected": {
+     "columns": [
+      "ticket_id",
+      "priority"
+     ],
+     "rows": [
+      [
+       10001,
+       "high"
+      ],
+      [
+       11112,
+       "high"
+      ],
+      [
+       11310,
+       "urgent"
+      ],
+      [
+       12027,
+       "high"
+      ],
+      [
+       12604,
+       "high"
+      ],
+      [
+       13405,
+       "urgent"
+      ],
+      [
+       13466,
+       "high"
+      ],
+      [
+       14327,
+       "high"
+      ],
+      [
+       15546,
+       "high"
+      ],
+      [
+       15683,
+       "urgent"
+      ],
+      [
+       15686,
+       "urgent"
+      ],
+      [
+       15689,
+       "urgent"
+      ],
+      [
+       15692,
+       "urgent"
+      ],
+      [
+       15697,
+       "urgent"
+      ],
+      [
+       15699,
+       "urgent"
+      ],
+      [
+       4833,
+       "high"
+      ],
+      [
+       5781,
+       "high"
+      ],
+      [
+       7495,
+       "urgent"
+      ],
+      [
+       7765,
+       "high"
+      ]
+     ]
+    }
+   },
+   {
+    "id": "andor3",
+    "kind": "drill",
+    "set": "andor",
+    "level": "foundations",
+    "title": "Two lists at once",
+    "prompt": "List tickets that still need work and came in through email or the web form.",
+    "rules": [
+     "Still needs work means status is 'open' or 'pending'.",
+     "The web form channel is 'web'."
+    ],
+    "returns": [
+     "ticket_id",
+     "channel",
+     "status"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "IN",
+     "IN"
+    ],
+    "expected": {
+     "columns": [
+      "ticket_id",
+      "channel",
+      "status"
+     ],
+     "rows": [
+      [
+       10001,
+       "web",
+       "pending"
+      ],
+      [
+       10175,
+       "email",
+       "open"
+      ],
+      [
+       10424,
+       "email",
+       "pending"
+      ],
+      [
+       10463,
+       "web",
+       "pending"
+      ],
+      [
+       10467,
+       "email",
+       "open"
+      ],
+      [
+       10521,
+       "email",
+       "pending"
+      ],
+      [
+       10629,
+       "email",
+       "pending"
+      ],
+      [
+       10876,
+       "email",
+       "pending"
+      ],
+      [
+       11050,
+       "web",
+       "open"
+      ],
+      [
+       11112,
+       "email",
+       "pending"
+      ],
+      [
+       11117,
+       "email",
+       "open"
+      ],
+      [
+       11170,
+       "email",
+       "pending"
+      ],
+      [
+       11310,
+       "email",
+       "pending"
+      ],
+      [
+       11354,
+       "email",
+       "open"
+      ],
+      [
+       11571,
+       "email",
+       "open"
+      ],
+      [
+       11660,
+       "email",
+       "open"
+      ],
+      [
+       11675,
+       "email",
+       "open"
+      ],
+      [
+       11751,
+       "web",
+       "open"
+      ],
+      [
+       11788,
+       "email",
+       "open"
+      ],
+      [
+       12027,
+       "email",
+       "pending"
+      ],
+      [
+       12086,
+       "email",
+       "pending"
+      ],
+      [
+       12109,
+       "email",
+       "open"
+      ],
+      [
+       12169,
+       "email",
+       "open"
+      ],
+      [
+       12193,
+       "email",
+       "open"
+      ],
+      [
+       12298,
+       "email",
+       "open"
+      ],
+      [
+       12536,
+       "email",
+       "pending"
+      ],
+      [
+       12656,
+       "email",
+       "open"
+      ],
+      [
+       12712,
+       "email",
+       "open"
+      ],
+      [
+       12751,
+       "web",
+       "open"
+      ],
+      [
+       12861,
+       "email",
+       "open"
+      ],
+      [
+       13180,
+       "email",
+       "open"
+      ],
+      [
+       13269,
+       "email",
+       "pending"
+      ],
+      [
+       13306,
+       "email",
+       "open"
+      ],
+      [
+       13309,
+       "email",
+       "open"
+      ],
+      [
+       13327,
+       "web",
+       "pending"
+      ],
+      [
+       13466,
+       "email",
+       "pending"
+      ],
+      [
+       13480,
+       "web",
+       "open"
+      ],
+      [
+       13520,
+       "web",
+       "open"
+      ],
+      [
+       13739,
+       "email",
+       "open"
+      ],
+      [
+       13816,
+       "web",
+       "pending"
+      ],
+      [
+       13819,
+       "web",
+       "open"
+      ],
+      [
+       14183,
+       "email",
+       "open"
+      ],
+      [
+       14280,
+       "web",
+       "open"
+      ],
+      [
+       14428,
+       "email",
+       "open"
+      ],
+      [
+       14514,
+       "email",
+       "pending"
+      ],
+      [
+       14557,
+       "email",
+       "open"
+      ],
+      [
+       14623,
+       "email",
+       "open"
+      ],
+      [
+       14764,
+       "web",
+       "pending"
+      ],
+      [
+       14827,
+       "email",
+       "open"
+      ],
+      [
+       14895,
+       "email",
+       "pending"
+      ],
+      [
+       14900,
+       "web",
+       "open"
+      ],
+      [
+       14908,
+       "email",
+       "open"
+      ],
+      [
+       14944,
+       "web",
+       "pending"
+      ],
+      [
+       14948,
+       "web",
+       "open"
+      ],
+      [
+       14962,
+       "email",
+       "open"
+      ],
+      [
+       14967,
+       "email",
+       "open"
+      ],
+      [
+       14971,
+       "web",
+       "open"
+      ],
+      [
+       15007,
+       "email",
+       "open"
+      ],
+      [
+       15016,
+       "email",
+       "open"
+      ],
+      [
+       15026,
+       "email",
+       "open"
+      ],
+      [
+       15573,
+       "web",
+       "open"
+      ],
+      [
+       15615,
+       "web",
+       "open"
+      ],
+      [
+       15616,
+       "email",
+       "open"
+      ],
+      [
+       15621,
+       "web",
+       "open"
+      ],
+      [
+       15624,
+       "email",
+       "open"
+      ],
+      [
+       15627,
+       "email",
+       "open"
+      ],
+      [
+       15629,
+       "email",
+       "open"
+      ],
+      [
+       15639,
+       "email",
+       "open"
+      ],
+      [
+       15641,
+       "email",
+       "pending"
+      ],
+      [
+       15642,
+       "web",
+       "open"
+      ],
+      [
+       15645,
+       "email",
+       "open"
+      ],
+      [
+       15649,
+       "email",
+       "pending"
+      ],
+      [
+       15662,
+       "email",
+       "open"
+      ],
+      [
+       15669,
+       "email",
+       "pending"
+      ],
+      [
+       15673,
+       "email",
+       "open"
+      ],
+      [
+       15676,
+       "email",
+       "open"
+      ],
+      [
+       15681,
+       "web",
+       "pending"
+      ],
+      [
+       15684,
+       "email",
+       "open"
+      ],
+      [
+       15686,
+       "web",
+       "pending"
+      ],
+      [
+       15689,
+       "email",
+       "pending"
+      ],
+      [
+       15692,
+       "email",
+       "pending"
+      ],
+      [
+       15694,
+       "email",
+       "open"
+      ],
+      [
+       15696,
+       "email",
+       "open"
+      ],
+      [
+       15697,
+       "email",
+       "pending"
+      ],
+      [
+       4005,
+       "web",
+       "open"
+      ],
+      [
+       4026,
+       "email",
+       "open"
+      ],
+      [
+       4201,
+       "web",
+       "pending"
+      ],
+      [
+       4219,
+       "email",
+       "open"
+      ],
+      [
+       4410,
+       "email",
+       "open"
+      ],
+      [
+       4577,
+       "email",
+       "open"
+      ],
+      [
+       4637,
+       "email",
+       "open"
+      ],
+      [
+       4818,
+       "email",
+       "open"
+      ],
+      [
+       4833,
+       "web",
+       "pending"
+      ],
+      [
+       4835,
+       "web",
+       "open"
+      ],
+      [
+       4991,
+       "email",
+       "open"
+      ],
+      [
+       5052,
+       "email",
+       "open"
+      ],
+      [
+       5230,
+       "web",
+       "open"
+      ],
+      [
+       5343,
+       "web",
+       "open"
+      ],
+      [
+       5507,
+       "web",
+       "open"
+      ],
+      [
+       5671,
+       "email",
+       "open"
+      ],
+      [
+       5736,
+       "email",
+       "pending"
+      ],
+      [
+       5773,
+       "email",
+       "pending"
+      ],
+      [
+       5778,
+       "email",
+       "open"
+      ],
+      [
+       5781,
+       "email",
+       "pending"
+      ],
+      [
+       5868,
+       "email",
+       "open"
+      ],
+      [
+       5882,
+       "email",
+       "pending"
+      ],
+      [
+       6089,
+       "email",
+       "open"
+      ],
+      [
+       6117,
+       "email",
+       "open"
+      ],
+      [
+       6343,
+       "email",
+       "open"
+      ],
+      [
+       6350,
+       "web",
+       "open"
+      ],
+      [
+       6516,
+       "email",
+       "pending"
+      ],
+      [
+       6550,
+       "web",
+       "open"
+      ],
+      [
+       6557,
+       "email",
+       "open"
+      ],
+      [
+       6607,
+       "email",
+       "open"
+      ],
+      [
+       6660,
+       "web",
+       "pending"
+      ],
+      [
+       6755,
+       "web",
+       "open"
+      ],
+      [
+       6777,
+       "email",
+       "open"
+      ],
+      [
+       6878,
+       "web",
+       "open"
+      ],
+      [
+       6974,
+       "web",
+       "pending"
+      ],
+      [
+       7012,
+       "web",
+       "open"
+      ],
+      [
+       7024,
+       "web",
+       "open"
+      ],
+      [
+       7043,
+       "web",
+       "open"
+      ],
+      [
+       7078,
+       "email",
+       "pending"
+      ],
+      [
+       7110,
+       "email",
+       "open"
+      ],
+      [
+       7190,
+       "web",
+       "open"
+      ],
+      [
+       7211,
+       "email",
+       "open"
+      ],
+      [
+       7269,
+       "email",
+       "open"
+      ],
+      [
+       7280,
+       "email",
+       "pending"
+      ],
+      [
+       7495,
+       "email",
+       "pending"
+      ],
+      [
+       7530,
+       "web",
+       "open"
+      ],
+      [
+       7590,
+       "email",
+       "open"
+      ],
+      [
+       7709,
+       "web",
+       "pending"
+      ],
+      [
+       7747,
+       "email",
+       "open"
+      ],
+      [
+       7765,
+       "web",
+       "pending"
+      ],
+      [
+       7839,
+       "web",
+       "open"
+      ],
+      [
+       8008,
+       "web",
+       "open"
+      ],
+      [
+       8104,
+       "email",
+       "open"
+      ],
+      [
+       8127,
+       "email",
+       "open"
+      ],
+      [
+       8274,
+       "email",
+       "open"
+      ],
+      [
+       8311,
+       "web",
+       "pending"
+      ],
+      [
+       8361,
+       "email",
+       "pending"
+      ],
+      [
+       8416,
+       "email",
+       "open"
+      ],
+      [
+       8518,
+       "email",
+       "open"
+      ],
+      [
+       8528,
+       "web",
+       "open"
+      ],
+      [
+       8557,
+       "email",
+       "pending"
+      ],
+      [
+       8729,
+       "web",
+       "open"
+      ],
+      [
+       8797,
+       "email",
+       "open"
+      ],
+      [
+       8940,
+       "email",
+       "open"
+      ],
+      [
+       9027,
+       "email",
+       "open"
+      ],
+      [
+       9211,
+       "web",
+       "open"
+      ],
+      [
+       9437,
+       "email",
+       "open"
+      ],
+      [
+       9450,
+       "email",
+       "pending"
+      ],
+      [
+       9493,
+       "email",
+       "open"
+      ],
+      [
+       9515,
+       "email",
+       "open"
+      ],
+      [
+       9575,
+       "email",
+       "open"
+      ],
+      [
+       9577,
+       "web",
+       "open"
+      ],
+      [
+       9658,
+       "email",
+       "open"
+      ],
+      [
+       9670,
+       "web",
+       "open"
+      ],
+      [
+       9711,
+       "email",
+       "open"
+      ],
+      [
+       9852,
+       "web",
+       "pending"
+      ]
+     ]
+    }
+   },
+   {
+    "id": "andor4",
+    "kind": "drill",
+    "set": "andor",
+    "level": "foundations",
+    "title": "Everything except",
+    "prompt": "List low priority tickets that aren't finished yet.",
+    "rules": [
+     "Finished means status is 'solved' or 'closed'.",
+     "Priority is 'low'."
+    ],
+    "returns": [
+     "ticket_id",
+     "status"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "NOT IN"
+    ],
+    "expected": {
+     "columns": [
+      "ticket_id",
+      "status"
+     ],
+     "rows": [
+      [
+       11117,
+       "open"
+      ],
+      [
+       11354,
+       "open"
+      ],
+      [
+       11571,
+       "open"
+      ],
+      [
+       12656,
+       "open"
+      ],
+      [
+       12712,
+       "open"
+      ],
+      [
+       12861,
+       "open"
+      ],
+      [
+       12923,
+       "open"
+      ],
+      [
+       13306,
+       "open"
+      ],
+      [
+       13816,
+       "pending"
+      ],
+      [
+       13819,
+       "open"
+      ],
+      [
+       14183,
+       "open"
+      ],
+      [
+       14623,
+       "open"
+      ],
+      [
+       14686,
+       "open"
+      ],
+      [
+       14781,
+       "open"
+      ],
+      [
+       14944,
+       "pending"
+      ],
+      [
+       14948,
+       "open"
+      ],
+      [
+       14971,
+       "open"
+      ],
+      [
+       15007,
+       "open"
+      ],
+      [
+       15573,
+       "open"
+      ],
+      [
+       15618,
+       "pending"
+      ],
+      [
+       15621,
+       "open"
+      ],
+      [
+       15635,
+       "open"
+      ],
+      [
+       15639,
+       "open"
+      ],
+      [
+       15654,
+       "open"
+      ],
+      [
+       15665,
+       "open"
+      ],
+      [
+       4005,
+       "open"
+      ],
+      [
+       4125,
+       "pending"
+      ],
+      [
+       4142,
+       "pending"
+      ],
+      [
+       4151,
+       "open"
+      ],
+      [
+       4410,
+       "open"
+      ],
+      [
+       4637,
+       "open"
+      ],
+      [
+       4761,
+       "open"
+      ],
+      [
+       4818,
+       "open"
+      ],
+      [
+       5052,
+       "open"
+      ],
+      [
+       5340,
+       "open"
+      ],
+      [
+       5343,
+       "open"
+      ],
+      [
+       5467,
+       "open"
+      ],
+      [
+       6283,
+       "open"
+      ],
+      [
+       6305,
+       "open"
+      ],
+      [
+       6350,
+       "open"
+      ],
+      [
+       6382,
+       "open"
+      ],
+      [
+       6550,
+       "open"
+      ],
+      [
+       6755,
+       "open"
+      ],
+      [
+       6878,
+       "open"
+      ],
+      [
+       6974,
+       "pending"
+      ],
+      [
+       7024,
+       "open"
+      ],
+      [
+       7078,
+       "pending"
+      ],
+      [
+       7166,
+       "open"
+      ],
+      [
+       7530,
+       "open"
+      ],
+      [
+       7590,
+       "open"
+      ],
+      [
+       7839,
+       "open"
+      ],
+      [
+       8008,
+       "open"
+      ],
+      [
+       8472,
+       "open"
+      ],
+      [
+       9001,
+       "open"
+      ],
+      [
+       9450,
+       "pending"
+      ],
+      [
+       9493,
+       "open"
+      ],
+      [
+       9670,
+       "open"
+      ],
+      [
+       9711,
+       "open"
+      ],
+      [
+       9852,
+       "pending"
+      ]
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "id": "dates",
+  "level": "foundations",
+  "title": "Writing dates",
+  "review": "02",
+  "intro": "Dates go in quotes with DATE in front, like DATE '2026-10-01'. A timestamp also has a time of day, which matters at the edges of a date range.",
+  "drills": [
+   {
+    "id": "dates1",
+    "kind": "drill",
+    "set": "dates",
+    "level": "foundations",
+    "title": "The last day of September",
+    "prompt": "List every ticket created on September 30, 2026, at any time that day.",
+    "rules": [
+     "created_at includes the time of day."
+    ],
+    "returns": [
+     "ticket_id",
+     "created_at"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "DATE",
+     "ranges"
+    ],
+    "expected": {
+     "columns": [
+      "ticket_id",
+      "created_at"
+     ],
+     "rows": [
+      [
+       10704,
+       "2026-09-30 20:21:51"
+      ],
+      [
+       11117,
+       "2026-09-30 16:25:57"
+      ],
+      [
+       11561,
+       "2026-09-30 14:34:36"
+      ],
+      [
+       11751,
+       "2026-09-30 14:37:44"
+      ],
+      [
+       12086,
+       "2026-09-30 10:55:41"
+      ],
+      [
+       12274,
+       "2026-09-30 18:12:37"
+      ],
+      [
+       12284,
+       "2026-09-30 16:49:10"
+      ],
+      [
+       13269,
+       "2026-09-30 20:16:59"
+      ],
+      [
+       13309,
+       "2026-09-30 04:53:16"
+      ],
+      [
+       13480,
+       "2026-09-30 00:05:32"
+      ],
+      [
+       13520,
+       "2026-09-30 16:37:38"
+      ],
+      [
+       14044,
+       "2026-09-30 15:34:11"
+      ],
+      [
+       14557,
+       "2026-09-30 20:30:58"
+      ],
+      [
+       15692,
+       "2026-09-30 12:50:00"
+      ],
+      [
+       15694,
+       "2026-09-30 09:50:12"
+      ],
+      [
+       4125,
+       "2026-09-30 07:52:36"
+      ],
+      [
+       4718,
+       "2026-09-30 09:05:10"
+      ],
+      [
+       5467,
+       "2026-09-30 15:59:07"
+      ],
+      [
+       6343,
+       "2026-09-30 15:02:25"
+      ],
+      [
+       7043,
+       "2026-09-30 05:16:04"
+      ],
+      [
+       7933,
+       "2026-09-30 14:56:27"
+      ],
+      [
+       8557,
+       "2026-09-30 20:55:08"
+      ],
+      [
+       9109,
+       "2026-09-30 18:42:49"
+      ],
+      [
+       9577,
+       "2026-09-30 16:27:00"
+      ]
+     ]
+    }
+   },
+   {
+    "id": "dates2",
+    "kind": "drill",
+    "set": "dates",
+    "level": "foundations",
+    "title": "Who left before August",
+    "prompt": "Which agents left before August 1, 2026?",
+    "rules": [
+     "An agent left on the date in deactivated_at."
+    ],
+    "returns": [
+     "agent_name",
+     "deactivated_at"
+    ],
+    "ordered": false,
+    "tables": [
+     "agents"
+    ],
+    "skills": [
+     "DATE",
+     "<"
+    ],
+    "expected": {
+     "columns": [
+      "agent_name",
+      "deactivated_at"
+     ],
+     "rows": [
+      [
+       "Elena Ellis",
+       "2026-06-15 17:00:00"
+      ],
+      [
+       "Kai Kim",
+       "2026-07-31 17:00:00"
+      ]
+     ]
+    }
+   },
+   {
+    "id": "dates3",
+    "kind": "drill",
+    "set": "dates",
+    "level": "foundations",
+    "title": "Days to solve",
+    "prompt": "For urgent tickets created in September 2026 that have been solved, how many whole days did each take?",
+    "rules": [
+     "A ticket has been solved if solved_at is filled in.",
+     "Name the column days_to_solve."
+    ],
+    "returns": [
+     "ticket_id",
+     "days_to_solve"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "date_diff",
+     "IS NOT NULL"
+    ],
+    "expected": {
+     "columns": [
+      "ticket_id",
+      "days_to_solve"
+     ],
+     "rows": [
+      [
+       10361,
+       0
+      ],
+      [
+       10368,
+       1
+      ],
+      [
+       10510,
+       1
+      ],
+      [
+       10855,
+       1
+      ],
+      [
+       11143,
+       1
+      ],
+      [
+       11302,
+       2
+      ],
+      [
+       11465,
+       0
+      ],
+      [
+       11478,
+       1
+      ],
+      [
+       11505,
+       1
+      ],
+      [
+       12119,
+       4
+      ],
+      [
+       12123,
+       1
+      ],
+      [
+       12477,
+       1
+      ],
+      [
+       12610,
+       1
+      ],
+      [
+       12633,
+       0
+      ],
+      [
+       12733,
+       1
+      ],
+      [
+       12766,
+       2
+      ],
+      [
+       12788,
+       0
+      ],
+      [
+       13302,
+       1
+      ],
+      [
+       13366,
+       2
+      ],
+      [
+       13676,
+       1
+      ],
+      [
+       13850,
+       0
+      ],
+      [
+       13948,
+       0
+      ],
+      [
+       14125,
+       0
+      ],
+      [
+       14168,
+       1
+      ],
+      [
+       14213,
+       0
+      ],
+      [
+       14301,
+       1
+      ],
+      [
+       14346,
+       1
+      ],
+      [
+       14395,
+       2
+      ],
+      [
+       14420,
+       1
+      ],
+      [
+       14570,
+       4
+      ],
+      [
+       14575,
+       1
+      ],
+      [
+       14851,
+       1
+      ],
+      [
+       14987,
+       1
+      ],
+      [
+       4095,
+       2
+      ],
+      [
+       4539,
+       0
+      ],
+      [
+       4751,
+       1
+      ],
+      [
+       5039,
+       0
+      ],
+      [
+       5263,
+       0
+      ],
+      [
+       5281,
+       1
+      ],
+      [
+       5355,
+       0
+      ],
+      [
+       5471,
+       1
+      ],
+      [
+       5764,
+       3
+      ],
+      [
+       5997,
+       2
+      ],
+      [
+       6139,
+       4
+      ],
+      [
+       6308,
+       1
+      ],
+      [
+       6359,
+       1
+      ],
+      [
+       6693,
+       1
+      ],
+      [
+       7180,
+       1
+      ],
+      [
+       7628,
+       1
+      ],
+      [
+       7645,
+       1
+      ],
+      [
+       8329,
+       0
+      ],
+      [
+       8382,
+       1
+      ],
+      [
+       8717,
+       1
+      ],
+      [
+       8778,
+       0
+      ],
+      [
+       8832,
+       4
+      ],
+      [
+       9166,
+       0
+      ],
+      [
+       9343,
+       1
+      ],
+      [
+       9998,
+       0
+      ]
+     ]
+    }
+   },
+   {
+    "id": "dates4",
+    "kind": "drill",
+    "set": "dates",
+    "level": "foundations",
+    "title": "The outage week",
+    "prompt": "List tickets created from July 9 through July 15, 2026, including both days.",
+    "rules": [
+     "Include all of July 15, up to midnight."
+    ],
+    "returns": [
+     "ticket_id"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "date ranges"
+    ],
+    "expected": {
+     "columns": [
+      "ticket_id"
+     ],
+     "rows": [
+      [
+       10093
+      ],
+      [
+       10118
+      ],
+      [
+       10119
+      ],
+      [
+       10155
+      ],
+      [
+       10179
+      ],
+      [
+       10191
+      ],
+      [
+       10210
+      ],
+      [
+       10326
+      ],
+      [
+       10380
+      ],
+      [
+       10387
+      ],
+      [
+       10399
+      ],
+      [
+       10511
+      ],
+      [
+       10526
+      ],
+      [
+       10597
+      ],
+      [
+       10628
+      ],
+      [
+       10789
+      ],
+      [
+       10792
+      ],
+      [
+       10857
+      ],
+      [
+       10868
+      ],
+      [
+       10921
+      ],
+      [
+       10958
+      ],
+      [
+       11039
+      ],
+      [
+       11126
+      ],
+      [
+       11182
+      ],
+      [
+       11315
+      ],
+      [
+       11335
+      ],
+      [
+       11341
+      ],
+      [
+       11369
+      ],
+      [
+       11402
+      ],
+      [
+       11610
+      ],
+      [
+       11643
+      ],
+      [
+       11692
+      ],
+      [
+       11722
+      ],
+      [
+       11731
+      ],
+      [
+       11827
+      ],
+      [
+       11892
+      ],
+      [
+       11934
+      ],
+      [
+       11984
+      ],
+      [
+       11992
+      ],
+      [
+       12075
+      ],
+      [
+       12155
+      ],
+      [
+       12238
+      ],
+      [
+       12242
+      ],
+      [
+       12280
+      ],
+      [
+       12301
+      ],
+      [
+       12333
+      ],
+      [
+       12349
+      ],
+      [
+       12356
+      ],
+      [
+       12374
+      ],
+      [
+       12392
+      ],
+      [
+       12413
+      ],
+      [
+       12422
+      ],
+      [
+       12424
+      ],
+      [
+       12439
+      ],
+      [
+       12453
+      ],
+      [
+       12478
+      ],
+      [
+       12701
+      ],
+      [
+       12748
+      ],
+      [
+       12756
+      ],
+      [
+       12809
+      ],
+      [
+       12913
+      ],
+      [
+       12981
+      ],
+      [
+       13053
+      ],
+      [
+       13075
+      ],
+      [
+       13076
+      ],
+      [
+       13094
+      ],
+      [
+       13264
+      ],
+      [
+       13304
+      ],
+      [
+       13417
+      ],
+      [
+       13437
+      ],
+      [
+       13438
+      ],
+      [
+       13539
+      ],
+      [
+       13555
+      ],
+      [
+       13587
+      ],
+      [
+       13606
+      ],
+      [
+       13609
+      ],
+      [
+       13617
+      ],
+      [
+       13641
+      ],
+      [
+       13684
+      ],
+      [
+       13688
+      ],
+      [
+       13731
+      ],
+      [
+       13733
+      ],
+      [
+       13767
+      ],
+      [
+       13776
+      ],
+      [
+       13822
+      ],
+      [
+       13831
+      ],
+      [
+       13836
+      ],
+      [
+       13868
+      ],
+      [
+       13889
+      ],
+      [
+       13959
+      ],
+      [
+       13989
+      ],
+      [
+       14078
+      ],
+      [
+       14119
+      ],
+      [
+       14166
+      ],
+      [
+       14181
+      ],
+      [
+       14194
+      ],
+      [
+       14216
+      ],
+      [
+       14242
+      ],
+      [
+       14261
+      ],
+      [
+       14313
+      ],
+      [
+       14351
+      ],
+      [
+       14435
+      ],
+      [
+       14452
+      ],
+      [
+       14454
+      ],
+      [
+       14486
+      ],
+      [
+       14541
+      ],
+      [
+       14676
+      ],
+      [
+       14734
+      ],
+      [
+       14743
+      ],
+      [
+       14778
+      ],
+      [
+       14804
+      ],
+      [
+       14856
+      ],
+      [
+       14984
+      ],
+      [
+       14995
+      ],
+      [
+       15052
+      ],
+      [
+       15115
+      ],
+      [
+       15199
+      ],
+      [
+       15204
+      ],
+      [
+       15269
+      ],
+      [
+       15306
+      ],
+      [
+       15313
+      ],
+      [
+       15352
+      ],
+      [
+       15371
+      ],
+      [
+       15459
+      ],
+      [
+       15518
+      ],
+      [
+       15523
+      ],
+      [
+       15605
+      ],
+      [
+       4036
+      ],
+      [
+       4050
+      ],
+      [
+       4113
+      ],
+      [
+       4202
+      ],
+      [
+       4390
+      ],
+      [
+       4429
+      ],
+      [
+       4432
+      ],
+      [
+       4546
+      ],
+      [
+       4658
+      ],
+      [
+       4706
+      ],
+      [
+       4795
+      ],
+      [
+       4933
+      ],
+      [
+       5175
+      ],
+      [
+       5233
+      ],
+      [
+       5239
+      ],
+      [
+       5260
+      ],
+      [
+       5301
+      ],
+      [
+       5332
+      ],
+      [
+       5489
+      ],
+      [
+       5704
+      ],
+      [
+       5752
+      ],
+      [
+       5822
+      ],
+      [
+       5824
+      ],
+      [
+       5832
+      ],
+      [
+       5885
+      ],
+      [
+       5921
+      ],
+      [
+       6009
+      ],
+      [
+       6019
+      ],
+      [
+       6057
+      ],
+      [
+       6067
+      ],
+      [
+       6105
+      ],
+      [
+       6134
+      ],
+      [
+       6159
+      ],
+      [
+       6181
+      ],
+      [
+       6257
+      ],
+      [
+       6264
+      ],
+      [
+       6281
+      ],
+      [
+       6320
+      ],
+      [
+       6542
+      ],
+      [
+       6591
+      ],
+      [
+       6595
+      ],
+      [
+       6678
+      ],
+      [
+       6691
+      ],
+      [
+       6853
+      ],
+      [
+       6885
+      ],
+      [
+       6926
+      ],
+      [
+       6951
+      ],
+      [
+       6997
+      ],
+      [
+       7067
+      ],
+      [
+       7095
+      ],
+      [
+       7240
+      ],
+      [
+       7323
+      ],
+      [
+       7333
+      ],
+      [
+       7343
+      ],
+      [
+       7376
+      ],
+      [
+       7413
+      ],
+      [
+       7513
+      ],
+      [
+       7540
+      ],
+      [
+       7568
+      ],
+      [
+       7571
+      ],
+      [
+       7639
+      ],
+      [
+       7796
+      ],
+      [
+       7841
+      ],
+      [
+       7894
+      ],
+      [
+       7898
+      ],
+      [
+       7975
+      ],
+      [
+       8116
+      ],
+      [
+       8226
+      ],
+      [
+       8247
+      ],
+      [
+       8270
+      ],
+      [
+       8282
+      ],
+      [
+       8325
+      ],
+      [
+       8332
+      ],
+      [
+       8393
+      ],
+      [
+       8400
+      ],
+      [
+       8452
+      ],
+      [
+       8455
+      ],
+      [
+       8493
+      ],
+      [
+       8621
+      ],
+      [
+       8657
+      ],
+      [
+       8666
+      ],
+      [
+       8692
+      ],
+      [
+       8787
+      ],
+      [
+       8802
+      ],
+      [
+       8889
+      ],
+      [
+       8910
+      ],
+      [
+       9030
+      ],
+      [
+       9044
+      ],
+      [
+       9063
+      ],
+      [
+       9205
+      ],
+      [
+       9214
+      ],
+      [
+       9245
+      ],
+      [
+       9266
+      ],
+      [
+       9299
+      ],
+      [
+       9309
+      ],
+      [
+       9391
+      ],
+      [
+       9473
+      ],
+      [
+       9553
+      ],
+      [
+       9615
+      ],
+      [
+       9626
+      ],
+      [
+       9641
+      ],
+      [
+       9848
+      ],
+      [
+       9955
+      ]
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "id": "text",
+  "level": "foundations",
+  "title": "Cleaning text",
+  "review": "03",
+  "intro": "Text typed by people needs cleaning before you compare or count it. Put functions inside each other: the innermost one runs first.",
+  "drills": [
+   {
+    "id": "text1",
+    "kind": "drill",
+    "set": "text",
+    "level": "foundations",
+    "title": "Find the trials",
+    "prompt": "List helpdesk orgs that are trials: the word 'trial' appears somewhere in the name, in any capitalization.",
+    "rules": [
+     "Match 'trial', 'Trial' or 'TRIAL'."
+    ],
+    "returns": [
+     "org_id",
+     "org_name"
+    ],
+    "ordered": false,
+    "tables": [
+     "helpdesk_orgs"
+    ],
+    "skills": [
+     "lower",
+     "LIKE"
+    ],
+    "expected": {
+     "columns": [
+      "org_id",
+      "org_name"
+     ],
+     "rows": [
+      [
+       5797,
+       "Wren Consulting (trial)"
+      ],
+      [
+       5798,
+       "Bluebird Physio (trial)"
+      ],
+      [
+       5801,
+       "Bluebird Spa (trial)"
+      ],
+      [
+       5805,
+       "Evergreen Consulting (trial)"
+      ],
+      [
+       5806,
+       "Northgate Consulting (trial)"
+      ],
+      [
+       5807,
+       "Oakline Veterinary (trial)"
+      ],
+      [
+       5809,
+       "Riverbend Barbers (trial)"
+      ],
+      [
+       5810,
+       "Juniper Counseling (trial)"
+      ],
+      [
+       5813,
+       "Riverbend Consulting (trial)"
+      ],
+      [
+       5814,
+       "Saffron Wellness (trial)"
+      ],
+      [
+       5816,
+       "Maple Dental (trial)"
+      ],
+      [
+       5817,
+       "Orchid Law Group (trial)"
+      ],
+      [
+       5819,
+       "Granite Optometry (trial)"
+      ],
+      [
+       5822,
+       "Bluebird Pet Care (trial)"
+      ]
+     ]
+    }
+   },
+   {
+    "id": "text2",
+    "kind": "drill",
+    "set": "text",
+    "level": "foundations",
+    "title": "Two functions, one value",
+    "prompt": "List each distinct category after making it lowercase and trimming spaces. Leave '-issue' alone for now.",
+    "rules": [
+     "Name the column clean."
+    ],
+    "returns": [
+     "clean"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "nesting",
+     "DISTINCT"
+    ],
+    "expected": {
+     "columns": [
+      "clean"
+     ],
+     "rows": [
+      [
+       ""
+      ],
+      [
+       "account settings"
+      ],
+      [
+       "account settings-issue"
+      ],
+      [
+       "billing"
+      ],
+      [
+       "billing-issue"
+      ],
+      [
+       "bug"
+      ],
+      [
+       "bug-issue"
+      ],
+      [
+       "integrations"
+      ],
+      [
+       "integrations-issue"
+      ],
+      [
+       "login"
+      ],
+      [
+       "login-issue"
+      ],
+      [
+       "notifications"
+      ],
+      [
+       "notifications-issue"
+      ],
+      [
+       "reporting"
+      ],
+      [
+       "reporting-issue"
+      ],
+      [
+       "scheduling"
+      ],
+      [
+       "scheduling-issue"
+      ],
+      [
+       null
+      ]
+     ]
+    }
+   },
+   {
+    "id": "text3",
+    "kind": "drill",
+    "set": "text",
+    "level": "foundations",
+    "title": "August's top topics",
+    "prompt": "What were the three most common ticket topics in August 2026, after cleaning the categories?",
+    "rules": [
+     "Clean a category by making it lowercase, removing a trailing '-issue', and trimming spaces.",
+     "Leave out tickets with no category after cleaning.",
+     "Most tickets first. If two topics tie, put them in alphabetical order."
+    ],
+    "returns": [
+     "category",
+     "tickets"
+    ],
+    "ordered": true,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "nesting",
+     "GROUP BY",
+     "tie-breaker",
+     "LIMIT"
+    ],
+    "expected": {
+     "columns": [
+      "category",
+      "tickets"
+     ],
+     "rows": [
+      [
+       "scheduling",
+       199
+      ],
+      [
+       "billing",
+       132
+      ],
+      [
+       "bug",
+       113
+      ]
+     ]
+    }
+   },
+   {
+    "id": "text4",
+    "kind": "drill",
+    "set": "text",
+    "level": "foundations",
+    "title": "Tickets with no topic",
+    "prompt": "How many tickets have no category: missing, empty, or only spaces?",
+    "rules": [
+     "Return one number, named no_category."
+    ],
+    "returns": [
+     "no_category"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "IS NULL",
+     "trim",
+     "COUNT"
+    ],
+    "expected": {
+     "columns": [
+      "no_category"
+     ],
+     "rows": [
+      [
+       586
+      ]
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "id": "joins",
+  "level": "foundations",
+  "title": "Joining tables",
+  "review": "04",
+  "intro": "ON says which rows belong together, so it uses =. A regular JOIN keeps only matches; a LEFT JOIN keeps every row from the first table and fills the other side with NULL when nothing matches.",
+  "drills": [
+   {
+    "id": "joins1",
+    "kind": "drill",
+    "set": "joins",
+    "level": "foundations",
+    "title": "Who has the urgent queue",
+    "prompt": "List open urgent tickets with the name of the agent assigned to each.",
+    "rules": [
+     "Open means status is 'open'."
+    ],
+    "returns": [
+     "ticket_id",
+     "agent_name"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets",
+     "agents"
+    ],
+    "skills": [
+     "JOIN"
+    ],
+    "expected": {
+     "columns": [
+      "ticket_id",
+      "agent_name"
+     ],
+     "rows": [
+      [
+       11000,
+       "Omar Okafor"
+      ],
+      [
+       13520,
+       "Uma Usman"
+      ],
+      [
+       14280,
+       "Wes Walsh"
+      ],
+      [
+       14908,
+       "Marco Morgan"
+      ],
+      [
+       15648,
+       "Kai Kim"
+      ],
+      [
+       15684,
+       "Victor Vega"
+      ],
+      [
+       15694,
+       "Hana Hughes"
+      ],
+      [
+       15696,
+       "Victor Vega"
+      ],
+      [
+       8341,
+       "Victor Vega"
+      ],
+      [
+       9699,
+       "Gabe Garcia"
+      ],
+      [
+       9942,
+       "Victor Vega"
+      ]
+     ]
+    }
+   },
+   {
+    "id": "joins2",
+    "kind": "drill",
+    "set": "joins",
+    "level": "foundations",
+    "title": "Churned customers in the helpdesk",
+    "prompt": "List customers the CRM marks as churned, with the name of their helpdesk org.",
+    "rules": [
+     "Churned means the CRM status is 'churned'."
+    ],
+    "returns": [
+     "company_name",
+     "org_name"
+    ],
+    "ordered": false,
+    "tables": [
+     "customers",
+     "helpdesk_orgs"
+    ],
+    "skills": [
+     "JOIN",
+     "WHERE"
+    ],
+    "expected": {
+     "columns": [
+      "company_name",
+      "org_name"
+     ],
+     "rows": [
+      [
+       "Clover Studios",
+       "Clover Studios Inc"
+      ],
+      [
+       "Copper Chiropractic",
+       "Copper Chiropractic LLC"
+      ],
+      [
+       "Copper Clinic",
+       "Copper Clinic"
+      ],
+      [
+       "Driftwood Studios",
+       "Driftwood Studios"
+      ],
+      [
+       "Foxglove Studios",
+       "Foxglove Studios"
+      ],
+      [
+       "Golden Fitness",
+       "Golden Fitness Inc"
+      ],
+      [
+       "Granite Salon",
+       "Granite Salon"
+      ],
+      [
+       "Hearth Pet Care",
+       "Hearth Pet Care"
+      ],
+      [
+       "Ironwood Consulting",
+       "Ironwood Consulting"
+      ],
+      [
+       "Juniper Veterinary",
+       "Juniper Veterinary"
+      ],
+      [
+       "Larkspur Consulting",
+       "Larkspur Consulting"
+      ],
+      [
+       "Larkspur Wellness",
+       "Larkspur Wellness LLC"
+      ],
+      [
+       "Maple Salon",
+       "Maple Salon LLC"
+      ],
+      [
+       "Northgate Clinic",
+       "Northgate Clinic"
+      ],
+      [
+       "Pebble Physio",
+       "Pebble Physio"
+      ],
+      [
+       "Saffron Pet Care",
+       "Saffron Pet care"
+      ],
+      [
+       "Silverline Chiropractic",
+       "Silverline Chiropractic"
+      ],
+      [
+       "Upland Tutoring",
+       "Upland Tutoring"
+      ],
+      [
+       "Willow Auto Care",
+       "Willow Auto Care"
+      ],
+      [
+       "Willow Clinic",
+       "Willow Clinic"
+      ],
+      [
+       "Willow Pet Care",
+       "Willow Pet Care"
+      ],
+      [
+       "Willow Tutoring",
+       "Willow Tutoring"
+      ],
+      [
+       "Wren Fitness",
+       "Wren Fitness"
+      ],
+      [
+       "Wren Yoga",
+       "Wren Yoga"
+      ]
+     ]
+    }
+   },
+   {
+    "id": "joins3",
+    "kind": "drill",
+    "set": "joins",
+    "level": "foundations",
+    "title": "Enterprise in the CRM",
+    "prompt": "List helpdesk orgs whose customer is on the enterprise plan in the CRM, with that plan.",
+    "rules": [
+     "Use the CRM's plan_tier, not the helpdesk."
+    ],
+    "returns": [
+     "org_id",
+     "plan_tier"
+    ],
+    "ordered": false,
+    "tables": [
+     "helpdesk_orgs",
+     "customers"
+    ],
+    "skills": [
+     "JOIN",
+     "which table to trust"
+    ],
+    "expected": {
+     "columns": [
+      "org_id",
+      "plan_tier"
+     ],
+     "rows": [
+      [
+       5008,
+       "enterprise"
+      ],
+      [
+       5018,
+       "enterprise"
+      ],
+      [
+       5020,
+       "enterprise"
+      ],
+      [
+       5036,
+       "enterprise"
+      ],
+      [
+       5042,
+       "enterprise"
+      ],
+      [
+       5059,
+       "enterprise"
+      ],
+      [
+       5061,
+       "enterprise"
+      ],
+      [
+       5064,
+       "enterprise"
+      ],
+      [
+       5080,
+       "enterprise"
+      ],
+      [
+       5113,
+       "enterprise"
+      ],
+      [
+       5123,
+       "enterprise"
+      ],
+      [
+       5140,
+       "enterprise"
+      ],
+      [
+       5149,
+       "enterprise"
+      ],
+      [
+       5160,
+       "enterprise"
+      ],
+      [
+       5162,
+       "enterprise"
+      ],
+      [
+       5184,
+       "enterprise"
+      ],
+      [
+       5196,
+       "enterprise"
+      ],
+      [
+       5207,
+       "enterprise"
+      ],
+      [
+       5219,
+       "enterprise"
+      ],
+      [
+       5221,
+       "enterprise"
+      ],
+      [
+       5223,
+       "enterprise"
+      ],
+      [
+       5238,
+       "enterprise"
+      ],
+      [
+       5258,
+       "enterprise"
+      ],
+      [
+       5263,
+       "enterprise"
+      ],
+      [
+       5264,
+       "enterprise"
+      ],
+      [
+       5268,
+       "enterprise"
+      ],
+      [
+       5273,
+       "enterprise"
+      ],
+      [
+       5278,
+       "enterprise"
+      ],
+      [
+       5282,
+       "enterprise"
+      ],
+      [
+       5292,
+       "enterprise"
+      ],
+      [
+       5316,
+       "enterprise"
+      ],
+      [
+       5323,
+       "enterprise"
+      ],
+      [
+       5336,
+       "enterprise"
+      ],
+      [
+       5347,
+       "enterprise"
+      ],
+      [
+       5356,
+       "enterprise"
+      ],
+      [
+       5389,
+       "enterprise"
+      ],
+      [
+       5396,
+       "enterprise"
+      ],
+      [
+       5398,
+       "enterprise"
+      ],
+      [
+       5408,
+       "enterprise"
+      ],
+      [
+       5428,
+       "enterprise"
+      ],
+      [
+       5454,
+       "enterprise"
+      ],
+      [
+       5465,
+       "enterprise"
+      ],
+      [
+       5468,
+       "enterprise"
+      ],
+      [
+       5469,
+       "enterprise"
+      ],
+      [
+       5470,
+       "enterprise"
+      ],
+      [
+       5474,
+       "enterprise"
+      ],
+      [
+       5484,
+       "enterprise"
+      ],
+      [
+       5497,
+       "enterprise"
+      ],
+      [
+       5501,
+       "enterprise"
+      ],
+      [
+       5523,
+       "enterprise"
+      ],
+      [
+       5538,
+       "enterprise"
+      ],
+      [
+       5568,
+       "enterprise"
+      ],
+      [
+       5624,
+       "enterprise"
+      ],
+      [
+       5629,
+       "enterprise"
+      ],
+      [
+       5640,
+       "enterprise"
+      ],
+      [
+       5672,
+       "enterprise"
+      ],
+      [
+       5676,
+       "enterprise"
+      ],
+      [
+       5694,
+       "enterprise"
+      ],
+      [
+       5695,
+       "enterprise"
+      ],
+      [
+       5705,
+       "enterprise"
+      ],
+      [
+       5765,
+       "enterprise"
+      ],
+      [
+       5780,
+       "enterprise"
+      ],
+      [
+       5785,
+       "enterprise"
+      ]
+     ]
+    }
+   },
+   {
+    "id": "joins4",
+    "kind": "drill",
+    "set": "joins",
+    "level": "foundations",
+    "title": "Tickets from unknown customers",
+    "prompt": "List tickets whose helpdesk org can't be matched to a CRM customer.",
+    "rules": [
+     "An org is unmatched if its crm_customer_id is blank or doesn't match any customer_id."
+    ],
+    "returns": [
+     "ticket_id",
+     "org_id"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets",
+     "helpdesk_orgs",
+     "customers"
+    ],
+    "skills": [
+     "JOIN",
+     "LEFT JOIN",
+     "IS NULL"
+    ],
+    "expected": {
+     "columns": [
+      "ticket_id",
+      "org_id"
+     ],
+     "rows": [
+      [
+       10026,
+       5826
+      ],
+      [
+       10199,
+       5814
+      ],
+      [
+       10362,
+       5826
+      ],
+      [
+       10694,
+       5798
+      ],
+      [
+       10861,
+       5807
+      ],
+      [
+       11014,
+       5816
+      ],
+      [
+       11050,
+       5807
+      ],
+      [
+       11062,
+       5810
+      ],
+      [
+       11202,
+       5819
+      ],
+      [
+       11762,
+       5816
+      ],
+      [
+       11793,
+       5807
+      ],
+      [
+       11799,
+       5817
+      ],
+      [
+       12037,
+       5814
+      ],
+      [
+       12301,
+       5819
+      ],
+      [
+       12410,
+       5806
+      ],
+      [
+       12492,
+       5819
+      ],
+      [
+       12596,
+       5801
+      ],
+      [
+       12723,
+       5827
+      ],
+      [
+       12876,
+       5816
+      ],
+      [
+       13061,
+       5809
+      ],
+      [
+       13508,
+       5810
+      ],
+      [
+       13548,
+       5826
+      ],
+      [
+       13629,
+       5801
+      ],
+      [
+       13650,
+       5809
+      ],
+      [
+       13752,
+       5827
+      ],
+      [
+       13898,
+       5814
+      ],
+      [
+       13987,
+       5813
+      ],
+      [
+       14063,
+       5813
+      ],
+      [
+       14224,
+       5822
+      ],
+      [
+       14328,
+       5822
+      ],
+      [
+       14352,
+       5806
+      ],
+      [
+       14476,
+       5810
+      ],
+      [
+       14498,
+       5805
+      ],
+      [
+       15216,
+       5827
+      ],
+      [
+       15249,
+       5822
+      ],
+      [
+       15518,
+       5805
+      ],
+      [
+       15599,
+       5817
+      ],
+      [
+       15624,
+       5801
+      ],
+      [
+       4051,
+       5816
+      ],
+      [
+       4185,
+       5810
+      ],
+      [
+       4239,
+       5822
+      ],
+      [
+       4264,
+       5798
+      ],
+      [
+       4312,
+       5817
+      ],
+      [
+       4317,
+       5827
+      ],
+      [
+       4713,
+       5827
+      ],
+      [
+       4826,
+       5809
+      ],
+      [
+       4865,
+       5797
+      ],
+      [
+       4974,
+       5805
+      ],
+      [
+       5032,
+       5817
+      ],
+      [
+       5101,
+       5822
+      ],
+      [
+       5290,
+       5819
+      ],
+      [
+       5434,
+       5807
+      ],
+      [
+       5557,
+       5805
+      ],
+      [
+       5820,
+       5805
+      ],
+      [
+       5887,
+       5809
+      ],
+      [
+       6192,
+       5824
+      ],
+      [
+       6533,
+       5824
+      ],
+      [
+       6587,
+       5824
+      ],
+      [
+       6799,
+       5827
+      ],
+      [
+       7021,
+       5813
+      ],
+      [
+       7086,
+       5801
+      ],
+      [
+       7205,
+       5814
+      ],
+      [
+       7328,
+       5806
+      ],
+      [
+       7364,
+       5809
+      ],
+      [
+       7501,
+       5822
+      ],
+      [
+       7529,
+       5827
+      ],
+      [
+       7613,
+       5807
+      ],
+      [
+       7791,
+       5805
+      ],
+      [
+       7947,
+       5814
+      ],
+      [
+       7983,
+       5801
+      ],
+      [
+       8340,
+       5797
+      ],
+      [
+       8469,
+       5801
+      ],
+      [
+       8473,
+       5822
+      ],
+      [
+       8510,
+       5826
+      ],
+      [
+       8512,
+       5816
+      ],
+      [
+       8861,
+       5806
+      ],
+      [
+       9211,
+       5797
+      ],
+      [
+       9798,
+       5813
+      ],
+      [
+       9805,
+       5817
+      ]
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "id": "groups",
+  "level": "bridge",
+  "title": "Counting by group",
+  "review": "B1",
+  "intro": "GROUP BY puts rows with the same value together, and COUNT, MIN or MAX work inside each group. Every column in SELECT is either grouped or wrapped in one of those.",
+  "drills": [
+   {
+    "id": "groups1",
+    "kind": "drill",
+    "set": "groups",
+    "level": "bridge",
+    "title": "Tickets per channel",
+    "prompt": "How many tickets came in through each channel, across all six months?",
+    "rules": [
+     "Name the count tickets."
+    ],
+    "returns": [
+     "channel",
+     "tickets"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "GROUP BY",
+     "COUNT"
+    ],
+    "expected": {
+     "columns": [
+      "channel",
+      "tickets"
+     ],
+     "rows": [
+      [
+       "chat",
+       1509
+      ],
+      [
+       "email",
+       2588
+      ],
+      [
+       "phone",
+       632
+      ],
+      [
+       "web",
+       1123
+      ]
+     ]
+    }
+   },
+   {
+    "id": "groups2",
+    "kind": "drill",
+    "set": "groups",
+    "level": "bridge",
+    "title": "Tickets per team",
+    "prompt": "How many tickets has each support team been assigned?",
+    "rules": [
+     "A ticket belongs to the team of the agent it's assigned to.",
+     "Name the count tickets."
+    ],
+    "returns": [
+     "team",
+     "tickets"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets",
+     "agents"
+    ],
+    "skills": [
+     "JOIN",
+     "GROUP BY"
+    ],
+    "expected": {
+     "columns": [
+      "team",
+      "tickets"
+     ],
+     "rows": [
+      [
+       "Enterprise",
+       1929
+      ],
+      [
+       "Tier 1",
+       2497
+      ],
+      [
+       "Tier 2",
+       1426
+      ]
+     ]
+    }
+   },
+   {
+    "id": "groups3",
+    "kind": "drill",
+    "set": "groups",
+    "level": "bridge",
+    "title": "Oldest in each lane",
+    "prompt": "For tickets that still need work, how many are there at each priority, and when was the oldest one created?",
+    "rules": [
+     "A ticket still needs work if its status is open or pending.",
+     "Name the columns tickets and oldest."
+    ],
+    "returns": [
+     "priority",
+     "tickets",
+     "oldest"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "COUNT",
+     "MIN"
+    ],
+    "expected": {
+     "columns": [
+      "priority",
+      "tickets",
+      "oldest"
+     ],
+     "rows": [
+      [
+       "high",
+       37,
+       "2026-08-16 02:39:59"
+      ],
+      [
+       "low",
+       59,
+       "2026-06-04 21:34:16"
+      ],
+      [
+       "normal",
+       151,
+       "2026-06-04 15:18:54"
+      ],
+      [
+       "urgent",
+       20,
+       "2026-07-22 11:38:09"
+      ]
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "id": "having",
+  "level": "bridge",
+  "title": "Filtering groups",
+  "review": "B2",
+  "intro": "WHERE filters rows before they're grouped. HAVING filters the groups afterward, so it can use counts and other totals.",
+  "drills": [
+   {
+    "id": "having1",
+    "kind": "drill",
+    "set": "having",
+    "level": "bridge",
+    "title": "Busy orgs in September",
+    "prompt": "Which orgs filed more than 10 tickets in September 2026?",
+    "rules": [
+     "Name the count tickets."
+    ],
+    "returns": [
+     "org_id",
+     "tickets"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "WHERE",
+     "HAVING"
+    ],
+    "expected": {
+     "columns": [
+      "org_id",
+      "tickets"
+     ],
+     "rows": [
+      [
+       5149,
+       11
+      ],
+      [
+       5250,
+       11
+      ],
+      [
+       5347,
+       12
+      ],
+      [
+       5356,
+       12
+      ],
+      [
+       5465,
+       12
+      ],
+      [
+       5614,
+       11
+      ],
+      [
+       5627,
+       11
+      ]
+     ]
+    }
+   },
+   {
+    "id": "having2",
+    "kind": "drill",
+    "set": "having",
+    "level": "bridge",
+    "title": "High stakes queues",
+    "prompt": "Which agents have at least 5 high or urgent tickets that still need work?",
+    "rules": [
+     "A ticket still needs work if its status is open or pending.",
+     "Name the count tickets."
+    ],
+    "returns": [
+     "agent_name",
+     "tickets"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets",
+     "agents"
+    ],
+    "skills": [
+     "IN",
+     "HAVING"
+    ],
+    "expected": {
+     "columns": [
+      "agent_name",
+      "tickets"
+     ],
+     "rows": [
+      [
+       "Gabe Garcia",
+       5
+      ],
+      [
+       "Uma Usman",
+       6
+      ],
+      [
+       "Victor Vega",
+       7
+      ]
+     ]
+    }
+   },
+   {
+    "id": "having3",
+    "kind": "drill",
+    "set": "having",
+    "level": "bridge",
+    "title": "Heavy days",
+    "prompt": "Which days in September 2026 had more than 40 tickets?",
+    "rules": [
+     "Group by calendar day, not by the exact time.",
+     "Name the columns day and tickets."
+    ],
+    "returns": [
+     "day",
+     "tickets"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "CAST AS DATE",
+     "HAVING"
+    ],
+    "expected": {
+     "columns": [
+      "day",
+      "tickets"
+     ],
+     "rows": [
+      [
+       "2026-09-01",
+       43
+      ],
+      [
+       "2026-09-02",
+       41
+      ],
+      [
+       "2026-09-04",
+       42
+      ],
+      [
+       "2026-09-07",
+       44
+      ],
+      [
+       "2026-09-14",
+       41
+      ],
+      [
+       "2026-09-15",
+       47
+      ],
+      [
+       "2026-09-16",
+       50
+      ],
+      [
+       "2026-09-17",
+       52
+      ],
+      [
+       "2026-09-18",
+       45
+      ],
+      [
+       "2026-09-22",
+       51
+      ],
+      [
+       "2026-09-24",
+       48
+      ]
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "id": "case",
+  "level": "bridge",
+  "title": "Labeling with CASE",
+  "review": "B3",
+  "intro": "CASE WHEN checks conditions in order and returns the label of the first one that's true, or the ELSE label. It's how you turn values into categories, or count only some rows.",
+  "drills": [
+   {
+    "id": "case1",
+    "kind": "drill",
+    "set": "case",
+    "level": "bridge",
+    "title": "Fast lane",
+    "prompt": "Label each ticket that still needs work as 'fast lane' if it's high or urgent priority, otherwise 'standard'.",
+    "rules": [
+     "A ticket still needs work if its status is open or pending.",
+     "Name the label lane."
+    ],
+    "returns": [
+     "ticket_id",
+     "lane"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "CASE WHEN",
+     "IN"
+    ],
+    "expected": {
+     "columns": [
+      "ticket_id",
+      "lane"
+     ],
+     "rows": [
+      [
+       10001,
+       "fast lane"
+      ],
+      [
+       10064,
+       "standard"
+      ],
+      [
+       10090,
+       "standard"
+      ],
+      [
+       10175,
+       "standard"
+      ],
+      [
+       10347,
+       "standard"
+      ],
+      [
+       10352,
+       "standard"
+      ],
+      [
+       10424,
+       "standard"
+      ],
+      [
+       10463,
+       "standard"
+      ],
+      [
+       10467,
+       "standard"
+      ],
+      [
+       10521,
+       "standard"
+      ],
+      [
+       10629,
+       "standard"
+      ],
+      [
+       10704,
+       "standard"
+      ],
+      [
+       10758,
+       "standard"
+      ],
+      [
+       10876,
+       "standard"
+      ],
+      [
+       11000,
+       "fast lane"
+      ],
+      [
+       11050,
+       "standard"
+      ],
+      [
+       11112,
+       "fast lane"
+      ],
+      [
+       11117,
+       "standard"
+      ],
+      [
+       11160,
+       "standard"
+      ],
+      [
+       11170,
+       "standard"
+      ],
+      [
+       11310,
+       "fast lane"
+      ],
+      [
+       11354,
+       "standard"
+      ],
+      [
+       11405,
+       "standard"
+      ],
+      [
+       11457,
+       "standard"
+      ],
+      [
+       11508,
+       "fast lane"
+      ],
+      [
+       11561,
+       "standard"
+      ],
+      [
+       11571,
+       "standard"
+      ],
+      [
+       11660,
+       "standard"
+      ],
+      [
+       11675,
+       "fast lane"
+      ],
+      [
+       11751,
+       "standard"
+      ],
+      [
+       11788,
+       "standard"
+      ],
+      [
+       12006,
+       "standard"
+      ],
+      [
+       12027,
+       "fast lane"
+      ],
+      [
+       12029,
+       "fast lane"
+      ],
+      [
+       12086,
+       "standard"
+      ],
+      [
+       12109,
+       "standard"
+      ],
+      [
+       12169,
+       "standard"
+      ],
+      [
+       12193,
+       "standard"
+      ],
+      [
+       12274,
+       "fast lane"
+      ],
+      [
+       12284,
+       "standard"
+      ],
+      [
+       12298,
+       "standard"
+      ],
+      [
+       12492,
+       "standard"
+      ],
+      [
+       12536,
+       "standard"
+      ],
+      [
+       12604,
+       "fast lane"
+      ],
+      [
+       12635,
+       "fast lane"
+      ],
+      [
+       12656,
+       "standard"
+      ],
+      [
+       12712,
+       "standard"
+      ],
+      [
+       12751,
+       "standard"
+      ],
+      [
+       12801,
+       "standard"
+      ],
+      [
+       12829,
+       "standard"
+      ],
+      [
+       12861,
+       "standard"
+      ],
+      [
+       12879,
+       "standard"
+      ],
+      [
+       12923,
+       "standard"
+      ],
+      [
+       12959,
+       "standard"
+      ],
+      [
+       12997,
+       "standard"
+      ],
+      [
+       13037,
+       "fast lane"
+      ],
+      [
+       13092,
+       "standard"
+      ],
+      [
+       13129,
+       "standard"
+      ],
+      [
+       13180,
+       "fast lane"
+      ],
+      [
+       13269,
+       "standard"
+      ],
+      [
+       13270,
+       "fast lane"
+      ],
+      [
+       13306,
+       "standard"
+      ],
+      [
+       13309,
+       "standard"
+      ],
+      [
+       13327,
+       "standard"
+      ],
+      [
+       13405,
+       "fast lane"
+      ],
+      [
+       13466,
+       "fast lane"
+      ],
+      [
+       13480,
+       "standard"
+      ],
+      [
+       13520,
+       "fast lane"
+      ],
+      [
+       13551,
+       "standard"
+      ],
+      [
+       13610,
+       "standard"
+      ],
+      [
+       13739,
+       "standard"
+      ],
+      [
+       13816,
+       "standard"
+      ],
+      [
+       13819,
+       "standard"
+      ],
+      [
+       13870,
+       "standard"
+      ],
+      [
+       13961,
+       "standard"
+      ],
+      [
+       14044,
+       "fast lane"
+      ],
+      [
+       14060,
+       "standard"
+      ],
+      [
+       14112,
+       "standard"
+      ],
+      [
+       14152,
+       "fast lane"
+      ],
+      [
+       14183,
+       "standard"
+      ],
+      [
+       14280,
+       "fast lane"
+      ],
+      [
+       14327,
+       "fast lane"
+      ],
+      [
+       14428,
+       "standard"
+      ],
+      [
+       14514,
+       "standard"
+      ],
+      [
+       14549,
+       "standard"
+      ],
+      [
+       14557,
+       "fast lane"
+      ],
+      [
+       14623,
+       "standard"
+      ],
+      [
+       14686,
+       "standard"
+      ],
+      [
+       14764,
+       "standard"
+      ],
+      [
+       14775,
+       "standard"
+      ],
+      [
+       14781,
+       "standard"
+      ],
+      [
+       14783,
+       "standard"
+      ],
+      [
+       14827,
+       "standard"
+      ],
+      [
+       14895,
+       "standard"
+      ],
+      [
+       14900,
+       "standard"
+      ],
+      [
+       14908,
+       "fast lane"
+      ],
+      [
+       14944,
+       "standard"
+      ],
+      [
+       14948,
+       "standard"
+      ],
+      [
+       14960,
+       "standard"
+      ],
+      [
+       14962,
+       "standard"
+      ],
+      [
+       14967,
+       "standard"
+      ],
+      [
+       14971,
+       "standard"
+      ],
+      [
+       15007,
+       "standard"
+      ],
+      [
+       15016,
+       "standard"
+      ],
+      [
+       15026,
+       "standard"
+      ],
+      [
+       15546,
+       "fast lane"
+      ],
+      [
+       15573,
+       "standard"
+      ],
+      [
+       15615,
+       "standard"
+      ],
+      [
+       15616,
+       "standard"
+      ],
+      [
+       15618,
+       "standard"
+      ],
+      [
+       15621,
+       "standard"
+      ],
+      [
+       15624,
+       "standard"
+      ],
+      [
+       15627,
+       "standard"
+      ],
+      [
+       15629,
+       "standard"
+      ],
+      [
+       15632,
+       "standard"
+      ],
+      [
+       15635,
+       "standard"
+      ],
+      [
+       15638,
+       "standard"
+      ],
+      [
+       15639,
+       "standard"
+      ],
+      [
+       15641,
+       "standard"
+      ],
+      [
+       15642,
+       "standard"
+      ],
+      [
+       15645,
+       "standard"
+      ],
+      [
+       15648,
+       "fast lane"
+      ],
+      [
+       15649,
+       "standard"
+      ],
+      [
+       15652,
+       "standard"
+      ],
+      [
+       15654,
+       "standard"
+      ],
+      [
+       15656,
+       "standard"
+      ],
+      [
+       15659,
+       "standard"
+      ],
+      [
+       15662,
+       "fast lane"
+      ],
+      [
+       15665,
+       "standard"
+      ],
+      [
+       15668,
+       "standard"
+      ],
+      [
+       15669,
+       "standard"
+      ],
+      [
+       15670,
+       "standard"
+      ],
+      [
+       15672,
+       "standard"
+      ],
+      [
+       15673,
+       "fast lane"
+      ],
+      [
+       15676,
+       "standard"
+      ],
+      [
+       15679,
+       "standard"
+      ],
+      [
+       15681,
+       "standard"
+      ],
+      [
+       15683,
+       "fast lane"
+      ],
+      [
+       15684,
+       "fast lane"
+      ],
+      [
+       15686,
+       "fast lane"
+      ],
+      [
+       15689,
+       "fast lane"
+      ],
+      [
+       15692,
+       "fast lane"
+      ],
+      [
+       15694,
+       "fast lane"
+      ],
+      [
+       15696,
+       "fast lane"
+      ],
+      [
+       15697,
+       "fast lane"
+      ],
+      [
+       15699,
+       "fast lane"
+      ],
+      [
+       4005,
+       "standard"
+      ],
+      [
+       4026,
+       "standard"
+      ],
+      [
+       4125,
+       "standard"
+      ],
+      [
+       4142,
+       "standard"
+      ],
+      [
+       4151,
+       "standard"
+      ],
+      [
+       4201,
+       "standard"
+      ],
+      [
+       4219,
+       "fast lane"
+      ],
+      [
+       4325,
+       "standard"
+      ],
+      [
+       4410,
+       "standard"
+      ],
+      [
+       4446,
+       "standard"
+      ],
+      [
+       4501,
+       "standard"
+      ],
+      [
+       4577,
+       "standard"
+      ],
+      [
+       4637,
+       "standard"
+      ],
+      [
+       4718,
+       "fast lane"
+      ],
+      [
+       4761,
+       "standard"
+      ],
+      [
+       4818,
+       "standard"
+      ],
+      [
+       4833,
+       "fast lane"
+      ],
+      [
+       4835,
+       "standard"
+      ],
+      [
+       4991,
+       "standard"
+      ],
+      [
+       5052,
+       "standard"
+      ],
+      [
+       5067,
+       "standard"
+      ],
+      [
+       5127,
+       "fast lane"
+      ],
+      [
+       5180,
+       "standard"
+      ],
+      [
+       5230,
+       "standard"
+      ],
+      [
+       5340,
+       "standard"
+      ],
+      [
+       5343,
+       "standard"
+      ],
+      [
+       5467,
+       "standard"
+      ],
+      [
+       5482,
+       "fast lane"
+      ],
+      [
+       5507,
+       "standard"
+      ],
+      [
+       5591,
+       "standard"
+      ],
+      [
+       5671,
+       "standard"
+      ],
+      [
+       5736,
+       "standard"
+      ],
+      [
+       5773,
+       "standard"
+      ],
+      [
+       5776,
+       "standard"
+      ],
+      [
+       5778,
+       "standard"
+      ],
+      [
+       5781,
+       "fast lane"
+      ],
+      [
+       5868,
+       "standard"
+      ],
+      [
+       5882,
+       "standard"
+      ],
+      [
+       5925,
+       "standard"
+      ],
+      [
+       6022,
+       "standard"
+      ],
+      [
+       6089,
+       "standard"
+      ],
+      [
+       6117,
+       "standard"
+      ],
+      [
+       6129,
+       "standard"
+      ],
+      [
+       6222,
+       "standard"
+      ],
+      [
+       6248,
+       "standard"
+      ],
+      [
+       6283,
+       "standard"
+      ],
+      [
+       6305,
+       "standard"
+      ],
+      [
+       6343,
+       "standard"
+      ],
+      [
+       6350,
+       "standard"
+      ],
+      [
+       6382,
+       "standard"
+      ],
+      [
+       6516,
+       "standard"
+      ],
+      [
+       6550,
+       "standard"
+      ],
+      [
+       6557,
+       "fast lane"
+      ],
+      [
+       6607,
+       "fast lane"
+      ],
+      [
+       6660,
+       "standard"
+      ],
+      [
+       6755,
+       "standard"
+      ],
+      [
+       6777,
+       "fast lane"
+      ],
+      [
+       6878,
+       "standard"
+      ],
+      [
+       6974,
+       "standard"
+      ],
+      [
+       7012,
+       "fast lane"
+      ],
+      [
+       7024,
+       "standard"
+      ],
+      [
+       7043,
+       "standard"
+      ],
+      [
+       7078,
+       "standard"
+      ],
+      [
+       7110,
+       "fast lane"
+      ],
+      [
+       7166,
+       "standard"
+      ],
+      [
+       7190,
+       "standard"
+      ],
+      [
+       7211,
+       "standard"
+      ],
+      [
+       7269,
+       "standard"
+      ],
+      [
+       7280,
+       "standard"
+      ],
+      [
+       7348,
+       "standard"
+      ],
+      [
+       7495,
+       "fast lane"
+      ],
+      [
+       7530,
+       "standard"
+      ],
+      [
+       7590,
+       "standard"
+      ],
+      [
+       7595,
+       "fast lane"
+      ],
+      [
+       7709,
+       "standard"
+      ],
+      [
+       7747,
+       "standard"
+      ],
+      [
+       7765,
+       "fast lane"
+      ],
+      [
+       7839,
+       "standard"
+      ],
+      [
+       7914,
+       "fast lane"
+      ],
+      [
+       7933,
+       "standard"
+      ],
+      [
+       8008,
+       "standard"
+      ],
+      [
+       8104,
+       "standard"
+      ],
+      [
+       8106,
+       "standard"
+      ],
+      [
+       8127,
+       "standard"
+      ],
+      [
+       8256,
+       "standard"
+      ],
+      [
+       8274,
+       "standard"
+      ],
+      [
+       8311,
+       "standard"
+      ],
+      [
+       8341,
+       "fast lane"
+      ],
+      [
+       8361,
+       "standard"
+      ],
+      [
+       8416,
+       "standard"
+      ],
+      [
+       8472,
+       "standard"
+      ],
+      [
+       8518,
+       "standard"
+      ],
+      [
+       8523,
+       "standard"
+      ],
+      [
+       8528,
+       "standard"
+      ],
+      [
+       8557,
+       "standard"
+      ],
+      [
+       8644,
+       "standard"
+      ],
+      [
+       8675,
+       "standard"
+      ],
+      [
+       8729,
+       "fast lane"
+      ],
+      [
+       8797,
+       "standard"
+      ],
+      [
+       8940,
+       "standard"
+      ],
+      [
+       9001,
+       "standard"
+      ],
+      [
+       9027,
+       "standard"
+      ],
+      [
+       9109,
+       "standard"
+      ],
+      [
+       9211,
+       "standard"
+      ],
+      [
+       9323,
+       "standard"
+      ],
+      [
+       9437,
+       "standard"
+      ],
+      [
+       9450,
+       "standard"
+      ],
+      [
+       9493,
+       "standard"
+      ],
+      [
+       9515,
+       "standard"
+      ],
+      [
+       9575,
+       "fast lane"
+      ],
+      [
+       9577,
+       "fast lane"
+      ],
+      [
+       9588,
+       "standard"
+      ],
+      [
+       9658,
+       "standard"
+      ],
+      [
+       9670,
+       "standard"
+      ],
+      [
+       9699,
+       "fast lane"
+      ],
+      [
+       9711,
+       "standard"
+      ],
+      [
+       9802,
+       "standard"
+      ],
+      [
+       9819,
+       "standard"
+      ],
+      [
+       9852,
+       "standard"
+      ],
+      [
+       9942,
+       "fast lane"
+      ],
+      [
+       9944,
+       "standard"
+      ]
+     ]
+    }
+   },
+   {
+    "id": "case2",
+    "kind": "drill",
+    "set": "case",
+    "level": "bridge",
+    "title": "Weekend tickets",
+    "prompt": "How many tickets were created on weekends versus weekdays?",
+    "rules": [
+     "In DuckDB, dayofweek(created_at) gives 0 for Sunday through 6 for Saturday.",
+     "Label rows 'weekend' or 'weekday', and name the columns day_type and tickets."
+    ],
+    "returns": [
+     "day_type",
+     "tickets"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "CASE WHEN",
+     "dayofweek"
+    ],
+    "expected": {
+     "columns": [
+      "day_type",
+      "tickets"
+     ],
+     "rows": [
+      [
+       "weekday",
+       5073
+      ],
+      [
+       "weekend",
+       779
+      ]
+     ]
+    }
+   },
+   {
+    "id": "case3",
+    "kind": "drill",
+    "set": "case",
+    "level": "bridge",
+    "title": "Counting only some rows",
+    "prompt": "For each channel, show the total number of tickets and how many of them were urgent.",
+    "rules": [
+     "Name the columns tickets and urgent_tickets."
+    ],
+    "returns": [
+     "channel",
+     "tickets",
+     "urgent_tickets"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "SUM(CASE WHEN)"
+    ],
+    "expected": {
+     "columns": [
+      "channel",
+      "tickets",
+      "urgent_tickets"
+     ],
+     "rows": [
+      [
+       "chat",
+       1509,
+       90
+      ],
+      [
+       "email",
+       2588,
+       160
+      ],
+      [
+       "phone",
+       632,
+       40
+      ],
+      [
+       "web",
+       1123,
+       54
+      ]
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "id": "time",
+  "level": "bridge",
+  "title": "Grouping by time",
+  "review": "B4",
+  "intro": "date_trunc rounds a timestamp down to the start of its week, month or year, so all the rows in that period share one value you can group by.",
+  "drills": [
+   {
+    "id": "time1",
+    "kind": "drill",
+    "set": "time",
+    "level": "bridge",
+    "title": "Weeks of September",
+    "prompt": "How many tickets were created in each week that started in September 2026?",
+    "rules": [
+     "Weeks start on Monday; show each week as its first day.",
+     "Include a week if its Monday is in September, even if it ends in October.",
+     "Name the columns week and tickets."
+    ],
+    "returns": [
+     "week",
+     "tickets"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "date_trunc('week')"
+    ],
+    "expected": {
+     "columns": [
+      "week",
+      "tickets"
+     ],
+     "rows": [
+      [
+       "2026-09-07",
+       210
+      ],
+      [
+       "2026-09-14",
+       269
+      ],
+      [
+       "2026-09-21",
+       241
+      ],
+      [
+       "2026-09-28",
+       101
+      ]
+     ]
+    }
+   },
+   {
+    "id": "time2",
+    "kind": "drill",
+    "set": "time",
+    "level": "bridge",
+    "title": "Urgent by month",
+    "prompt": "How many urgent tickets came in each month?",
+    "rules": [
+     "Show each month as its first day.",
+     "Name the columns month and urgent_tickets."
+    ],
+    "returns": [
+     "month",
+     "urgent_tickets"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "date_trunc('month')",
+     "WHERE"
+    ],
+    "expected": {
+     "columns": [
+      "month",
+      "urgent_tickets"
+     ],
+     "rows": [
+      [
+       "2026-04-01",
+       52
+      ],
+      [
+       "2026-05-01",
+       58
+      ],
+      [
+       "2026-06-01",
+       51
+      ],
+      [
+       "2026-07-01",
+       55
+      ],
+      [
+       "2026-08-01",
+       51
+      ],
+      [
+       "2026-09-01",
+       77
+      ]
+     ]
+    }
+   },
+   {
+    "id": "time3",
+    "kind": "drill",
+    "set": "time",
+    "level": "bridge",
+    "title": "Month and channel",
+    "prompt": "How many tickets came in each month through each channel?",
+    "rules": [
+     "Show each month as its first day.",
+     "Name the count tickets."
+    ],
+    "returns": [
+     "month",
+     "channel",
+     "tickets"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "GROUP BY two columns"
+    ],
+    "expected": {
+     "columns": [
+      "month",
+      "channel",
+      "tickets"
+     ],
+     "rows": [
+      [
+       "2026-04-01",
+       "chat",
+       277
+      ],
+      [
+       "2026-04-01",
+       "email",
+       408
+      ],
+      [
+       "2026-04-01",
+       "phone",
+       97
+      ],
+      [
+       "2026-04-01",
+       "web",
+       176
+      ],
+      [
+       "2026-05-01",
+       "chat",
+       236
+      ],
+      [
+       "2026-05-01",
+       "email",
+       435
+      ],
+      [
+       "2026-05-01",
+       "phone",
+       96
+      ],
+      [
+       "2026-05-01",
+       "web",
+       170
+      ],
+      [
+       "2026-06-01",
+       "chat",
+       249
+      ],
+      [
+       "2026-06-01",
+       "email",
+       430
+      ],
+      [
+       "2026-06-01",
+       "phone",
+       85
+      ],
+      [
+       "2026-06-01",
+       "web",
+       185
+      ],
+      [
+       "2026-07-01",
+       "chat",
+       240
+      ],
+      [
+       "2026-07-01",
+       "email",
+       441
+      ],
+      [
+       "2026-07-01",
+       "phone",
+       124
+      ],
+      [
+       "2026-07-01",
+       "web",
+       202
+      ],
+      [
+       "2026-08-01",
+       "chat",
+       242
+      ],
+      [
+       "2026-08-01",
+       "email",
+       427
+      ],
+      [
+       "2026-08-01",
+       "phone",
+       114
+      ],
+      [
+       "2026-08-01",
+       "web",
+       192
+      ],
+      [
+       "2026-09-01",
+       "chat",
+       265
+      ],
+      [
+       "2026-09-01",
+       "email",
+       447
+      ],
+      [
+       "2026-09-01",
+       "phone",
+       116
+      ],
+      [
+       "2026-09-01",
+       "web",
+       198
+      ]
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "id": "cte",
+  "level": "bridge",
+  "title": "Building in steps",
+  "review": "B5",
+  "intro": "A CTE names a step: WITH step_name AS (a query), then the main query reads from step_name like a table. Big questions get easier when you answer them in small named steps.",
+  "drills": [
+   {
+    "id": "cte1",
+    "kind": "drill",
+    "set": "cte",
+    "level": "bridge",
+    "title": "Orgs over 15",
+    "prompt": "How many orgs filed more than 15 tickets from July through September 2026?",
+    "rules": [
+     "Step 1: count tickets per org in that period. Step 2: count the orgs over 15.",
+     "Return one number, named orgs."
+    ],
+    "returns": [
+     "orgs"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "WITH",
+     "two steps"
+    ],
+    "expected": {
+     "columns": [
+      "orgs"
+     ],
+     "rows": [
+      [
+       62
+      ]
+     ]
+    }
+   },
+   {
+    "id": "cte2",
+    "kind": "drill",
+    "set": "cte",
+    "level": "bridge",
+    "title": "The average org",
+    "prompt": "On average, how many tickets did an org file in September 2026?",
+    "rules": [
+     "Average over orgs that filed at least one ticket in September.",
+     "Round to one decimal place and name it avg_tickets."
+    ],
+    "returns": [
+     "avg_tickets"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets"
+    ],
+    "skills": [
+     "WITH",
+     "avg",
+     "round"
+    ],
+    "expected": {
+     "columns": [
+      "avg_tickets"
+     ],
+     "rows": [
+      [
+       3.7
+      ]
+     ]
+    }
+   },
+   {
+    "id": "cte3",
+    "kind": "drill",
+    "set": "cte",
+    "level": "bridge",
+    "title": "Above their team's average",
+    "prompt": "Which active agents have more tickets still needing work than the average active agent on their own team?",
+    "rules": [
+     "A ticket still needs work if its status is open or pending.",
+     "Active means deactivated_at is empty.",
+     "Compare each agent with their own team's average, not everyone's.",
+     "Name the count open_tickets."
+    ],
+    "returns": [
+     "agent_name",
+     "open_tickets"
+    ],
+    "ordered": false,
+    "tables": [
+     "tickets",
+     "agents"
+    ],
+    "skills": [
+     "WITH",
+     "two steps",
+     "JOIN"
+    ],
+    "expected": {
+     "columns": [
+      "agent_name",
+      "open_tickets"
+     ],
+     "rows": [
+      [
+       "Ben Brooks",
+       9
+      ],
+      [
+       "Diego Dubois",
+       9
+      ],
+      [
+       "Gabe Garcia",
+       14
+      ],
+      [
+       "Lena Lopez",
+       12
+      ],
+      [
+       "Marco Morgan",
+       12
+      ],
+      [
+       "Nia Nakamura",
+       14
+      ],
+      [
+       "Omar Okafor",
+       15
+      ],
+      [
+       "Quinn Quinn",
+       14
+      ],
+      [
+       "Uma Usman",
+       23
+      ],
+      [
+       "Ximena Young",
+       19
+      ]
+     ]
+    }
+   }
+  ]
+ }
+]

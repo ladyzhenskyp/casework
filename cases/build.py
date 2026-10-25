@@ -61,7 +61,8 @@ def main():
     con = connect()
     public, private = [], {}
     # case 15's prompt quotes the dashboard and real percentages
-    pct = con.execute(CASES[14]["solution"].split("SELECT CASE")[0] + """
+    case15 = next(c for c in CASES if c["id"] == "15")
+    pct = con.execute(case15["solution"].split("SELECT CASE")[0] + """
         SELECT round(100.0 * avg(dashboard_met::INT), 1), round(100.0 * avg(real_met::INT), 1) FROM judged""").fetchone()
     print(f"case 15: dashboard {pct[0]}%  real {pct[1]}%\n")
     for c in CASES:
@@ -82,6 +83,31 @@ def main():
     (HERE / "solutions.json").write_text(json.dumps(private, indent=1))
     print(f"\nwrote cases.json ({(HERE / 'cases.json').stat().st_size:,} bytes) and solutions.json")
     build_quizzes(con)
+    build_drills(con)
+
+
+def build_drills(con):
+    """Run every drill's solution, check its classic mistake changes the answer, write drills.json."""
+    from drills import DRILL_SETS
+    out = []
+    for s in DRILL_SETS:
+        drills = []
+        for i, d in enumerate(s["drills"], 1):
+            did = f"{s['id']}{i}"
+            cols, rows = run(con, d["solution"])
+            assert cols == d["returns"], (did, cols)
+            assert rows, f"drill {did} returned no rows"
+            _, naive = run(con, d["naive"])
+            assert not same(rows, naive, d["ordered"]), f"drill {did}: the mistake gives the same answer"
+            print(f"drill {did:7s} {d['title'][:34]:34s} rows={len(rows):4d}  mistake rows={len(naive)}")
+            if not d["ordered"]:
+                rows = sorted(rows, key=lambda r: json.dumps(r, sort_keys=True))
+            drills.append({"id": did, "kind": "drill", "set": s["id"], "level": s["level"]}
+                          | {k: d[k] for k in ("title", "prompt", "rules", "returns", "ordered", "tables", "skills")}
+                          | {"expected": {"columns": cols, "rows": rows}})
+        out.append({k: s[k] for k in ("id", "level", "title", "review", "intro")} | {"drills": drills})
+    (HERE / "drills.json").write_text(json.dumps(out, indent=1))
+    print(f"wrote drills.json ({(HERE / 'drills.json').stat().st_size:,} bytes)")
 
 
 def build_quizzes(con):

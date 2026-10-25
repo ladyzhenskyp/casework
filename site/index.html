@@ -221,6 +221,7 @@ table.grid tr:last-child td{border-bottom:0}
 .case-row .sk{font-family:var(--mono);font-size:12.5px;color:var(--mocha)}
 .lvl{justify-self:end;font-size:12px;font-weight:600;padding:5px 11px;border-radius:6px}
 .lvl.l1{background:var(--cream);border:1px solid var(--line);color:var(--mocha)}
+.lvl.lb{background:#F3E6DD;color:var(--cocoa)}
 .lvl.l2{background:var(--blush);color:var(--wine)}
 .lvl.l3{background:var(--wine);color:#fff}
 .case-row:target{background:var(--blush)}
@@ -413,8 +414,8 @@ table.grid tr:last-child td{border-bottom:0}
           <h3>Progress you can see at a glance</h3>
           <p class="sub">Solved cases, and which ones took hints, so you know what to revisit before an interview.</p>
           <div class="demo">
-            <div class="cells" aria-label="Example progress across 15 cases">
-              <span class="cell s">01</span><span class="cell s">02</span><span class="cell s">03</span><span class="cell h">04</span><span class="cell s">05</span><span class="cell s">06</span><span class="cell h">07</span><span class="cell s">08</span><span class="cell p">09</span><span class="cell">10</span><span class="cell">11</span><span class="cell">12</span><span class="cell">13</span><span class="cell">14</span><span class="cell">15</span>
+            <div class="cells" aria-label="Example progress across 20 cases">
+              <span class="cell s">01</span><span class="cell s">02</span><span class="cell s">03</span><span class="cell h">04</span><span class="cell s">B1</span><span class="cell s">B2</span><span class="cell h">B3</span><span class="cell s">B4</span><span class="cell p">B5</span><span class="cell s">05</span><span class="cell s">06</span><span class="cell h">07</span><span class="cell s">08</span><span class="cell p">09</span><span class="cell">10</span><span class="cell">11</span><span class="cell">12</span><span class="cell">13</span><span class="cell">14</span><span class="cell">15</span>
             </div>
             <div class="key"><span><i style="background:var(--wine)"></i>Solved</span><span><i style="background:var(--rose)"></i>Solved with hints</span><span><i style="background:var(--blush)"></i>Started</span></div>
           </div>
@@ -426,14 +427,19 @@ table.grid tr:last-child td{border-bottom:0}
   <section class="sec" id="cases" aria-labelledby="cs-h" style="padding-top:0">
     <div class="wrap">
       <div class="sec-head">
-        <h2 id="cs-h">Fifteen cases, from lookup to reconciliation</h2>
-        <p>One support operations database, ordered the way the skills build: single-table lookups first, then time math and events, then reconciling systems that disagree.</p>
+        <h2 id="cs-h">Twenty cases, from lookup to reconciliation</h2>
+        <p>One support operations database, ordered the way the skills build: single-table lookups first, a bridge that adds one new idea at a time, then time math and events, then reconciling systems that disagree. Short drills and quizzes sit alongside for practice.</p>
       </div>
       <div class="cases">
         <a class="case-row" id="case-01" href="/app/#case-01"><span class="no">01</span><span class="t">Today&#39;s urgent queue<span>Every urgent ticket still waiting, oldest first.</span></span><span class="sk">SELECT, WHERE, IN</span><span class="lvl l1">Foundations</span></a>
         <a class="case-row" id="case-02" href="/app/#case-02"><span class="no">02</span><span class="t">Tickets owned by people who left<span>Open tickets assigned to agents who already left.</span></span><span class="sk">JOIN, IS NOT NULL, date_diff</span><span class="lvl l1">Foundations</span></a>
         <a class="case-row" id="case-03" href="/app/#case-03"><span class="no">03</span><span class="t">What are customers writing in about?<span>The top five topics, once the labels are cleaned.</span></span><span class="sk">lower, trim, replace</span><span class="lvl l1">Foundations</span></a>
         <a class="case-row" id="case-04" href="/app/#case-04"><span class="no">04</span><span class="t">Customers the CRM doesn&#39;t know<span>Helpdesk organizations with no match in the CRM.</span></span><span class="sk">LEFT JOIN, IS NULL</span><span class="lvl l1">Foundations</span></a>
+        <a class="case-row" id="case-B1" href="/app/#case-B1"><span class="no">B1</span><span class="t">Volume by channel<span>Tickets per channel last quarter, and the latest one.</span></span><span class="sk">GROUP BY, COUNT, MAX</span><span class="lvl lb">Bridge</span></a>
+        <a class="case-row" id="case-B2" href="/app/#case-B2"><span class="no">B2</span><span class="t">Who&#39;s carrying the most<span>Agents with the biggest open queues.</span></span><span class="sk">GROUP BY, HAVING</span><span class="lvl lb">Bridge</span></a>
+        <a class="case-row" id="case-B3" href="/app/#case-B3"><span class="no">B3</span><span class="t">How old is the queue?<span>Open tickets sorted into age buckets.</span></span><span class="sk">CASE WHEN</span><span class="lvl lb">Bridge</span></a>
+        <a class="case-row" id="case-B4" href="/app/#case-B4"><span class="no">B4</span><span class="t">Month by month<span>Ticket volume for each month.</span></span><span class="sk">date_trunc</span><span class="lvl lb">Bridge</span></a>
+        <a class="case-row" id="case-B5" href="/app/#case-B5"><span class="no">B5</span><span class="t">Busier than usual<span>Orgs filing twice as much as the average org.</span></span><span class="sk">CTE (WITH)</span><span class="lvl lb">Bridge</span></a>
         <a class="case-row" id="case-05" href="/app/#case-05"><span class="no">05</span><span class="t">Weekly volume by channel<span>Tickets per week on each channel.</span></span><span class="sk">date_trunc, COUNT with FILTER or CASE, GROUP BY</span><span class="lvl l2">Core</span></a>
         <a class="case-row" id="case-06" href="/app/#case-06"><span class="no">06</span><span class="t">How fast do we really reply?<span>Median minutes to the first reply from a person.</span></span><span class="sk">CTE, MIN, median</span><span class="lvl l2">Core</span></a>
         <a class="case-row" id="case-07" href="/app/#case-07"><span class="no">07</span><span class="t">Two clocks for one ticket<span>Tickets that disagree with their own created event.</span></span><span class="sk">JOIN, date_diff, GROUP BY</span><span class="lvl l2">Core</span></a>

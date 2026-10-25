@@ -83,6 +83,107 @@ WHERE c.customer_id IS NULL""",
     "naive": """
 SELECT org_id, org_name FROM helpdesk_orgs WHERE crm_customer_id IS NULL""",
   },
+  # ---- Bridge: one new idea per case, between Foundations and Core (added Oct 21
+  # after Patricia found the jump to Core too steep).
+  {
+    "id": "B1", "level": "bridge", "title": "Volume by channel",
+    "prompt": "The support lead wants a quick picture of July through September: how many tickets came in through each channel, and when the most recent one arrived.",
+    "rules": ["Only tickets created from July 1 through September 30, 2026, including all of September 30.",
+              "Name the columns tickets and latest_ticket."],
+    "returns": ["channel", "tickets", "latest_ticket"], "ordered": False,
+    "tables": ["tickets"], "skills": ["GROUP BY", "COUNT", "MAX"],
+    "solution": """
+SELECT channel, count(*) AS tickets, max(created_at) AS latest_ticket
+FROM tickets
+WHERE created_at >= DATE '2026-07-01' AND created_at < DATE '2026-10-01'
+GROUP BY channel""",
+    "naive": """
+SELECT channel, count(*) AS tickets, max(created_at) AS latest_ticket FROM tickets
+WHERE created_at BETWEEN DATE '2026-07-01' AND DATE '2026-09-30' GROUP BY channel""",
+  },
+  {
+    "id": "B2", "level": "bridge", "title": "Who's carrying the most",
+    "prompt": "Which active agents have more than 12 tickets that still need work? The lead wants to rebalance their queues.",
+    "rules": ["A ticket still needs work if its status is open or pending.",
+              "An agent is active if deactivated_at is empty.", "Name the count open_tickets."],
+    "returns": ["agent_name", "open_tickets"], "ordered": False,
+    "tables": ["tickets", "agents"], "skills": ["GROUP BY", "HAVING", "WHERE vs HAVING"],
+    "solution": """
+SELECT a.agent_name, count(*) AS open_tickets
+FROM tickets t
+JOIN agents a ON a.agent_id = t.assignee_id
+WHERE t.status IN ('open', 'pending') AND a.deactivated_at IS NULL
+GROUP BY a.agent_name
+HAVING count(*) > 12""",
+    "naive": """
+SELECT a.agent_name, count(*) AS open_tickets FROM tickets t JOIN agents a ON a.agent_id = t.assignee_id
+WHERE a.deactivated_at IS NULL GROUP BY a.agent_name HAVING count(*) > 12""",
+  },
+  {
+    "id": "B3", "level": "bridge", "title": "How old is the queue?",
+    "prompt": "Group the tickets that still need work by how long they've been waiting, so the lead can see if anything is going stale.",
+    "rules": ["A ticket still needs work if its status is open or pending.",
+              "Days waiting are whole days from created_at to the snapshot date, 2026-10-01.",
+              "Buckets: '0-2 days', '3-7 days', '8-30 days', 'over 30 days'. The numbers in each label are included.",
+              "Name the columns age_bucket and tickets."],
+    "returns": ["age_bucket", "tickets"], "ordered": False,
+    "tables": ["tickets"], "skills": ["CASE WHEN", "GROUP BY"],
+    "solution": """
+SELECT CASE
+         WHEN date_diff('day', created_at, DATE '2026-10-01') <= 2 THEN '0-2 days'
+         WHEN date_diff('day', created_at, DATE '2026-10-01') <= 7 THEN '3-7 days'
+         WHEN date_diff('day', created_at, DATE '2026-10-01') <= 30 THEN '8-30 days'
+         ELSE 'over 30 days'
+       END AS age_bucket,
+       count(*) AS tickets
+FROM tickets
+WHERE status IN ('open', 'pending')
+GROUP BY 1""",
+    "naive": """
+SELECT CASE WHEN date_diff('day', created_at, DATE '2026-10-01') < 2 THEN '0-2 days'
+            WHEN date_diff('day', created_at, DATE '2026-10-01') < 7 THEN '3-7 days'
+            WHEN date_diff('day', created_at, DATE '2026-10-01') < 30 THEN '8-30 days'
+            ELSE 'over 30 days' END AS age_bucket, count(*) AS tickets
+FROM tickets WHERE status IN ('open', 'pending') GROUP BY 1""",
+  },
+  {
+    "id": "B4", "level": "bridge", "title": "Month by month",
+    "prompt": "How many tickets came in each month from April through September 2026?",
+    "rules": ["Show each month as its first day, like 2026-04-01.", "Name the columns month and tickets.", "Earliest month first."],
+    "returns": ["month", "tickets"], "ordered": True,
+    "tables": ["tickets"], "skills": ["date_trunc", "GROUP BY", "ORDER BY"],
+    "solution": """
+SELECT date_trunc('month', created_at) AS month, count(*) AS tickets
+FROM tickets
+GROUP BY 1
+ORDER BY 1""",
+    "naive": """
+SELECT month(created_at) AS month, count(*) AS tickets FROM tickets GROUP BY 1 ORDER BY 1""",
+  },
+  {
+    "id": "B5", "level": "bridge", "title": "Busier than usual",
+    "prompt": "Which orgs filed more than twice as many tickets as the average org during July through September?",
+    "rules": ["Count each org's tickets created from July 1 up to (not including) October 1, 2026.",
+              "The average is over orgs that filed at least one ticket in that period.",
+              "Name the count tickets."],
+    "returns": ["org_id", "tickets"], "ordered": False,
+    "tables": ["tickets"], "skills": ["CTE (WITH)", "subquery", "avg"],
+    "solution": """
+WITH per_org AS (
+  SELECT org_id, count(*) AS tickets
+  FROM tickets
+  WHERE created_at >= DATE '2026-07-01' AND created_at < DATE '2026-10-01'
+  GROUP BY org_id
+)
+SELECT org_id, tickets
+FROM per_org
+WHERE tickets > 2 * (SELECT avg(tickets) FROM per_org)""",
+    "naive": """
+WITH per_org AS (SELECT org_id, count(*) AS tickets FROM tickets
+  WHERE created_at >= DATE '2026-07-01' AND created_at < DATE '2026-10-01' GROUP BY org_id),
+all_time AS (SELECT org_id, count(*) AS tickets FROM tickets GROUP BY org_id)
+SELECT org_id, tickets FROM per_org WHERE tickets > 2 * (SELECT avg(tickets) FROM all_time)""",
+  },
   {
     "id": "05", "level": "core", "title": "Weekly volume by channel",
     "prompt": "Staffing wants to see how many tickets arrive each week on each channel, one row per week.",

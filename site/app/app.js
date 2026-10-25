@@ -16,7 +16,7 @@ const SYSTEMS = [
   ["Survey tool", ["csat_responses"]],
   ["Integration", ["integration_sync_log"]],
 ];
-const LEVELS = [["foundations", "Foundations"], ["core", "Core"], ["advanced", "Advanced"]];
+const LEVELS = [["foundations", "Foundations"], ["bridge", "Bridge"], ["core", "Core"], ["advanced", "Advanced"]];
 const MAX_ROWS_SHOWN = 500;
 const STORE_KEY = "casework.progress.v1";
 const $ = (id) => document.getElementById(id);
@@ -30,6 +30,12 @@ let tableCounts = {};
 let loadingDoc = false;
 let tutor = null;
 let QUIZZES = [];
+let DRILL_SETS = [];
+const DRILLS = {}; // drill id -> drill (drills work like small cases)
+let mode = "case"; // case | quiz | picker
+let pickerLevel = null;
+const findItem = (id) => CASES.find((c) => c.id === id) || DRILLS[id];
+const isDrill = (item) => item?.kind === "drill";
 let quiz = null; // quiz controller; quiz.active while a quiz is open
 const lastRun = {}; // case id -> short description of the latest run, for the tutor
 
@@ -42,6 +48,7 @@ function saveProgress() {
   try { localStorage.setItem(STORE_KEY, JSON.stringify(progress)); } catch { /* private mode: keep in memory */ }
 }
 const progress = loadProgress();
+const settings = () => (progress.settings ||= { hideReturns: false, hideTables: false });
 const caseState = (id) => (progress.cases[id] ||= { status: "new", hints: 0, query: null });
 
 /* ---------------- case list ---------------- */
@@ -58,10 +65,21 @@ function statusIcon(id) {
 function renderNav() {
   const nav = $("cases-nav");
   const inQuiz = quiz?.active;
+  const drillRow = (lv) => {
+    const sets = DRILL_SETS.filter((d) => d.level === lv);
+    if (!sets.length) return "";
+    const all = sets.flatMap((d) => d.drills);
+    const done = all.filter((d) => caseState(d.id).status === "solved").length;
+    const here = (mode === "picker" && pickerLevel === lv) || (mode === "case" && isDrill(current) && current.level === lv);
+    return `<button class="case-btn quiz-btn drill-btn" type="button" data-drills="${lv}" ${here ? 'aria-current="true"' : ""}>
+       <span class="n" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="M2 9.5 4.5 7l2 2L10 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+       <span class="t">${LEVELS.find(([k]) => k === lv)[1]} drills</span><span class="qscore">${done}/${all.length}</span></button>`;
+  };
   nav.innerHTML = LEVELS.map(([lv, name]) =>
     `<h2>${name}</h2>` + CASES.filter((c) => c.level === lv).map((c) =>
-      `<button class="case-btn" type="button" data-id="${c.id}" ${!inQuiz && current && c.id === current.id ? 'aria-current="true"' : ""}>
+      `<button class="case-btn" type="button" data-id="${c.id}" ${mode === "case" && current && c.id === current.id ? 'aria-current="true"' : ""}>
          <span class="n">${c.id}</span><span class="t">${esc(c.title)}</span>${statusIcon(c.id)}</button>`).join("") +
+    drillRow(lv) +
     QUIZZES.filter((q) => q.level === lv).map((q) => {
       const best = progress.quizzes?.[q.id]?.best;
       return `<button class="case-btn quiz-btn" type="button" data-quiz="${q.id}" ${inQuiz && quiz.id === q.id ? 'aria-current="true"' : ""}>
@@ -71,10 +89,14 @@ function renderNav() {
   ).join("");
   nav.querySelectorAll(".case-btn[data-id]").forEach((b) => b.addEventListener("click", () => openCase(b.dataset.id)));
   nav.querySelectorAll(".case-btn[data-quiz]").forEach((b) => b.addEventListener("click", () => openQuiz(b.dataset.quiz)));
+  nav.querySelectorAll(".case-btn[data-drills]").forEach((b) => b.addEventListener("click", () => openDrills(b.dataset.drills)));
   const sel = $("case-select");
   sel.innerHTML = CASES.map((c) => `<option value="${c.id}">${c.id}. ${esc(c.title)}${caseState(c.id).status === "solved" ? " (solved)" : ""}</option>`).join("") +
+    [...new Set(DRILL_SETS.map((d) => d.level))].map((lv) => `<option value="drills-${lv}">${LEVELS.find(([k]) => k === lv)[1]} drills</option>`).join("") +
+    (isDrill(current) ? `<option value="${current.id}">Drill: ${esc(current.title)}</option>` : "") +
     QUIZZES.map((q) => `<option value="quiz-${q.id}">${esc(q.title)}</option>`).join("");
   if (inQuiz) sel.value = `quiz-${quiz.id}`;
+  else if (mode === "picker") sel.value = `drills-${pickerLevel}`;
   else if (current) sel.value = current.id;
   const solved = CASES.filter((c) => caseState(c.id).status === "solved").length;
   $("progress-text").textContent = `${solved} of ${CASES.length} solved`;
@@ -85,19 +107,91 @@ function renderNav() {
 function esc(s) { return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
 function codeify(s) { return esc(s).replace(/'([^']+)'/g, "<code>'$1'</code>").replace(/\b([a-z]+_[a-z_]+)\b/g, "<code>$1</code>"); }
 
+/** Rules, returned columns and tables. Columns and tables can be hidden for a harder practice. */
+function renderScaffolding() {
+  if (!current) return;
+  const { hideReturns, hideTables } = settings();
+  // Column names never count in checking, so naming rules are hidden along with the columns.
+  const rules = hideReturns ? current.rules.filter((r) => !/^Name the /i.test(r)) : current.rules;
+  $("case-rules").innerHTML = rules.map((r) => `<li>${codeify(r)}</li>`).join("");
+  $("case-returns").innerHTML = hideReturns
+    ? '<span class="col-chip hidden-chip">Hidden. Work out what the answer needs.</span>'
+    : current.returns.map((r) => `<span class="col-chip">${esc(r)}</span>`).join("");
+  $("case-tables").innerHTML = hideTables
+    ? '<span class="col-chip hidden-chip">Hidden. Explore the Tables tab.</span>'
+    : current.tables.map((t) => `<button type="button" class="col-chip table" data-t="${t}">${esc(t)}</button>`).join("");
+  $("case-tables").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => showTable(b.dataset.t)));
+  $("toggle-returns").textContent = hideReturns ? "Show" : "Hide";
+  $("toggle-returns").setAttribute("aria-label", `${hideReturns ? "Show" : "Hide"} the columns to return`);
+  $("toggle-tables").textContent = hideTables ? "Show" : "Hide";
+  $("toggle-tables").setAttribute("aria-label", `${hideTables ? "Show" : "Hide"} the tables you'll need`);
+  if (!hideTables) markUsedTables(); else document.querySelectorAll("details.tbl").forEach((d) => d.classList.remove("used"));
+}
+
 function starterQuery(c) {
+  if (isDrill(c)) return `-- Drill: ${c.title}\nSELECT *\nFROM ${c.tables[0]}\nLIMIT 10;\n`;
   return `-- Case ${c.id}: ${c.title}\n-- Look around first, then write your answer.\nSELECT *\nFROM ${c.tables[0]}\nLIMIT 10;\n`;
 }
 
-function setMode(mode) {
-  const inQuiz = mode === "quiz";
-  if (!inQuiz) quiz?.stop();
-  $("quiz-card").hidden = !inQuiz;
-  $("brief").hidden = inQuiz;
-  $("tutor-off").hidden = !inQuiz;
-  $("tutor-body").hidden = inQuiz;
-  $("editor-panel").hidden = false;
-  $("results").hidden = false;
+function setMode(m) {
+  mode = m;
+  const card = m !== "case";
+  if (m !== "quiz") quiz?.stop();
+  if (m !== "picker") pickerLevel = null;
+  $("quiz-card").hidden = !card;
+  $("brief").hidden = card;
+  const offText = m === "quiz"
+    ? "Hints and the tutor are off during quizzes, so the score shows what you know. Afterward, each question links to the case that teaches it, where they're back on."
+    : "Pick a drill to start. Hints and the tutor can help inside every drill.";
+  document.querySelectorAll(".off-note").forEach((n) => { n.hidden = !card; n.textContent = offText; });
+  document.querySelectorAll(".help-body").forEach((b) => { b.hidden = card; });
+  $("editor-panel").hidden = m === "picker";
+  $("results").hidden = m === "picker";
+}
+
+function openDrills(level) {
+  const sets = DRILL_SETS.filter((d) => d.level === level);
+  if (!sets.length) return;
+  setMode("picker");
+  pickerLevel = level;
+  history.replaceState(null, "", `#drills-${level}`);
+  const name = LEVELS.find(([k]) => k === level)[1];
+  const card = $("quiz-card");
+  card.innerHTML = `
+    <div class="tags"><span class="tag case">Drills</span><span class="tag lvl-${level}">${name}</span></div>
+    <h1>${name} drills</h1>
+    <p class="prompt">Short exercises, one skill at a time. Click a drill to open it in the editor; each takes a few minutes and is checked right away. Do them in any order, and come back to repeat any of them.</p>
+    <div class="drill-sets">${sets.map((set) => {
+      const done = set.drills.filter((d) => caseState(d.id).status === "solved").length;
+      return `<section class="drill-set">
+        <div class="ds-head"><h2>${esc(set.title)}</h2><span class="ds-count">${done} of ${set.drills.length}</span></div>
+        <p class="ds-intro">${esc(set.intro)}</p>
+        <ol class="ds-list">${set.drills.map((d, i) => {
+          const st = caseState(d.id).status;
+          const tag = st === "solved" ? '<span class="ds-st done">Solved</span>' : st === "started" ? '<span class="ds-st">Started</span>' : "";
+          return `<li><button type="button" class="ds-row" data-drill="${d.id}">
+          <span class="n">${i + 1}</span><span class="t">${esc(d.title)}</span>${tag}<span class="go" aria-hidden="true">Open →</span></button></li>`;
+        }).join("")}</ol>
+        <button type="button" class="review-link" data-case="${set.review}">Review case ${set.review}</button>
+      </section>`;
+    }).join("")}</div>`;
+  card.querySelectorAll("[data-drill]").forEach((b) => b.addEventListener("click", () => openCase(b.dataset.drill)));
+  card.querySelectorAll(".review-link").forEach((b) => b.addEventListener("click", () => openCase(b.dataset.case)));
+  renderNav();
+  window.scrollTo(0, 0);
+}
+
+/** What the "next" button after a match leads to. */
+function nextStep() {
+  if (isDrill(current)) {
+    const set = DRILL_SETS.find((d) => d.id === current.set);
+    const i = set.drills.findIndex((d) => d.id === current.id);
+    return i < set.drills.length - 1
+      ? { label: "Next drill", go: () => openCase(set.drills[i + 1].id) }
+      : { label: "Back to drills", go: () => openDrills(current.level) };
+  }
+  const i = CASES.indexOf(current);
+  return i < CASES.length - 1 ? { label: "Next case", go: () => openCase(CASES[i + 1].id) } : null;
 }
 
 function openQuiz(id) {
@@ -131,18 +225,18 @@ function target() {
 
 function openCase(id) {
   setMode("case");
-  current = CASES.find((c) => c.id === id) || CASES[0];
+  current = findItem(id) || CASES[0];
   progress.last = current.id; saveProgress();
-  history.replaceState(null, "", `#case-${current.id}`);
+  history.replaceState(null, "", isDrill(current) ? `#drill-${current.id}` : `#case-${current.id}`);
   const lvl = LEVELS.find(([k]) => k === current.level)[1];
-  $("case-tags").innerHTML = `<span class="tag case">Case ${current.id}</span><span class="tag lvl-${current.level}">${lvl}</span>` +
+  const set = isDrill(current) ? DRILL_SETS.find((d) => d.id === current.set) : null;
+  $("case-tags").innerHTML = (set
+    ? `<span class="tag case">Drill</span><span class="tag lvl-${current.level}">${esc(set.title)}</span>`
+    : `<span class="tag case">Case ${current.id}</span><span class="tag lvl-${current.level}">${lvl}</span>`) +
     current.skills.map((s) => `<span class="tag">${esc(s)}</span>`).join("");
   $("case-title").textContent = current.title;
   $("case-prompt").innerHTML = esc(current.prompt);
-  $("case-rules").innerHTML = current.rules.map((r) => `<li>${codeify(r)}</li>`).join("");
-  $("case-returns").innerHTML = current.returns.map((r) => `<span class="col-chip">${esc(r)}</span>`).join("");
-  $("case-tables").innerHTML = current.tables.map((t) => `<button type="button" class="col-chip table" data-t="${t}">${esc(t)}</button>`).join("");
-  $("case-tables").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => showTable(b.dataset.t)));
+  renderScaffolding();
   const st = caseState(current.id);
   setEditor(st.query ?? starterQuery(current));
   renderNav();
@@ -298,8 +392,10 @@ function cell(v) {
 
 function renderGrid(el, columns, rows, limit = MAX_ROWS_SHOWN) {
   const numeric = columns.map((_, i) => rows.length > 0 && rows.slice(0, 20).every((r) => r[i] === null || typeof r[i] === "number"));
-  const head = `<thead><tr>${columns.map((c, i) => `<th${numeric[i] ? ' class="num"' : ""}>${esc(c)}</th>`).join("")}</tr></thead>`;
-  const body = rows.slice(0, limit).map((r) => `<tr>${r.map(cell).join("")}</tr>`).join("");
+  // Columns fit their content; an empty last column takes the leftover width so
+  // a two-column result doesn't spread across the whole panel.
+  const head = `<thead><tr>${columns.map((c, i) => `<th${numeric[i] ? ' class="num"' : ""}>${esc(c)}</th>`).join("")}<th class="fill" aria-hidden="true"></th></tr></thead>`;
+  const body = rows.slice(0, limit).map((r) => `<tr>${r.map(cell).join("")}<td class="fill" aria-hidden="true"></td></tr>`).join("");
   el.innerHTML = head + `<tbody>${body}</tbody>`;
 }
 
@@ -374,7 +470,7 @@ function showRuns(out, total, fromSelection) {
   const last = out[out.length - 1];
   const lastRan = out.length === total && !last.error;
   const tgt = target();
-  checked = lastRan ? { actual: last, result: compareResults(last, tgt.expected, { ordered: tgt.ordered }) } : null;
+  checked = lastRan ? { actual: last, result: compareResults(last, tgt.expected, { ordered: tgt.ordered, hideColumns: !tgt.quiz && settings().hideReturns }) } : null;
   const p = $("status-pill");
   const ranWhat = fromSelection ? "Ran your selection. " : "";
 
@@ -435,8 +531,9 @@ function showTab(i) {
   }
   diff.hidden = !parts.length; diff.innerHTML = parts.join("");
 
-  const idx = quiz?.active ? CASES.length : CASES.indexOf(current);
-  $("next-wrap").hidden = !(isChecked && checked.result.match && idx < CASES.length - 1);
+  const nxt = quiz?.active ? null : nextStep();
+  $("next-wrap").hidden = !(isChecked && checked.result.match && nxt);
+  if (nxt) $("next-label").textContent = nxt.label;
 
   const hasRows = !r.error && r.rows.length > 0;
   $("grid-title").hidden = !hasRows;
@@ -462,12 +559,13 @@ function markUsedTables() {
   if (!current) return;
   document.querySelectorAll("details.tbl").forEach((d) => d.classList.toggle("used", current.tables.includes(d.dataset.t)));
 }
+const TABS = ["hints", "tables", "tutor"];
 function selectTab(which) {
-  const tutor = which === "tutor";
-  $("tab-tutor").setAttribute("aria-selected", String(tutor));
-  $("tab-tables").setAttribute("aria-selected", String(!tutor));
-  $("tutor-panel").hidden = !tutor;
-  $("tables-panel").hidden = tutor;
+  for (const t of TABS) {
+    $(`tab-${t}`).setAttribute("aria-selected", String(t === which));
+    $(`${t}-panel`).hidden = t !== which;
+  }
+  if (which === "tutor" && matchMedia("(min-width: 821px)").matches) requestAnimationFrame(() => $("ask-input").focus({ preventScroll: true }));
 }
 function showTable(t) {
   selectTab("tables");
@@ -478,24 +576,30 @@ function showTable(t) {
 /* ---------------- start ---------------- */
 async function main() {
   $("run-kbd").textContent = /Mac|iPhone|iPad/.test(navigator.platform) ? "⌘ Enter" : "Ctrl Enter";
-  $("tab-tutor").addEventListener("click", () => selectTab("tutor"));
-  $("tab-tables").addEventListener("click", () => selectTab("tables"));
+  for (const t of TABS) $(`tab-${t}`).addEventListener("click", () => selectTab(t));
   $("run-btn").addEventListener("click", runQuery);
   $("reset-btn").addEventListener("click", () => {
     const fix = quiz?.active && quiz.currentFix();
     if (fix) { setEditor(fix.broken); view.focus(); return; }
     if (current) { setEditor(starterQuery(current)); caseState(current.id).query = null; saveProgress(); view.focus(); } });
-  $("next-btn").addEventListener("click", () => { const i = CASES.indexOf(current); if (i < CASES.length - 1) openCase(CASES[i + 1].id); });
+  $("next-btn").addEventListener("click", () => nextStep()?.go());
+  for (const [btn, key] of [["toggle-returns", "hideReturns"], ["toggle-tables", "hideTables"]]) {
+    $(btn).addEventListener("click", () => { settings()[key] = !settings()[key]; saveProgress(); renderScaffolding(); });
+  }
   $("case-select").addEventListener("change", (e) => {
     const v = e.target.value;
-    if (v.startsWith("quiz-")) openQuiz(v.slice(5)); else openCase(v);
+    if (v.startsWith("quiz-")) openQuiz(v.slice(5));
+    else if (v.startsWith("drills-")) openDrills(v.slice(7));
+    else openCase(v);
   });
 
   buildEditor();
-  [CASES, QUIZZES] = await Promise.all([
+  [CASES, QUIZZES, DRILL_SETS] = await Promise.all([
     fetch("/cases.json").then((r) => r.json()),
     fetch("/quizzes.json").then((r) => (r.ok ? r.json() : [])).catch(() => []),
+    fetch("/drills.json").then((r) => (r.ok ? r.json() : [])).catch(() => []),
   ]);
+  for (const set of DRILL_SETS) for (const d of set.drills) DRILLS[d.id] = d;
   quiz = createQuiz({
     getProgress: () => progress,
     save: () => { saveProgress(); renderNav(); },
@@ -510,12 +614,16 @@ async function main() {
     save: saveProgress,
     getQuery: () => view.state.doc.toString(),
     getLastRun: () => lastRun[current.id] || "",
+    getHidden: () => ({ columns: settings().hideReturns, tables: settings().hideTables }),
     onHelpUsed: () => renderNav(),
   });
-  const fromHash = (location.hash.match(/case-(\d+)/) || [])[1];
+  const fromHash = (location.hash.match(/case-([A-Z]?\d+)/) || [])[1];
   const quizHash = (location.hash.match(/quiz-([a-z]+)/) || [])[1];
-  openCase(fromHash || progress.last || CASES[0].id);
+  const drillHash = (location.hash.match(/#drill-([a-z]+\d+)/) || [])[1];
+  const drillsHash = (location.hash.match(/#drills-([a-z]+)/) || [])[1];
+  openCase(drillHash || fromHash || (findItem(progress.last) ? progress.last : CASES[0].id));
   if (quizHash) openQuiz(quizHash);
+  else if (drillsHash) openDrills(drillsHash);
   try {
     conn = await initDb();
     view.dispatch({ effects: sqlConf.reconfigure(sqlExtension()) });
@@ -531,9 +639,13 @@ async function main() {
   }
 }
 addEventListener("hashchange", () => {
-  const id = (location.hash.match(/case-(\d+)/) || [])[1];
+  const id = (location.hash.match(/case-([A-Z]?\d+)/) || [])[1];
   const qid = (location.hash.match(/quiz-([a-z]+)/) || [])[1];
-  if (qid && !(quiz?.active && quiz.id === qid)) openQuiz(qid);
-  else if (id && (quiz?.active || !current || id !== current.id)) openCase(id);
+  const did = (location.hash.match(/#drill-([a-z]+\d+)/) || [])[1];
+  const dlv = (location.hash.match(/#drills-([a-z]+)/) || [])[1];
+  if (did) { if (current?.id !== did || mode !== "case") openCase(did); }
+  else if (dlv) { if (mode !== "picker" || pickerLevel !== dlv) openDrills(dlv); }
+  else if (qid && !(quiz?.active && quiz.id === qid)) openQuiz(qid);
+  else if (id && (mode !== "case" || !current || id !== current.id)) openCase(id);
 });
 main();

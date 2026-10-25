@@ -7,9 +7,11 @@ Read this first. It carries the decisions from the planning session so work can 
 - Owner: Patricia (Trish), client and data operations professional in NYC, job searching for operations, implementation, customer success and deployment roles. Mainly finance (especially private funds / fintech) and customer support operations.
 - Experience to draw on: Customer Success Associate at Datazoic (onboarding through UAT, SQL to diagnose API and configuration issues), Data Operations Analyst II at Chronograph (private capital fund data, SQL via Retool), optical practice (insurance billing, EHR rollout).
 - Casework is a portfolio piece and her own SQL interview practice tool. It must prove three things: she can solve real ops problems with SQL, she thinks like a product person, and she uses AI responsibly.
-- Demo target: about 3 weeks from early October 2026, built alongside a job search. Scope discipline beats feature count. Flag anything that threatens the timeline.
+- Demo target was about 3 weeks from early October 2026. On Oct 21 Patricia said the timeline no longer matters much: Casework is also her own learning journey to write SQL well, so learning quality comes before shipping speed. Still mention schedule impact briefly, but don't push back on learning features for timeline reasons.
 
 ## How to work with Patricia
+
+- Delivering files to her Mac: after copying files into the outputs folder and writing them to ~/Projects/casework, ALWAYS compare md5 hashes on the Mac with the cloud copies. On Oct 22 a write right after copying delivered the previous version of app.js and app.css; earlier "reverts" (landing page, requirements.txt, app.css) were most likely the same thing, not her editor. If a hash differs, write again and re-check.
 
 - She is not a professional software engineer. Explain tradeoffs in plain English and recommend the simplest option that works.
 - When recommending a technology, give one recommendation with a one-line reason, not a menu.
@@ -94,6 +96,7 @@ Tutor (built Oct 20):
 - Prompt: system rules + case brief, schema, the reference solution and the trap query marked private. Learner text is treated as data.
 - Guard: every SQL snippet in a reply runs against the real data in a locked DuckDB (no external access, 3 s limit, SELECT/WITH only). If it returns the case's exact answer (any row or column order), Claude is asked once more; if that leaks too, a safe fallback is shown.
 - Limits: 25 replies per visitor per day (by forwarded IP), 600 per server per day (CASEWORK_HINTS_PER_DAY / CASEWORK_HINTS_SERVER_DAY). Failed replies are refunded. Plus Patricia's Console credit ($4.85 prepaid, auto-reload off).
+- Side panel tabs (Oct 24, Patricia's request): Hints | Tables | Tutor. Hints holds the ladder, Get a hint, walkthrough and their replies; Tutor holds the question chat and ask box. One saved thread per case; messages carry a kind so each tab shows its own. Hints and Tutor both show an off note during quizzes and on the drill picker.
 - Panel (`site/app/tutor.js`): hint ladder Nudge, Structure, Skeleton, Walkthrough; "Get a hint" climbs one level per press (then more skeleton hints); an ask box (Enter sends); thread saved per case in localStorage. Walkthrough unlocks after the level 3 hint plus 3 more runs; once started, the case shows "Solved with help" when solved.
 - Tested with a fake Claude server (guard retry and fallback, refunds, limits, errors) and in the browser at desktop and phone widths. Not yet tested against real Haiku output.
 
@@ -108,11 +111,19 @@ Quizzes (built Oct 21, Foundations only so far):
 - UI: `site/app/quiz.js`; quiz row at the end of its level in the case list (and in the phone dropdown); address `#quiz-foundations`.
 - Next: Core quiz and the Advanced exam (timed, one long case, no hints), written from Patricia's sticking points on cases 05 to 15.
 
+Drills and Bridge level (built Oct 21):
+- Patricia found the jump from Foundations to Core too steep (Core introduces about nine new ideas at once) and wants more practice by repetition. Timeline no longer a constraint.
+- Drills (`cases/drills.py` -> `cases/drills.json`, served at `/drills.json`): short single-skill exercises that work like small cases (same brief, editor, checker, tutor). Each has a "naive" query with the skill's classic mistake; build.py checks the mistake changes the answer. Foundations: 4 sets x 4 (AND/OR/IN, writing dates, cleaning text incl. a case-03-style top topics drill, joins). Bridge: 5 sets x 3 (counting by group, HAVING, CASE, grouping by time, CTEs). Ids like `andor1`, address `#drill-andor1`; the set picker is `#drills-foundations`. Progress lives in the same localStorage map as cases; the header's "N of 20 solved" counts cases only.
+- Bridge level (cases B1 to B5, between Foundations and Core), one new idea each, each with a verified trap: B1 GROUP BY/COUNT/MAX (trap: BETWEEN drops Sept 30), B2 HAVING (trap: forgetting the status filter in WHERE), B3 CASE buckets (trap: < vs <=), B4 date_trunc month (trap: month() returns a number), B5 CTE (trap: averaging over the wrong period). Landing page updated to "Twenty cases" with Bridge rows.
+- Drill text3 had a tie at the LIMIT boundary (bug and login both 113); fixed with an alphabetical tie-break rule. Watch for ties whenever an ordered answer uses LIMIT.
+- Next: a Bridge quiz written from Patricia's sticking points on the Bridge cases and drills (same approach as the Foundations quiz). Also add "(not equal to)" next to != in the Foundations quiz explanation.
+
 After launch (Patricia's ideas, not v1):
 - Quizzes and exams (Oct 20; Foundations quiz built Oct 21, see above). Solving every case in a level unlocks an optional quiz: 3 to 5 new short questions on the same skills and tables, no tutor, checked the same way. Advanced levels get an exam instead: a longer case, timed, no hints, ending in a score summary. Reuses the existing checker; the new work is writing questions and answer keys (extend cases.py / build.py). Ties into the interview-prep mode from the original brief.
   - Patricia's direction: quiz questions should look like the questions a learner actually asks while working, to test understanding, not just repeat the case. Mix formats: spot the bug, predict the output, explain why, plus short queries. Later: personalize from each learner's own sticking points (errors hit, hints used), stored in the browser.
   - Seed questions from Patricia's own testing (Foundations): IN vs chained OR, and why OR needs parentheses next to AND; DESC vs ASC and what a tie-breaker column does; DISTINCT vs GROUP BY; unquoted 2026-10-01 being math; nesting functions vs joining them with AND; replace's three inputs; empty text vs spaces vs NULL, and why <> '' also drops NULL; a comma between tables pairs every row; what LEFT means in LEFT JOIN; why ON uses = and != makes unmatched rows "match everyone"; where the NULL after a LEFT JOIN comes from.
 - Brainstorm later: other ways people learn (Patricia notes everyone works differently), to shape features after launch.
+- Hide-the-scaffolding toggles (built Oct 22): "Hide" / "Show" next to "Return these columns" and "Tables you'll need" in every case and drill brief, saved per browser in progress.settings (hideReturns, hideTables; both shown by default). Patricia keeps columns hidden and tables shown. While columns are hidden: rules starting "Name the" are hidden (names never count), the wrong-columns message gives only the count, and the tutor is told not to name the hidden items unless asked. Skill tags still show; hiding them could be a later option. Exams could force both hidden.
 - Tutor visuals: show a small before-and-after table for the case's own join (the walkthrough that helped on case 04).
 
 Open items:

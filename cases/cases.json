@@ -472,6 +472,392 @@
   }
  },
  {
+  "id": "B1",
+  "level": "bridge",
+  "title": "Volume by channel",
+  "rules": [
+   "Only tickets created from July 1 through September 30, 2026, including all of September 30.",
+   "Name the columns tickets and latest_ticket."
+  ],
+  "returns": [
+   "channel",
+   "tickets",
+   "latest_ticket"
+  ],
+  "ordered": false,
+  "tables": [
+   "tickets"
+  ],
+  "skills": [
+   "GROUP BY",
+   "COUNT",
+   "MAX"
+  ],
+  "prompt": "The support lead wants a quick picture of July through September: how many tickets came in through each channel, and when the most recent one arrived.",
+  "expected": {
+   "columns": [
+    "channel",
+    "tickets",
+    "latest_ticket"
+   ],
+   "rows": [
+    [
+     "chat",
+     747,
+     "2026-09-30 20:21:51"
+    ],
+    [
+     "email",
+     1315,
+     "2026-09-30 20:55:08"
+    ],
+    [
+     "phone",
+     354,
+     "2026-09-30 16:49:10"
+    ],
+    [
+     "web",
+     592,
+     "2026-09-30 16:37:38"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "B2",
+  "level": "bridge",
+  "title": "Who's carrying the most",
+  "rules": [
+   "A ticket still needs work if its status is open or pending.",
+   "An agent is active if deactivated_at is empty.",
+   "Name the count open_tickets."
+  ],
+  "returns": [
+   "agent_name",
+   "open_tickets"
+  ],
+  "ordered": false,
+  "tables": [
+   "tickets",
+   "agents"
+  ],
+  "skills": [
+   "GROUP BY",
+   "HAVING",
+   "WHERE vs HAVING"
+  ],
+  "prompt": "Which active agents have more than 12 tickets that still need work? The lead wants to rebalance their queues.",
+  "expected": {
+   "columns": [
+    "agent_name",
+    "open_tickets"
+   ],
+   "rows": [
+    [
+     "Gabe Garcia",
+     14
+    ],
+    [
+     "Nia Nakamura",
+     14
+    ],
+    [
+     "Omar Okafor",
+     15
+    ],
+    [
+     "Quinn Quinn",
+     14
+    ],
+    [
+     "Uma Usman",
+     23
+    ],
+    [
+     "Victor Vega",
+     16
+    ],
+    [
+     "Wes Walsh",
+     15
+    ],
+    [
+     "Ximena Young",
+     19
+    ]
+   ]
+  }
+ },
+ {
+  "id": "B3",
+  "level": "bridge",
+  "title": "How old is the queue?",
+  "rules": [
+   "A ticket still needs work if its status is open or pending.",
+   "Days waiting are whole days from created_at to the snapshot date, 2026-10-01.",
+   "Buckets: '0-2 days', '3-7 days', '8-30 days', 'over 30 days'. The numbers in each label are included.",
+   "Name the columns age_bucket and tickets."
+  ],
+  "returns": [
+   "age_bucket",
+   "tickets"
+  ],
+  "ordered": false,
+  "tables": [
+   "tickets"
+  ],
+  "skills": [
+   "CASE WHEN",
+   "GROUP BY"
+  ],
+  "prompt": "Group the tickets that still need work by how long they've been waiting, so the lead can see if anything is going stale.",
+  "expected": {
+   "columns": [
+    "age_bucket",
+    "tickets"
+   ],
+   "rows": [
+    [
+     "0-2 days",
+     56
+    ],
+    [
+     "3-7 days",
+     98
+    ],
+    [
+     "8-30 days",
+     83
+    ],
+    [
+     "over 30 days",
+     30
+    ]
+   ]
+  }
+ },
+ {
+  "id": "B4",
+  "level": "bridge",
+  "title": "Month by month",
+  "rules": [
+   "Show each month as its first day, like 2026-04-01.",
+   "Name the columns month and tickets.",
+   "Earliest month first."
+  ],
+  "returns": [
+   "month",
+   "tickets"
+  ],
+  "ordered": true,
+  "tables": [
+   "tickets"
+  ],
+  "skills": [
+   "date_trunc",
+   "GROUP BY",
+   "ORDER BY"
+  ],
+  "prompt": "How many tickets came in each month from April through September 2026?",
+  "expected": {
+   "columns": [
+    "month",
+    "tickets"
+   ],
+   "rows": [
+    [
+     "2026-04-01",
+     958
+    ],
+    [
+     "2026-05-01",
+     937
+    ],
+    [
+     "2026-06-01",
+     949
+    ],
+    [
+     "2026-07-01",
+     1007
+    ],
+    [
+     "2026-08-01",
+     975
+    ],
+    [
+     "2026-09-01",
+     1026
+    ]
+   ]
+  }
+ },
+ {
+  "id": "B5",
+  "level": "bridge",
+  "title": "Busier than usual",
+  "rules": [
+   "Count each org's tickets created from July 1 up to (not including) October 1, 2026.",
+   "The average is over orgs that filed at least one ticket in that period.",
+   "Name the count tickets."
+  ],
+  "returns": [
+   "org_id",
+   "tickets"
+  ],
+  "ordered": false,
+  "tables": [
+   "tickets"
+  ],
+  "skills": [
+   "CTE (WITH)",
+   "subquery",
+   "avg"
+  ],
+  "prompt": "Which orgs filed more than twice as many tickets as the average org during July through September?",
+  "expected": {
+   "columns": [
+    "org_id",
+    "tickets"
+   ],
+   "rows": [
+    [
+     5008,
+     19
+    ],
+    [
+     5020,
+     21
+    ],
+    [
+     5042,
+     22
+    ],
+    [
+     5113,
+     19
+    ],
+    [
+     5140,
+     22
+    ],
+    [
+     5149,
+     28
+    ],
+    [
+     5160,
+     19
+    ],
+    [
+     5207,
+     25
+    ],
+    [
+     5219,
+     28
+    ],
+    [
+     5250,
+     19
+    ],
+    [
+     5258,
+     19
+    ],
+    [
+     5263,
+     26
+    ],
+    [
+     5268,
+     23
+    ],
+    [
+     5278,
+     27
+    ],
+    [
+     5336,
+     19
+    ],
+    [
+     5347,
+     23
+    ],
+    [
+     5356,
+     29
+    ],
+    [
+     5398,
+     23
+    ],
+    [
+     5408,
+     24
+    ],
+    [
+     5428,
+     23
+    ],
+    [
+     5442,
+     23
+    ],
+    [
+     5465,
+     24
+    ],
+    [
+     5470,
+     20
+    ],
+    [
+     5484,
+     19
+    ],
+    [
+     5523,
+     22
+    ],
+    [
+     5614,
+     30
+    ],
+    [
+     5627,
+     23
+    ],
+    [
+     5629,
+     20
+    ],
+    [
+     5672,
+     24
+    ],
+    [
+     5676,
+     28
+    ],
+    [
+     5694,
+     27
+    ],
+    [
+     5695,
+     25
+    ],
+    [
+     5780,
+     32
+    ]
+   ]
+  }
+ },
+ {
   "id": "05",
   "level": "core",
   "title": "Weekly volume by channel",

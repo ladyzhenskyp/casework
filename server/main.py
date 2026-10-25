@@ -72,5 +72,10 @@ def quizzes_json():
     return FileResponse(ROOT / "cases" / "quizzes.json", media_type="application/json")
 
 
+@app.get("/drills.json")
+def drills_json():
+    return FileResponse(ROOT / "cases" / "drills.json", media_type="application/json")
+
+
 app.mount("/data", StaticFiles(directory=ROOT / "data" / "arrow"), name="data")
 app.mount("/", StaticFiles(directory=ROOT / "site", html=True), name="site")
