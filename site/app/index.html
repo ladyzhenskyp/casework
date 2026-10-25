@@ -22,6 +22,7 @@
     <span class="bar" aria-hidden="true"><span id="progress-bar"></span></span>
   </div>
   <label class="case-select-wrap"><span class="sr">Case</span><select id="case-select"></select></label>
+  <div class="acct" id="acct"></div>
 </header>
 
 <div class="shell">
@@ -123,6 +124,34 @@
     </div>
   </aside>
 </div>
+
+<dialog class="dlg" id="auth-dialog" aria-labelledby="auth-title">
+  <form id="auth-form" class="dlg-body">
+    <button type="button" class="dlg-x" id="auth-close" aria-label="Close">×</button>
+    <span class="beta-tag">Beta</span>
+    <h2 id="auth-title">Sign in</h2>
+    <p class="dlg-sub" id="auth-sub"></p>
+    <label class="fld" id="auth-name-row" hidden><span>Your name</span><input id="auth-name" autocomplete="name" maxlength="60"></label>
+    <label class="fld"><span>Email</span><input id="auth-email" type="email" autocomplete="email" required></label>
+    <label class="fld"><span>Password</span><input id="auth-password" type="password" minlength="8" required><small>At least 8 characters.</small></label>
+    <label class="fld" id="auth-invite-row" hidden><span>Invite code</span><input id="auth-invite" autocomplete="off" spellcheck="false"></label>
+    <p class="dlg-privacy" id="auth-privacy" hidden>Casework stores your name, email, progress and any feedback you send. Your password is never stored or visible to anyone. Tutor questions are sent to Anthropic's Claude to answer them, without your name or email, so please don't paste anything personal or confidential there.</p>
+    <p class="dlg-err" id="auth-error" role="alert"></p>
+    <button type="submit" class="next-btn dlg-go" id="auth-submit">Sign in</button>
+    <p class="dlg-switch" id="auth-switch"></p>
+  </form>
+</dialog>
+
+<dialog class="dlg" id="fb-dialog" aria-labelledby="fb-title">
+  <form id="fb-form" class="dlg-body">
+    <button type="button" class="dlg-x" id="fb-close" aria-label="Close">×</button>
+    <h2 id="fb-title">Send feedback</h2>
+    <p class="dlg-sub">Anything confusing, broken, too easy or too hard. It goes straight to Patricia, with where you were: <b id="fb-place"></b></p>
+    <label class="fld"><span class="sr">Your feedback</span><textarea id="fb-text" rows="5" maxlength="4000" required></textarea></label>
+    <p class="dlg-err" id="fb-status" role="status"></p>
+    <button type="submit" class="next-btn dlg-go" id="fb-send">Send</button>
+  </form>
+</dialog>
 
 <script type="module" src="app.js"></script>
 </body>

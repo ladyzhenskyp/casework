@@ -1,6 +1,6 @@
 // Light motion for the workspace: a first-load entrance, content that glides in
 // when you switch cases, and highlights that slide between items and tabs.
-// Quick and small on purpose (about a quarter second), so it never slows work.
+// Small and calm (about 0.4 to 0.6 s, set with Patricia on Oct 24); side tabs stay quicker.
 // Everything is skipped when the visitor prefers reduced motion.
 
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
@@ -8,7 +8,7 @@ const EASE = "cubic-bezier(.2,.75,.2,1)";
 const still = () => reduced.matches;
 
 /** Fade elements in while they rise (or slide) a few pixels, one after another. */
-export function rise(els, { y = 8, x = 0, dur = 280, stagger = 45, delay = 0, max = 14 } = {}) {
+export function rise(els, { y = 8, x = 0, dur = 420, stagger = 60, delay = 0, max = 14 } = {}) {
   if (still()) return;
   [...els].filter(Boolean).forEach((el, i) => {
     if (el.hidden || !el.getClientRects().length) return;
@@ -22,21 +22,21 @@ export function rise(els, { y = 8, x = 0, dur = 280, stagger = 45, delay = 0, ma
 /** The first time the workspace appears. */
 export function entrance() {
   if (still()) return;
-  rise([document.querySelector(".topbar")], { y: -6, dur: 260 });
-  rise(document.querySelectorAll("#cases-nav h2, #cases-nav .case-btn"), { x: -8, y: 0, stagger: 22, delay: 60, max: 18 });
-  rise(document.querySelectorAll(".work > section"), { y: 12, dur: 360, stagger: 70, delay: 90 });
-  rise([document.querySelector(".side")], { x: 10, y: 0, dur: 360, delay: 160 });
+  rise([document.querySelector(".topbar")], { y: -6, dur: 420 });
+  rise(document.querySelectorAll("#cases-nav h2, #cases-nav .case-btn"), { x: -10, y: 0, dur: 520, stagger: 40, delay: 120, max: 18 });
+  rise(document.querySelectorAll(".work > section"), { y: 14, dur: 620, stagger: 120, delay: 180 });
+  rise([document.querySelector(".side")], { x: 12, y: 0, dur: 620, delay: 320 });
 }
 
 /** Content of the main column when switching between cases, drills and quizzes. */
 export function switchIn() {
-  rise(document.querySelectorAll(".work > section"), { y: 6, dur: 240, stagger: 40 });
+  rise(document.querySelectorAll(".work > section"), { y: 10, dur: 460, stagger: 80 });
 }
 
 /** A short fade for freshly drawn results. */
 export function settle(el) {
   if (still() || !el || el.hidden) return;
-  el.animate([{ opacity: 0.35 }, { opacity: 1 }], { duration: 200, easing: EASE });
+  el.animate([{ opacity: 0.35 }, { opacity: 1 }], { duration: 340, easing: EASE });
 }
 
 /**
@@ -65,7 +65,7 @@ export function glide(container, target, key, cls) {
   ind.animate(
     [{ transform: `translate(${dx}px, ${dy}px)`, width: `${from.width}px`, height: `${from.height}px` },
      { transform: "none", width: `${spot.width}px`, height: `${spot.height}px` }],
-    { duration: 260, easing: EASE },
+    { duration: 420, easing: EASE },
   );
 }
 

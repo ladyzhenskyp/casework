@@ -4,3 +4,5 @@ __pycache__/
 .venv/
 .DS_Store
 cases/solutions.json
+data/*.db
+data/*.db-*

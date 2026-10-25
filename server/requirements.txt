@@ -1,4 +1,2 @@
-fastapi==0.115.6
-uvicorn[standard]==0.32.1
-httpx==0.28.1
-duckdb==1.4.4  # newest release that still supports Python 3.9 (Apple's built-in Python)
+# The packages are listed in the requirements.txt at the project root (Railway reads that one).
+-r ../requirements.txt

@@ -9,6 +9,7 @@ import { splitStatements } from "./statements.js";
 import { createTutor } from "./tutor.js";
 import { createQuiz } from "./quiz.js";
 import * as motion from "./motion.js";
+import { createAccount } from "./account.js";
 
 const TABLES = ["customers", "helpdesk_orgs", "tickets", "ticket_events", "agents", "sla_policies", "csat_responses", "integration_sync_log"];
 const SYSTEMS = [
@@ -41,14 +42,16 @@ const isDrill = (item) => item?.kind === "drill";
 let quiz = null; // quiz controller; quiz.active while a quiz is open
 const lastRun = {}; // case id -> short description of the latest run, for the tutor
 
-/* ---------------- progress (saved in this browser only) ---------------- */
+/* ---------------- progress (this browser, plus the account when signed in) ---------------- */
 function loadProgress() {
   try { return JSON.parse(localStorage.getItem(STORE_KEY)) || { cases: {}, last: null }; }
   catch { return { cases: {}, last: null }; }
 }
 function saveProgress() {
   try { localStorage.setItem(STORE_KEY, JSON.stringify(progress)); } catch { /* private mode: keep in memory */ }
+  account?.queueSave();
 }
+let account = null;
 const progress = loadProgress();
 const settings = () => (progress.settings ||= { hideReturns: false, hideTables: false });
 const caseState = (id) => (progress.cases[id] ||= { status: "new", hints: 0, query: null });
@@ -613,6 +616,20 @@ async function main() {
     fetch("/drills.json").then((r) => (r.ok ? r.json() : [])).catch(() => []),
   ]);
   for (const set of DRILL_SETS) for (const d of set.drills) DRILLS[d.id] = d;
+  account = createAccount({
+    getProgress: () => progress,
+    setProgress: (p) => {
+      for (const k of Object.keys(progress)) delete progress[k];
+      Object.assign(progress, p);
+      progress.cases ||= {};
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(progress)); } catch { /* keep in memory */ }
+    },
+    clearLocal: () => { try { localStorage.removeItem(STORE_KEY); } catch { /* nothing saved */ } },
+    getPlace: () => mode === "quiz" ? (QUIZZES.find((q) => q.id === quiz.id)?.title || "A quiz")
+      : mode === "picker" ? `${LEVELS.find(([k]) => k === pickerLevel)?.[1] || ""} drills`
+      : current ? `${isDrill(current) ? "Drill" : `Case ${current.id}`}: ${current.title}` : "The workspace",
+  });
+  await account.start();
   quiz = createQuiz({
     getProgress: () => progress,
     save: () => { saveProgress(); renderNav(); },
@@ -629,6 +646,8 @@ async function main() {
     getLastRun: () => lastRun[current.id] || "",
     getHidden: () => ({ columns: settings().hideReturns, tables: settings().hideTables }),
     onHelpUsed: () => renderNav(),
+    getUser: () => account.user,
+    onSignIn: () => account.openAuth("signin"),
   });
   const fromHash = (location.hash.match(/case-([A-Z]?\d+)/) || [])[1];
   const quizHash = (location.hash.match(/quiz-([a-z]+)/) || [])[1];

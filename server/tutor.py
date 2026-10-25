@@ -161,38 +161,23 @@ def leaks_answer(reply: str, case_id: str) -> bool:
 
 # ---------------------------------------------------------------- limits
 class DailyLimits:
-    def __init__(self):
-        self.day = None
-        self.per_visitor = Counter()
-        self.total = 0
-        self.lock = threading.Lock()
-
-    def _roll(self):
-        today = datetime.now(timezone.utc).date()
-        if today != self.day:
-            self.day, self.per_visitor, self.total = today, Counter(), 0
+    """Daily tutor limits, counted in the accounts database so restarts don't reset them."""
 
     def remaining(self, who):
-        with self.lock:
-            self._roll()
-            return max(0, HINTS_PER_VISITOR_PER_DAY - self.per_visitor[who])
+        from server import accounts
+        return max(0, HINTS_PER_VISITOR_PER_DAY - accounts.usage_today(who))
 
     def take(self, who):
-        with self.lock:
-            self._roll()
-            if self.total >= HINTS_PER_SERVER_PER_DAY:
-                return "server"
-            if self.per_visitor[who] >= HINTS_PER_VISITOR_PER_DAY:
-                return "visitor"
-            self.per_visitor[who] += 1
-            self.total += 1
-            return None
+        from server import accounts
+        return accounts.usage_take(who, HINTS_PER_VISITOR_PER_DAY, HINTS_PER_SERVER_PER_DAY)
 
     def refund(self, who):
-        with self.lock:
-            if self.per_visitor[who] > 0:
-                self.per_visitor[who] -= 1
-                self.total -= 1
+        from server import accounts
+        accounts.usage_refund(who)
+
+    def off_topic(self, who):
+        from server import accounts
+        accounts.usage_off_topic(who)
 
 
 LIMITS = DailyLimits()
@@ -211,6 +196,7 @@ Hard rules:
 5. Formatting: plain sentences, `inline code` for SQL words, columns and values, at most one short code block. Don't use em dashes. No headings.
 6. When you show example SQL to explain syntax, use a different table or column than the case needs, or use placeholders like `___`, so the example teaches the idea without being the answer.
 7. Ground every hint in the actual schema and the learner's actual query and result. If their query is close, say what is right before pointing at what to change.
+8. Stay on topic. Help with: SQL syntax and errors; database ideas (joins, NULL, grouping, window functions, indexes); data cleaning and data quality; the operations metrics in these cases (SLA, CSAT, first reply time, reopen rate, sync failures); explaining a query in an interview; how to practice SQL. Other languages only when compared with SQL. Anything else (unrelated homework or writing, general chat, other coding, personal, medical, legal or financial advice, anything harmful): don't answer it. Start that reply with the exact marker [off-topic] and a space, then one or two kind sentences saying you can only help with SQL and this case, and suggest a relevant next step in the case.
 
 The three hint levels (used when the learner presses "Get a hint"):
 - Level 1, Nudge: what the case is really asking, or what to look at in the data. Name a concept at most. No code.
@@ -322,6 +308,8 @@ def _call_claude(system, user, extra=None):
             msg = r.json().get("error", {}).get("message", "")
         except ValueError:
             msg = r.text[:200]
+        if "usage limit" in msg.lower():  # the monthly spend limit set in the Claude Console
+            raise TutorError("The tutor has reached its spending limit for this month. Everything else still works.", 503)
         if "credit" in msg.lower() or "balance" in msg.lower():
             raise TutorError("The tutor is out of API credit for now.", 503)
         raise TutorError(f"Claude returned an error ({r.status_code}): {msg[:200]}")
@@ -351,10 +339,14 @@ def sample_reply(req):
     return ("*Sample reply: the tutor isn't connected to Claude on this server yet.*\n\n" + body)
 
 
+OFF_TOPIC = "[off-topic]"
+
+
 def answer(req):
-    """req: validated dict with case_id, mode, level, question, query, last_result, history, runs."""
+    """req: validated dict with case_id, mode, level, question, query, last_result, history, runs.
+    Returns (reply, sample_mode, off_topic)."""
     if not os.environ.get("ANTHROPIC_API_KEY"):
-        return sample_reply(req), True
+        return sample_reply(req), True, False
     system = SYSTEM_RULES + "\n\n" + _case_context(req["case_id"])
     user = build_user_message(req)
     reply = _call_claude(system, user)
@@ -365,7 +357,10 @@ def answer(req):
         reply = _call_claude(system, user, retry)
         if leaks_answer(reply, req["case_id"]):
             reply = SAFE_FALLBACK
-    return reply, False
+    off = reply.lstrip().startswith(OFF_TOPIC)
+    if off:
+        reply = reply.lstrip()[len(OFF_TOPIC):].strip()
+    return reply, False, off
 
 
 def validate(payload):

@@ -33,7 +33,7 @@ export function renderMarkdown(text) {
   return out.join("").replace(/\u0000(\d+)\u0000/g, (_, i) => blocks[Number(i)]);
 }
 
-export function createTutor({ getCase, getState, save, getQuery, getLastRun, getHidden, onHelpUsed }) {
+export function createTutor({ getCase, getState, save, getQuery, getLastRun, getHidden, onHelpUsed, getUser, onSignIn }) {
   let busy = false;
   let busyMode = null;
   // Hints (levels 1 to 3) and the walkthrough show in the Hints tab; questions in the Tutor tab.
@@ -88,7 +88,9 @@ export function createTutor({ getCase, getState, save, getQuery, getLastRun, get
       : "Unlocks after all three hints and 3 more runs";
 
     const hb = $("hint-btn");
-    hb.textContent = s.level >= 3 ? "Another skeleton hint" : `Get a hint (${["Nudge", "Structure", "Skeleton"][s.level]})`;
+    const guest = getUser && !getUser();
+    hb.textContent = guest ? "Sign in to get hints" : s.level >= 3 ? "Another skeleton hint" : `Get a hint (${["Nudge", "Structure", "Skeleton"][s.level]})`;
+    $("ask-input").placeholder = guest ? "Sign in to ask the tutor" : "Ask about this case, an error, or a SQL idea";
     hb.disabled = busy;
     $("walk-btn").hidden = !open;
     $("walk-btn").textContent = s.walkthrough ? "Next step" : "Walk me through it";
@@ -104,12 +106,13 @@ export function createTutor({ getCase, getState, save, getQuery, getLastRun, get
     $("thread").innerHTML = (asked.length ? asked.map(draw).join("")
       : '<p class="empty-chat">No questions yet. Try "Why is my result too long?" or "What does HAVING do?"</p>')
       + (busy && busyMode === "ask" ? thinking : "");
-    if (!busy) note(remainingText());
+    if (!busy) note(guest ? "Hints and the tutor are for signed-in beta testers. Everything else works without an account." : remainingText());
   }
 
   async function ask(mode, question = "") {
     const c = getCase();
     if (!c || busy) return;
+    if (getUser && !getUser()) { onSignIn?.(); return; }
     const s = st();
     const level = mode === "hint" ? Math.min(3, s.level + 1) : null;
     if (question) s.thread.push({ role: "learner", kind: mode, text: question });
@@ -155,6 +158,7 @@ export function createTutor({ getCase, getState, save, getQuery, getLastRun, get
   $("walk-btn").addEventListener("click", () => ask("walkthrough"));
   $("ask-form").addEventListener("submit", (e) => {
     e.preventDefault();
+    if (getUser && !getUser()) { onSignIn?.(); return; }
     const q = $("ask-input").value.trim();
     if (!q) return;
     $("ask-input").value = "";
