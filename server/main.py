@@ -293,7 +293,7 @@ def admin(request: Request):
 <h2>Feedback ({len(data['feedback'])})</h2>
 <table><tr><th>When (UTC)</th><th>Who</th><th>Where</th><th>Note</th></tr>{fb or '<tr><td colspan=4>No feedback yet.</td></tr>'}</table>
 <h2>Testers ({len(data['users'])})</h2>
-<p class="sub">Tutor replies count hints, questions and walkthrough steps. Off-topic = questions the tutor declined as unrelated to SQL. Limits: {tutor.HINTS_PER_VISITOR_PER_DAY} per person and {tutor.HINTS_PER_SERVER_PER_DAY} for the site per day (UTC).</p>
+<p class="sub">Tutor replies count hints, questions and walkthrough steps. Off-topic = questions the tutor declined as unrelated to SQL. Limits: {tutor.HINTS_PER_VISITOR_PER_DAY or 'no limit'} per person and {tutor.HINTS_PER_SERVER_PER_DAY or 'no limit'} for the site per day (UTC).</p>
 <table><tr><th>Name</th><th>Email</th><th>Solved</th><th>Hints used</th><th>Tutor today</th><th>Last 7 days</th><th>All time</th><th>Off-topic</th><th>Joined</th><th>Last seen (UTC)</th></tr>{users}</table>
 <h2>Reset a password</h2>
 <form id="reset"><input name="email" type="email" placeholder="Their email" required>

@@ -37,8 +37,14 @@ from drills import DRILL_SETS  # noqa: E402
 
 MODEL = os.environ.get("CASEWORK_MODEL", "claude-haiku-5-5")
 API_URL = os.environ.get("CASEWORK_API_URL", "https://api.anthropic.com/v1/messages")  # override only for tests
-HINTS_PER_VISITOR_PER_DAY = int(os.environ.get("CASEWORK_HINTS_PER_DAY", "25"))
-HINTS_PER_SERVER_PER_DAY = int(os.environ.get("CASEWORK_HINTS_SERVER_DAY", "600"))
+def _daily_limit(name, default):
+    """A daily cap from the environment. "unlimited" turns it off (handy on your own computer)."""
+    value = os.environ.get(name, default).strip().lower()
+    return None if value in ("unlimited", "none", "off") else int(value)
+
+
+HINTS_PER_VISITOR_PER_DAY = _daily_limit("CASEWORK_HINTS_PER_DAY", "25")
+HINTS_PER_SERVER_PER_DAY = _daily_limit("CASEWORK_HINTS_SERVER_DAY", "600")
 MAX_TOKENS = 1500
 
 LEVEL_NAMES = {1: "Nudge", 2: "Structure", 3: "Skeleton"}
@@ -165,6 +171,8 @@ class DailyLimits:
 
     def remaining(self, who):
         from server import accounts
+        if HINTS_PER_VISITOR_PER_DAY is None:
+            return None  # no limit: the app shows no "replies left" note
         return max(0, HINTS_PER_VISITOR_PER_DAY - accounts.usage_today(who))
 
     def take(self, who):

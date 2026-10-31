@@ -338,15 +338,16 @@ def usage_today(who) -> int:
 
 
 def usage_take(who, per_person, per_site):
-    """Count one tutor reply. Returns None, or "visitor" / "server" when a daily limit is reached."""
+    """Count one tutor reply. Returns None, or "visitor" / "server" when a daily limit is reached.
+    A limit of None means no limit; replies are still counted for the admin page."""
     day = _today()
     with db() as con:
         con.execute("BEGIN IMMEDIATE")  # one writer at a time, so two quick clicks can't both slip past the limit
         total = con.execute("SELECT COALESCE(SUM(replies), 0) AS n FROM usage WHERE day = ?", (day,)).fetchone()["n"]
-        if total >= per_site:
+        if per_site is not None and total >= per_site:
             return "server"
         mine = con.execute("SELECT replies FROM usage WHERE day = ? AND who = ?", (day, who)).fetchone()
-        if mine and mine["replies"] >= per_person:
+        if per_person is not None and mine and mine["replies"] >= per_person:
             return "visitor"
         con.execute("""INSERT INTO usage (day, who, replies) VALUES (?, ?, 1)
                        ON CONFLICT(day, who) DO UPDATE SET replies = replies + 1""", (day, who))
